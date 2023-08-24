@@ -1,7 +1,38 @@
-import { DataTable, TextFilter } from '@edx/paragon';
+import { Button, DataTable, TextFilter } from '@edx/paragon';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { adaptToTableFormat, getColumns } from '../utils/helpers';
+
+// TODO: Modify this to execute the proper needed action
+const ActionsAvailable = {
+  submitted: {
+    action: (row) => console.log('submitted', row),
+    label: 'Cancel validation',
+  },
+  draft: {
+    action: (row) => console.log('draft', row),
+    label: 'Re-submit for validation',
+  },
+  approved: {
+    action: (row) => console.log('approved', row),
+    label: 'Cancel validation',
+  },
+};
+
+// TODO: Change this by the @edx/frontend-platform getAuthenticatedUser.roles
+const isCourseAuthor = true;
+
+const ActionButton = ({ label, action, row }) => (
+  <Button variant="link" onClick={() => action(row)}>
+    {label}
+  </Button>
+);
+
+ActionButton.propTypes = {
+  label: PropTypes.string.isRequired,
+  action: PropTypes.func.isRequired,
+  row: PropTypes.shape.isRequired,
+};
 
 const ValidationsTableView = ({ data }) => (
   <DataTable
@@ -11,15 +42,21 @@ const ValidationsTableView = ({ data }) => (
     itemCount={data.length}
     data={adaptToTableFormat(data)}
     columns={getColumns(data)}
-    // TODO: Add actions according to the validation status
-    // additionalColumns={[
-    //   {
-    //     id: 'action',
-    //     Header: 'Action',
-    //     // Proptypes disabled as this prop is passed in separately
-    //     Cell: ({ row }) => <Button variant="link" onClick={() => console.log("Assign", row)}>Assign</Button>,
-    //   }
-    // ]}
+    additionalColumns={isCourseAuthor ? [
+      {
+        id: 'action',
+        Header: 'Action',
+        // eslint-disable-next-line react/no-unstable-nested-components, react/prop-types
+        Cell: ({ row }) => {
+          // eslint-disable-next-line react/prop-types
+          const label = ActionsAvailable[row.values.status?.toLowerCase()]?.label || '';
+          // eslint-disable-next-line react/prop-types
+          const action = ActionsAvailable[row.values.status?.toLowerCase()]?.action || '';
+
+          return label ? <ActionButton label={label} action={action} row={row} /> : null;
+        },
+      },
+    ] : false}
   >
     <DataTable.TableControlBar />
     <DataTable.Table />
