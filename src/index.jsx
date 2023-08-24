@@ -6,9 +6,11 @@ import {
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import ReactDOM from 'react-dom';
+import { Route, Routes } from 'react-router';
 
 import messages from './i18n';
 import ValidationPanelPage from './ValidationPanelPage';
+import PermissionsGuard from './utils/PermissionsGuard';
 
 import './index.scss';
 import store from './data/store';
@@ -16,7 +18,11 @@ import store from './data/store';
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
-      <ValidationPanelPage />
+      <Routes>
+        <Route element={<PermissionsGuard />}>
+          <Route path="/validations-panel" element={<ValidationPanelPage />} />
+        </Route>
+      </Routes>
     </AppProvider>,
     document.getElementById('root'),
   );
