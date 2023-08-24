@@ -155,6 +155,7 @@ export const getFilterChoices = (coursesToValidate, selectedFilter) => {
   // Return formatted filter choices for all properties
   return Object.entries(availableFilters).reduce((formattedFilters, [filterName, filterValues]) => {
     const uniqueValues = [...new Set(filterValues)];
+    // eslint-disable-next-line no-param-reassign
     formattedFilters[filterName] = uniqueValues.map((newFilter) => ({
       name: newFilter,
       value: newFilter,
