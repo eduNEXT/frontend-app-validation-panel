@@ -48,7 +48,7 @@ const ModalLayout = ({
     isFullscreenOnMobile
     size="lg"
   >
-    <ModalDialog.Header className="mx-5 mt-5">
+    <ModalDialog.Header className="mx-5 mt-4">
       <ModalDialog.Title>
         {title}
       </ModalDialog.Title>
