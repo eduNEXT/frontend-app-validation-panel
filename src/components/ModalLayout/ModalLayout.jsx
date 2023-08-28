@@ -1,5 +1,5 @@
-import { ModalDialog, Tabs, Tab } from '@edx/paragon';
 import PropTypes from 'prop-types';
+import { ModalDialog, Tabs, Tab } from '@edx/paragon';
 
 /**
  * A versatile modal layout component with optional tabs. For showing and hiding
@@ -48,11 +48,13 @@ const ModalLayout = ({
     isFullscreenOnMobile
     size="lg"
   >
-    <ModalDialog.Header className="mx-5 mt-4">
+    <ModalDialog.Header className="mx-5">
       <ModalDialog.Title>
         {title}
       </ModalDialog.Title>
+    </ModalDialog.Header>
 
+    <ModalDialog.Body className="mx-5">
       {!!tabs.length
         && (
           <Tabs variant="tabs">
@@ -63,9 +65,6 @@ const ModalLayout = ({
             ))}
           </Tabs>
         )}
-    </ModalDialog.Header>
-
-    <ModalDialog.Body>
       {children}
     </ModalDialog.Body>
   </ModalDialog>
