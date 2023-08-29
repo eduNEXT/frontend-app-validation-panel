@@ -91,7 +91,7 @@ RecordItem.propTypes = {
   createdAt: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   validationBody: PropTypes.string.isRequired,
-  reason: PropTypes.string.isRequired,
+  reason: PropTypes.string,
   comment: PropTypes.string,
   first: PropTypes.bool,
   last: PropTypes.bool,
@@ -99,6 +99,7 @@ RecordItem.propTypes = {
 
 RecordItem.defaultProps = {
   comment: null,
+  reason: null,
   first: false,
   last: false,
 };
