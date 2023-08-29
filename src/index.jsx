@@ -11,10 +11,11 @@ import messages from './i18n';
 import ValidationPanelPage from './ValidationPanelPage';
 
 import './index.scss';
+import store from './data/store';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <AppProvider>
+    <AppProvider store={store}>
       <ValidationPanelPage />
     </AppProvider>,
     document.getElementById('root'),

@@ -11,7 +11,7 @@ ensureConfig(['LMS_BASE_URL'], 'Validation Panel API');
 
 export const getApiBaseUrl = () => getConfig().LMS_BASE_URL;
 export const getCoursesApiUrl = () => `${getApiBaseUrl()}/api/courses/v1/courses/`;
-export const getValidationApiUrl = (service) => `http://localhost:3002/plugin-cvw/api/v1/${service}/`;
+export const getValidationApiUrl = (service) => `${getApiBaseUrl()}/plugin-cvw/api/v1/${service}/`;
 
 /**
  * Fetches all courses created by the current user (course author).
@@ -29,31 +29,15 @@ export async function getCoursesByUser() {
 }
 
 /**
- * Fetches all the validation process created by the current user.
+ * Fetches all the validation records created by the current user or related to a validation body.
+ *  * @param {object} params
  * @returns {Promise<[{}]>}
  */
 
-export async function getValidationProcessesByUser() {
+export async function getValidationProcesses(params) {
   const { data } = await getAuthenticatedHttpClient()
     .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
-      params: {
-        username: getAuthenticatedUser().username,
-      },
-    });
-  return camelCaseObject(data);
-}
-
-/**
- * Fetches all the records asocieted to a especific validation body.
- * @returns {Promise<[{}]>}
- */
-
-export async function getValidationProcessesByValidationBody(validationBody) {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
-      params: {
-        validation_body: validationBody,
-      },
+      params,
     });
   return camelCaseObject(data);
 }
