@@ -59,7 +59,7 @@ const ModalLayout = ({
         && (
           <Tabs variant="tabs">
             {tabs.map(({ name, label, component }) => (
-              <Tab eventKey={name} title={label} className="p-4">
+              <Tab eventKey={name} title={label} className="py-4">
                 {component}
               </Tab>
             ))}
