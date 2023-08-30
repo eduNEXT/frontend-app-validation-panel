@@ -94,7 +94,6 @@ export const adaptToTableFormat = (coursesToValidate) => {
   coursesToValidate.forEach((course) => {
     let lastValidationProcessEvent = null;
     let firstValidationProcessEvent = null;
-    const courseCreatedAt = moment(course.created_at);
 
     course.validation_process_events.forEach((event) => {
       const eventCreatedAt = moment(event.created_at);
@@ -112,9 +111,7 @@ export const adaptToTableFormat = (coursesToValidate) => {
     adaptedCourses.push({
       ...course,
       ...lastValidationProcessEvent,
-      created_at: courseCreatedAt.isBefore(firstValidationProcessEvent.created_at)
-        ? courseCreatedAt
-        : firstValidationProcessEvent.created_at,
+      created_at: firstValidationProcessEvent.created_at,
     });
   });
 

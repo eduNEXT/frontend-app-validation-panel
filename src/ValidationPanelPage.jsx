@@ -1,13 +1,9 @@
-import React from 'react';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import {
-  Button, Stack,
-} from '@edx/paragon';
+import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
+import { Button, Stack } from '@edx/paragon';
+
+import { ValidationsTableView, Header } from './components';
 
 import messages from './messages';
-import ValidationsTableView from './components/ValidationsTableView';
-
-import Header from './components/Header/Header';
 import infoMockedFilled from './data/mocked_data';
 
 const ValidationsPanelPage = ({ intl }) => (
@@ -24,7 +20,7 @@ const ValidationsPanelPage = ({ intl }) => (
 );
 
 ValidationsPanelPage.propTypes = {
-  intl: intlShape.isRequired,
+  intl: useIntl.isRequired,
 };
 
 export default injectIntl(ValidationsPanelPage);
