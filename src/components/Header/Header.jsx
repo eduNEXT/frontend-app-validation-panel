@@ -1,4 +1,4 @@
-import { intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Container, Icon, IconButton, Stack,
 } from '@edx/paragon';
@@ -19,7 +19,7 @@ const Header = ({ intl }) => (
 );
 
 Header.propTypes = {
-  intl: intlShape.isRequired,
+  intl: useIntl.isRequired,
 };
 
 export default Header;
