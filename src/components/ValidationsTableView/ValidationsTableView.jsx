@@ -1,7 +1,6 @@
-import { Button, DataTable, TextFilter } from '@edx/paragon';
-import React from 'react';
 import PropTypes from 'prop-types';
-import { adaptToTableFormat, getColumns } from '../utils/helpers';
+import { Button, DataTable, TextFilter } from '@edx/paragon';
+import { adaptToTableFormat, getColumns } from '../../utils/helpers';
 
 // TODO: Modify this to execute the proper needed action
 const ActionsAvailable = {

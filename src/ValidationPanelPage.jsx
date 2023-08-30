@@ -1,4 +1,4 @@
-import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Stack } from '@edx/paragon';
 
 import { Header, ValidationTableLayout } from './components';
@@ -23,4 +23,4 @@ const ValidationPanelPage = () => {
   );
 };
 
-export default injectIntl(ValidationPanelPage);
+export default ValidationPanelPage;
