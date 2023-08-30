@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types, react/no-unstable-nested-components */
 import PropTypes from 'prop-types';
 import { Button, DataTable, TextFilter } from '@edx/paragon';
 import { adaptToTableFormat, getColumns } from '../../utils/helpers';
@@ -21,8 +22,8 @@ const ActionsAvailable = {
 // TODO: Change this by the @edx/frontend-platform getAuthenticatedUser.roles
 const isCourseAuthor = true;
 
-const ActionButton = ({ label, action, row }) => (
-  <Button variant="link" onClick={() => action(row)}>
+const ActionButton = ({ label, action }) => (
+  <Button variant="link" onClick={action} style={{ fontSize: '0.9rem' }}>
     {label}
   </Button>
 );
@@ -30,39 +31,56 @@ const ActionButton = ({ label, action, row }) => (
 ActionButton.propTypes = {
   label: PropTypes.string.isRequired,
   action: PropTypes.func.isRequired,
-  row: PropTypes.shape.isRequired,
 };
 
-const ValidationsTableView = ({ data }) => (
-  <DataTable
-    isFilterable
-    isSortable
-    defaultColumnValues={{ Filter: TextFilter }}
-    itemCount={data.length}
-    data={adaptToTableFormat(data)}
-    columns={getColumns(data)}
-    additionalColumns={isCourseAuthor ? [
-      {
-        id: 'action',
-        Header: 'Action',
-        // eslint-disable-next-line react/no-unstable-nested-components, react/prop-types
-        Cell: ({ row }) => {
-          // eslint-disable-next-line react/prop-types
-          const label = ActionsAvailable[row.values.status?.toLowerCase()]?.label || '';
-          // eslint-disable-next-line react/prop-types
-          const action = ActionsAvailable[row.values.status?.toLowerCase()]?.action || '';
+const ValidationsTableView = ({ data }) => {
+  const handleClickInCourseTitle = (aux) => {
+    console.log(aux);
+  };
 
-          return label ? <ActionButton label={label} action={action} row={row} /> : null;
+  const columnsWithClickableNames = getColumns(data).map((col) => {
+    if (col.accessor === 'course_name') {
+      return {
+        ...col,
+        Cell: ({ row }) => (
+          <ActionButton
+            label={row.values.course_name}
+            action={() => handleClickInCourseTitle(row.values.course_id)}
+          />
+        ),
+      };
+    }
+
+    return col;
+  });
+
+  return (
+    <DataTable
+      isFilterable
+      isSortable
+      defaultColumnValues={{ Filter: TextFilter }}
+      itemCount={data.length}
+      data={adaptToTableFormat(data)}
+      columns={columnsWithClickableNames}
+      additionalColumns={isCourseAuthor ? [
+        {
+          id: 'action',
+          Header: 'Action',
+          Cell: ({ row }) => {
+            const label = ActionsAvailable[row.values.status?.toLowerCase()]?.label || '';
+            const action = ActionsAvailable[row.values.status?.toLowerCase()]?.action || '';
+            return label ? <ActionButton label={label} action={() => action(row)} /> : null;
+          },
         },
-      },
-    ] : false}
-  >
-    <DataTable.TableControlBar />
-    <DataTable.Table />
-    <DataTable.EmptyTable content="No results found" />
-    <DataTable.TableFooter />
-  </DataTable>
-);
+      ] : false}
+    >
+      <DataTable.TableControlBar />
+      <DataTable.Table />
+      <DataTable.EmptyTable content="No results found" />
+      <DataTable.TableFooter />
+    </DataTable>
+  );
+};
 
 ValidationsTableView.propTypes = {
   data: PropTypes.arrayOf(

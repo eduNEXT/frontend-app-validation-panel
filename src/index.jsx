@@ -20,7 +20,7 @@ subscribe(APP_READY, () => {
     <AppProvider store={store}>
       <Routes>
         <Route element={<PermissionsGuard />}>
-          <Route path="/validations-panel" element={<ValidationPanelPage />} />
+          <Route path="/validation-panel" element={<ValidationPanelPage />} />
         </Route>
       </Routes>
     </AppProvider>,
