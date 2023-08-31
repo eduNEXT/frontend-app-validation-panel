@@ -1,4 +1,5 @@
 import { CheckboxFilter } from '@edx/paragon';
+import { VALIDATION_STATUS } from '../data/constants';
 
 /**
  * Mapping of column keys to their human-readable names for the table.
@@ -158,6 +159,7 @@ export const getColumns = (coursesToValidate) => {
     return processColumn(column, includeFilter, filterChoices);
   });
 };
+
 export const getLastReviewEvent = (course) => {
   let lastValidationProcessEvent = null;
   course.validation_process_events.forEach((event) => {
@@ -172,7 +174,7 @@ export const getLastReviewEvent = (course) => {
 
 export const getSubmissionInfo = (course) => {
   const submissionProcessEvent = course.validation_process_events.find(
-    (validationProcess) => validationProcess.status.toLowerCase() === 'submitted',
+    (validationProcess) => validationProcess.status.toLowerCase() === VALIDATION_STATUS.SUBMITTED.toLowerCase(),
   );
   const courseAuthor = submissionProcessEvent.user;
   const submissionDate = submissionProcessEvent.created_at;
