@@ -1,2 +1,2 @@
 /* eslint-disable import/prefer-default-export */
-export { default as ValidationsTableView } from './ValidationsTableView';
+export { default as ValidationTableView } from './ValidationTableView';
