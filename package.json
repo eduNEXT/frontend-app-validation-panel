@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.2.0",
-    "@edx/frontend-platform": "5.1.0",
+    "@edx/frontend-platform": "5.3.0",
     "@edx/paragon": "21.1.2",
     "@fortawesome/fontawesome-svg-core": "1.2.36",
     "@fortawesome/free-brands-svg-icons": "5.15.4",
@@ -48,7 +48,7 @@
     "prop-types": "15.8.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-redux": "7.2.9",
+    "react-redux": "8.1.1",
     "react-router": "6.14.2",
     "react-router-dom": "6.14.2",
     "redux": "4.2.1",
