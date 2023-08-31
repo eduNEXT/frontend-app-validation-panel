@@ -18,11 +18,7 @@ import store from './data/store';
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
-      <Routes>
-        <Route element={<PermissionsGuard />}>
-          <Route path="/validations-panel" element={<ValidationPanelPage />} />
-        </Route>
-      </Routes>
+      <ValidationPanelPage />
     </AppProvider>,
     document.getElementById('root'),
   );
