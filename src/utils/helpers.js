@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { CheckboxFilter } from '@edx/paragon';
 import { VALIDATION_STATUS } from '../data/constants';
 
@@ -96,13 +95,13 @@ export const adaptToTableFormat = (coursesToValidate) => {
     let firstValidationProcessEvent = null;
 
     course.validation_process_events.forEach((event) => {
-      const eventCreatedAt = moment(event.created_at);
+      const eventCreatedAt = new Date(event.created_at);
 
-      if (!lastValidationProcessEvent || eventCreatedAt.isAfter(lastValidationProcessEvent.created_at)) {
+      if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent.created_at)) {
         lastValidationProcessEvent = event;
       }
 
-      if (!firstValidationProcessEvent || eventCreatedAt.isBefore(firstValidationProcessEvent.created_at)) {
+      if (!firstValidationProcessEvent || eventCreatedAt < new Date(firstValidationProcessEvent.created_at)) {
         firstValidationProcessEvent = event;
       }
     });
