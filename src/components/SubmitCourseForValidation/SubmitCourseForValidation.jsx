@@ -1,16 +1,21 @@
 import PropTypes from 'prop-types';
-import { Button, Form, Stack } from '@edx/paragon';
 import { useFormik } from 'formik';
+import { Button, Stack } from '@edx/paragon';
 
+import { Field } from './Field';
 import { ModalLayout } from '../ModalLayout';
+import { getInitialValues } from './helpers';
 
 const SubmitCourseForValidation = ({ isOpen, close }) => {
   const fieldsToRender = [
     {
       name: 'course_name',
-      type: 'select',
+      // select, textarea or input
+      as: 'select',
       label: 'Course Name',
       description: 'Please select one of your courses from the list below',
+      // prop when 'as' property is 'select'
+      // This properties come from API or Constants
       options: [
         { key: 'regular_course', label: 'Regular Course' },
         { key: 'very_good_course', label: 'Very Good Course' },
@@ -19,7 +24,7 @@ const SubmitCourseForValidation = ({ isOpen, close }) => {
     },
     {
       name: 'validation_body',
-      type: 'select',
+      as: 'select',
       label: 'Validation Body',
       description: 'Please select the applicable validation body for your course',
       options: [
@@ -29,7 +34,7 @@ const SubmitCourseForValidation = ({ isOpen, close }) => {
     },
     {
       name: 'category',
-      type: 'select',
+      as: 'select',
       label: 'Category',
       description: 'Please select the appropriate category for your course',
       options: [
@@ -41,33 +46,18 @@ const SubmitCourseForValidation = ({ isOpen, close }) => {
     },
     {
       name: 'comments',
-      type: 'textarea',
+      as: 'textarea',
       label: 'Comments',
       description: 'Type any comment or explanation for your course',
     },
   ];
 
-  const getInitialValues = (fieldData) => {
-    const getDefaultValue = (options) => {
-      if (options) {
-        return options[0].key;
-      }
-
-      return '';
-    };
-
-    const initialValues = {};
-    fieldData.forEach((field) => {
-      initialValues[field.name] = getDefaultValue(field?.options);
-    });
-
-    return initialValues;
-  };
+  const initialValues = getInitialValues(fieldsToRender);
 
   const {
     handleChange, values, handleSubmit, setValues,
   } = useFormik({
-    initialValues: getInitialValues(fieldsToRender),
+    initialValues,
     onSubmit: (formData) => {
       console.log(formData);
     },
@@ -75,27 +65,22 @@ const SubmitCourseForValidation = ({ isOpen, close }) => {
 
   const handleClose = () => {
     close();
-    setValues(getInitialValues(fieldsToRender));
+    setValues(initialValues);
   };
 
   return (
-    <ModalLayout isOpen={isOpen} onClose={close}>
+    <ModalLayout isOpen={isOpen} onClose={handleClose}>
       <Stack gap={3}>
         <p style={{ fontSize: '1.5rem' }}>Submit a course for validation</p>
         <Stack gap={2}>
           {
             fieldsToRender.map((field) => (
-              <Stack key={field.name}>
-                <span style={{ fontSize: '1.25rem' }}>{field.label}</span>
-                <span style={{ fontSize: '1rem' }}>{field.description}</span>
-                <Form.Group>
-                  <Form.Control name={field.name} as={field.type} onChange={handleChange} value={values[field.name]}>
-                    { field.options?.map((optionInfo) => (
-                      <option key={optionInfo.key} value={optionInfo.key}>{optionInfo.label}</option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-              </Stack>
+              <Field
+                key={field.name}
+                handleChange={handleChange}
+                value={values[field.name]}
+                {...field}
+              />
             ))
           }
         </Stack>
