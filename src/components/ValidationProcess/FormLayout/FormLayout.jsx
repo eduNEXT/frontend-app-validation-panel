@@ -23,7 +23,7 @@ const FormLayout = ({
   });
 
   const submissionDate = data.find((field) => useSpecialDateUsage && field.label.toLowerCase().includes('date'));
-  const isValidator = false;
+  const isValidator = localStorage.getItem('isValidator') === 'true';
 
   const fields = data
     .sort((a, b) => {

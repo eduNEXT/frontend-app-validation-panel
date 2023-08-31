@@ -4,7 +4,8 @@ import { FormattedDate, FormattedMessage } from '@edx/frontend-platform/i18n';
 const bold = (str) => <b>{str}</b>;
 
 const RecordItem = ({
-  createdAt,
+  // eslint-disable-next-line camelcase
+  created_at,
   status,
   validationBody,
   reason,
@@ -34,7 +35,8 @@ const RecordItem = ({
           values={{
             date: (
               <FormattedDate
-                value={createdAt}
+                // eslint-disable-next-line camelcase
+                value={created_at}
                 day="numeric"
                 month="short"
                 year="numeric"
@@ -88,7 +90,7 @@ const RecordItem = ({
 );
 
 RecordItem.propTypes = {
-  createdAt: PropTypes.string.isRequired,
+  created_at: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   validationBody: PropTypes.string.isRequired,
   reason: PropTypes.string,

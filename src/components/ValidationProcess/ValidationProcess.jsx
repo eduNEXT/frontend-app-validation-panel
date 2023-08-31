@@ -1,44 +1,23 @@
-import { Form, Stack } from '@edx/paragon';
+import PropTypes from 'prop-types';
+import { Form, Hyperlink, Stack } from '@edx/paragon';
+import { getConfig } from '@edx/frontend-platform';
 import { useState } from 'react';
 import { getLastReviewEventInfo, getSubmissionInfo } from '../../utils/helpers';
 import { CourseSubmissionInfo } from './CourseSubmissionInfo';
 import { ValidatorReview } from './ValidatorReview';
 
-// TODO: How will be received the current reviewer?
-const courseSelected = {
-  course_name: 'Test Course #1',
-  course_id: 'course-v1:org1+test-course-1',
-  organization: 'Organization 1',
-  categories: ['Category 1', 'Category 2'],
-  validation_body: 'Validator Body #1',
-  validation_process_events: [
-    {
-      status: 'Submitted',
-      created_at: '2023-08-01',
-      reason: null,
-      comment: 'This is the comment of the course author. This is the comment of the course author. This is the comment of the course author',
-      user: 'Course Author 1',
-    },
-    {
-      status: 'Disapproved',
-      created_at: '2023-08-15',
-      reason: 'Reason 1',
-      comment: 'This is the comment of Validator 1 This is the comment of Validator 1 This is the comment of Validator 1 This is the comment of Validator 1',
-      user: 'Validator 1',
-    },
-  ],
-};
-
-const ValidationProcess = () => {
+const ValidationProcess = ({ courseSelected }) => {
   const [didValidatorConfirmReview, setDidValidatorConfirmReview] = useState(false);
   const [openCollapsible, setOpenCollapsible] = useState(null);
+
+  const isValidator = localStorage.getItem('isValidator') === 'true';
 
   const handleChangeReviewConfirmation = () => {
     setOpenCollapsible(false);
     setDidValidatorConfirmReview((prevState) => !prevState);
   };
 
-  const isValidator = false;
+  const courseStudioURL = `${getConfig().STUDIO_URL}/course/${courseSelected.course_id}`;
 
   return (
     <>
@@ -52,9 +31,14 @@ const ValidationProcess = () => {
       />
       {isValidator && (
       <Stack gap={3} className="my-4">
-        <span>Before validating the course, review the content!</span>
+        <span>
+          Before validating the course, review the content!{' '}
+          <Hyperlink destination={courseStudioURL} className="text-dark" style={{ textDecoration: 'underline' }}>
+            <strong>View course in Studio</strong>
+          </Hyperlink>
+        </span>
         <Form.Checkbox onChange={handleChangeReviewConfirmation} checked={didValidatorConfirmReview}>
-          Click here to confirm that you have reviewed the content in STUDIO.
+          Please confirm if you have reviewed the content in STUDIO.
         </Form.Checkbox>
       </Stack>
       )}
@@ -64,6 +48,25 @@ const ValidationProcess = () => {
       />
     </>
   );
+};
+
+ValidationProcess.propTypes = {
+  courseSelected: PropTypes.shape({
+    course_name: PropTypes.string,
+    course_id: PropTypes.string,
+    organization: PropTypes.string,
+    categories: PropTypes.arrayOf(PropTypes.string),
+    validation_body: PropTypes.string,
+    validation_process_events: PropTypes.arrayOf(
+      PropTypes.shape({
+        status: PropTypes.string,
+        created_at: PropTypes.string,
+        reason: PropTypes.string,
+        comment: PropTypes.string,
+        user: PropTypes.string,
+      }),
+    ),
+  }).isRequired,
 };
 
 export default ValidationProcess;

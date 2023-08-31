@@ -20,7 +20,7 @@ const validatorReviewFieldUtilsProps = [
 
 const ValidatorReview = ({ lastReviewEventInfo, didValidatorConfirmReview }) => {
   const lastValidationReviewInfoWithUtilsProps = addUtils(validatorReviewFieldUtilsProps, lastReviewEventInfo);
-  const isValidator = false;
+  const isValidator = localStorage.getItem('isValidator') === 'true';
 
   return (
     <div>

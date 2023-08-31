@@ -5,7 +5,7 @@ const Timeline = ({ passProcessEvents, validationBody }) => (
   <ul className="px-2">
     {passProcessEvents.map((processEvent, index) => (
       <RecordItem
-        key={`validationEvent-${processEvent.createdAt}-${processEvent.user}`}
+        key={`validationEvent-${processEvent.created_at}-${processEvent.user}`}
         {...processEvent}
         validationBody={validationBody}
         first={index === 0}

@@ -1,6 +1,7 @@
 import { useIntl } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 import {
-  Container, Icon, IconButton, Stack,
+  Container, Hyperlink, Icon, IconButton, Stack,
 } from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 import messages from '../../i18n';
@@ -8,12 +9,14 @@ import messages from '../../i18n';
 const Header = ({ intl }) => (
   <Stack className="bg-secondary-200">
     <Container>
-      <IconButton
-        className="my-3 mx-5"
-        src={ArrowBack}
-        iconAs={Icon}
-        alt={intl.formatMessage(messages.goBack)}
-      />
+      <Hyperlink destination={getConfig().STUDIO_URL}>
+        <IconButton
+          className="my-3 mx-5"
+          src={ArrowBack}
+          iconAs={Icon}
+          alt={intl.formatMessage(messages.goBack)}
+        />
+      </Hyperlink>
     </Container>
   </Stack>
 );
