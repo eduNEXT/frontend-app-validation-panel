@@ -38,7 +38,7 @@ ActionButton.propTypes = {
   action: PropTypes.func.isRequired,
 };
 
-const ValidationTableView = ({ data }) => {
+const ValidationTable = ({ data }) => {
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
   const [auxColumnsWithClickableNames, setAuxColumnsWithClickableNames] = useState([]);
 
@@ -149,7 +149,7 @@ const ValidationTableView = ({ data }) => {
   );
 };
 
-ValidationTableView.propTypes = {
+ValidationTable.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -162,4 +162,4 @@ ValidationTableView.propTypes = {
   ).isRequired,
 };
 
-export default ValidationTableView;
+export default ValidationTable;

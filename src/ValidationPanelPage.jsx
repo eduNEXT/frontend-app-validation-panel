@@ -1,7 +1,7 @@
 import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Stack } from '@edx/paragon';
 
-import { Header, ValidationTableView } from './components';
+import { Header, ValidationTable } from './components';
 
 import messages from './messages';
 import infoMockedFilled from './data/mocked_data';
@@ -14,7 +14,7 @@ const ValidationPanelPage = ({ intl }) => (
         <h2>{intl.formatMessage(messages.heading)}</h2>
         <Button variant="brand">Submit a course for validation</Button>
       </Stack>
-      <ValidationTableView data={infoMockedFilled} />
+      <ValidationTable data={infoMockedFilled} />
     </main>
   </Stack>
 );
