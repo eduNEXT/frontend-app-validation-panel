@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   Button, CheckboxFilter, DataTable, TextFilter, SearchField,
 } from '@edx/paragon';
+import { Search } from '@edx/paragon/icons';
 
 import { adaptToTableFormat, getColumns } from '../../utils/helpers';
 import CustomFilter from './CustomFilter';
@@ -24,9 +25,6 @@ const ActionsAvailable = {
   },
 };
 
-// TODO: Change this by the @edx/frontend-platform getAuthenticatedUser.roles
-const isCourseAuthor = true;
-
 const ActionButton = ({ label, action }) => (
   <Button variant="link" onClick={action} style={{ fontSize: '0.9rem' }}>
     {label}
@@ -39,6 +37,8 @@ ActionButton.propTypes = {
 };
 
 const ValidationTable = ({ data }) => {
+  const isValidator = true;
+
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
   const [auxColumnsWithClickableNames, setAuxColumnsWithClickableNames] = useState([]);
 
@@ -53,7 +53,7 @@ const ValidationTable = ({ data }) => {
 
   const handleFilterChoices = (value, col) => {
     const newValues = auxColumnsWithClickableNames.map((column) => {
-      if (column.accessor === col.accessor) {
+      if (column?.accessor === col?.accessor) {
         const newOptions = column.filterChoices.filter((option) => (
           option.name.toLowerCase().includes(value.toLowerCase())
         ));
@@ -71,7 +71,7 @@ const ValidationTable = ({ data }) => {
   };
 
   const getColumnsWithClickableNames = (dataToAdapt) => getColumns(dataToAdapt).map((col) => {
-    if (col.accessor === 'course_name') {
+    if (col?.accessor === 'course_name') {
       return {
         ...col,
         Cell: ({ row }) => (
@@ -84,16 +84,19 @@ const ValidationTable = ({ data }) => {
     }
 
     if (!col.disableFilters) {
-      if (col.accessor === 'organization' || col.accessor === 'categories') {
+      if (col?.accessor === 'organization' || col?.accessor === 'categories') {
         return {
           ...col,
           Filter: (_ref) => (
             <CustomFilter _ref={_ref} Filter={CheckboxFilter}>
               <SearchField.Advanced
+                submitButtonLocation="external"
                 onSubmit={(value) => setKeyword({ value, col })}
               >
-                <SearchField.Input placeholder={`Find ${_ref.column.Header}`} />
-                <SearchField.SubmitButton />
+                <div className="pgn__searchfield_wrapper">
+                  <SearchField.Input placeholder={`Find ${_ref.column.Header}`} />
+                </div>
+                <SearchField.SubmitButton buttonText={<Search />} submitButtonLocation="external" />
               </SearchField.Advanced>
             </CustomFilter>
           ),
@@ -129,7 +132,7 @@ const ValidationTable = ({ data }) => {
       itemCount={data.length}
       data={adaptToTableFormat(data)}
       columns={columnsWithClickableNames}
-      additionalColumns={isCourseAuthor ? [
+      additionalColumns={!isValidator ? [
         {
           id: 'action',
           Header: 'Action',

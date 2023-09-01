@@ -6,7 +6,7 @@ const CustomMenu = forwardRef(
     <div
       ref={ref}
       style={{ ...style, zIndex: 2 }}
-      className="mt-1 bg-white border rounded px-3 pb-2 pt-3"
+      className="mt-1 bg-white border rounded px-3 pb-2 pt-3 box-shadow-centered-2"
     >
       {children}
     </div>

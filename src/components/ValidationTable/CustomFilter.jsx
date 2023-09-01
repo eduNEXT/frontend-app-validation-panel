@@ -7,7 +7,7 @@ import CustomToggle from './CustomToggleButton';
 const CustomFilter = ({
   _ref, Filter, children,
 }) => (
-  <Dropdown>
+  <Dropdown alignRight>
     <Dropdown.Toggle as={CustomToggle} variant="tertiary">
       {_ref.column.Header}
     </Dropdown.Toggle>

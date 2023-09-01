@@ -78,6 +78,25 @@ export const tableColumns = {
  */
 const filtersToShow = ['validation_body', 'status', 'categories', 'organization'];
 
+export const getLastAndFirstValidationProcessEvents = (course) => {
+  let lastValidationProcessEvent = null;
+  let firstValidationProcessEvent = null;
+
+  course.validation_process_events.forEach((event) => {
+    const eventCreatedAt = new Date(event.created_at);
+
+    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent.created_at)) {
+      lastValidationProcessEvent = event;
+    }
+
+    if (!firstValidationProcessEvent || eventCreatedAt < new Date(firstValidationProcessEvent.created_at)) {
+      firstValidationProcessEvent = event;
+    }
+  });
+
+  return [lastValidationProcessEvent, firstValidationProcessEvent];
+};
+
 /**
  * Adapt the last validation process event so that it can be accessed and rendered by
  * the data table of the Validation Panel.
@@ -90,20 +109,10 @@ export const adaptToTableFormat = (coursesToValidate) => {
   const adaptedCourses = [];
 
   coursesToValidate.forEach((course) => {
-    let lastValidationProcessEvent = null;
-    let firstValidationProcessEvent = null;
-
-    course.validation_process_events.forEach((event) => {
-      const eventCreatedAt = new Date(event.created_at);
-
-      if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent.created_at)) {
-        lastValidationProcessEvent = event;
-      }
-
-      if (!firstValidationProcessEvent || eventCreatedAt < new Date(firstValidationProcessEvent.created_at)) {
-        firstValidationProcessEvent = event;
-      }
-    });
+    const [
+      lastValidationProcessEvent,
+      firstValidationProcessEvent,
+    ] = getLastAndFirstValidationProcessEvents(course);
 
     // Add the last validation process event properties to the course data
     adaptedCourses.push({
