@@ -1,4 +1,3 @@
-import { CheckboxFilter } from '@edx/paragon';
 import { VALIDATION_STATUS } from '../data/constants';
 
 export const getLastReviewEvent = (course) => {
@@ -171,14 +170,14 @@ export const getColumns = (coursesToValidate) => {
 
   const processColumn = (key, includeFilter, filterChoices) => {
     const isCourseNameProperty = key === 'course_name';
+
     const shouldEnableTheFilter = includeFilter
       ? {
-        Filter: CheckboxFilter,
         filter: 'includesValue',
         filterChoices,
       }
       : {
-        Filter: false,
+        disableFilters: true,
       };
 
     // Define column properties based on whether it's the course_name column

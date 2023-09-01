@@ -1,7 +1,12 @@
 /* eslint-disable react/prop-types, react/no-unstable-nested-components */
 import PropTypes from 'prop-types';
-import { Button, DataTable, TextFilter } from '@edx/paragon';
+import { useEffect, useState } from 'react';
+import {
+  Button, CheckboxFilter, DataTable, TextFilter, SearchField,
+} from '@edx/paragon';
+
 import { adaptToTableFormat, getColumns } from '../../utils/helpers';
+import CustomFilter from './CustomFilter';
 
 // TODO: Modify this to execute the proper needed action
 const ActionsAvailable = {
@@ -33,12 +38,39 @@ ActionButton.propTypes = {
   action: PropTypes.func.isRequired,
 };
 
-const validationTableView = ({ data }) => {
+const ValidationTableView = ({ data }) => {
+  const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
+  const [auxColumnsWithClickableNames, setAuxColumnsWithClickableNames] = useState([]);
+
+  const [keyword, setKeyword] = useState({
+    value: '',
+    col: null,
+  });
+
   const handleClickInCourseTitle = (aux) => {
     console.log(aux);
   };
 
-  const columnsWithClickableNames = getColumns(data).map((col) => {
+  const handleFilterChoices = (value, col) => {
+    const newValues = auxColumnsWithClickableNames.map((column) => {
+      if (column.accessor === col.accessor) {
+        const newOptions = column.filterChoices.filter((option) => (
+          option.name.toLowerCase().includes(value.toLowerCase())
+        ));
+
+        return {
+          ...column,
+          filterChoices: newOptions,
+        };
+      }
+
+      return column;
+    });
+
+    setColumnsWithClickableNames(newValues);
+  };
+
+  const getColumnsWithClickableNames = (dataToAdapt) => getColumns(dataToAdapt).map((col) => {
     if (col.accessor === 'course_name') {
       return {
         ...col,
@@ -51,13 +83,48 @@ const validationTableView = ({ data }) => {
       };
     }
 
+    if (!col.disableFilters) {
+      if (col.accessor === 'organization' || col.accessor === 'categories') {
+        return {
+          ...col,
+          Filter: (_ref) => (
+            <CustomFilter _ref={_ref} Filter={CheckboxFilter}>
+              <SearchField.Advanced
+                onSubmit={(value) => setKeyword({ value, col })}
+              >
+                <SearchField.Input placeholder={`Find ${_ref.column.Header}`} />
+                <SearchField.SubmitButton />
+              </SearchField.Advanced>
+            </CustomFilter>
+          ),
+        };
+      }
+      return {
+        ...col,
+        Filter: (_ref) => (
+          <CustomFilter _ref={_ref} Filter={CheckboxFilter} />
+        ),
+      };
+    }
+
     return col;
   });
+
+  useEffect(() => {
+    handleFilterChoices(keyword.value, keyword.col);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyword.value]);
+
+  useEffect(() => {
+    const auxData = getColumnsWithClickableNames(data);
+    setColumnsWithClickableNames(auxData);
+    setAuxColumnsWithClickableNames(auxData);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <DataTable
       isFilterable
-      isSortable
       defaultColumnValues={{ Filter: TextFilter }}
       itemCount={data.length}
       data={adaptToTableFormat(data)}
@@ -82,7 +149,7 @@ const validationTableView = ({ data }) => {
   );
 };
 
-validationTableView.propTypes = {
+ValidationTableView.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -95,4 +162,4 @@ validationTableView.propTypes = {
   ).isRequired,
 };
 
-export default validationTableView;
+export default ValidationTableView;

@@ -1,9 +1,9 @@
 export default [
   {
-    course_name: 'Test Course #1',
-    course_id: 'course-v1:org1+test-course-1',
-    organization: 'Organization 1',
-    categories: ['Category 1', 'Category 2'],
+    course_name: 'Test Course #1 Test Course #1 Test Course #1 Test Course #1',
+    course_id: 'course-v1:org1+test-course-1 course-v1:org1+test-course-1 course-v1:org1+test-course-1',
+    organization: 'Organization 1 Organization 1 Organization 1 Organization 1',
+    categories: 'Category 1 Category 1 Category 1 Category 1',
     validation_body: 'Validator Body #1',
     validation_process_events: [
       {
@@ -23,10 +23,10 @@ export default [
     ],
   },
   {
-    course_name: 'Test Course #2',
-    course_id: 'course-v1:org2+test-course-2',
-    organization: 'Organization 2',
-    categories: ['Category 1', 'Category 3'],
+    course_name: 'Test Course #2 Test Course #2 Test Course #2 Test Course #2',
+    course_id: 'course-v1:org2+test-course-2 course-v1:org2+test-course-2 course-v1:org2+test-course-2',
+    organization: 'Organization 2 Organization 2 Organization 2 Organization 2',
+    categories: 'Category 1 Category 1 Category 1 Category 1',
     validation_body: 'Validator Body #2',
     validation_process_events: [
       {
@@ -46,10 +46,10 @@ export default [
     ],
   },
   {
-    course_name: 'Test Course #2',
-    course_id: 'course-v1:org2+test-course-2',
-    organization: 'Organization 2',
-    categories: ['Category 1', 'Category 3'],
+    course_name: 'Test Course #2 Test Course #2 Test Course #2 Test Course #2',
+    course_id: 'course-v1:org2+test-course-2 course-v1:org2+test-course-2 course-v1:org2+test-course-2',
+    organization: 'Organization 2 Organization 2 Organization 2 Organization 2',
+    categories: 'Category 2 Category 2 Category 2 Category 2',
     validation_body: 'Validator Body #2',
     validation_process_events: [
       {
@@ -69,10 +69,10 @@ export default [
     ],
   },
   {
-    course_name: 'Test Course #2',
-    course_id: 'course-v1:org2+test-course-2',
-    organization: 'Organization 2',
-    categories: ['Category 1', 'Category 3'],
+    course_name: 'Test Course #2 Test Course #2 Test Course #2 Test Course #2',
+    course_id: 'course-v1:org2+test-course-2 course-v1:org2+test-course-2 course-v1:org2+test-course-2',
+    organization: 'Organization 2 Organization 2 Organization 2 Organization 2',
+    categories: 'Category 2 Category 2 Category 2 Category 2',
     validation_body: 'Validator Body #2',
     validation_process_events: [
       {
