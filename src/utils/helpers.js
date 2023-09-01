@@ -16,12 +16,19 @@ export const getSubmissionInfo = (course) => {
   const submissionProcessEvent = course.validation_process_events.find(
     (validationProcess) => validationProcess.status.toLowerCase() === VALIDATION_STATUS.SUBMITTED.toLowerCase(),
   );
-  const courseAuthor = submissionProcessEvent.user;
-  const submissionDate = submissionProcessEvent.created_at;
-  const submissionComments = submissionProcessEvent.comment;
+  const exemptionProcessEvent = course.validation_process_events.find(
+    (validationProcess) => validationProcess.status.toLowerCase() === VALIDATION_STATUS.EXEMPT.toLowerCase(),
+  );
+
+  const courseAuthor = exemptionProcessEvent.user || submissionProcessEvent.user;
+  const submissionDate = exemptionProcessEvent.created_at || submissionProcessEvent.created_at;
+  const submissionComments = exemptionProcessEvent.comment || submissionProcessEvent.comment;
   const lastValidationProcessEvent = getLastReviewEvent(course);
 
+  const isExempted = !!exemptionProcessEvent;
+
   return {
+    isExempted,
     courseName: course.course_name,
     courseId: course.course_id,
     organization: course.organization,

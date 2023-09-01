@@ -70,7 +70,11 @@ const CourseSubmissionInfo = ({
   }
 
   return (
-    <FormLayout useSpecialDateUsage data={submissionInfoWithDesignPropsWithUtilsProps} />
+    <FormLayout
+      useSpecialDateUsage
+      data={submissionInfoWithDesignPropsWithUtilsProps}
+      isExempted={submissionInfo.isExempted}
+    />
   );
 };
 
@@ -84,6 +88,7 @@ CourseSubmissionInfo.propTypes = {
     currentValidator: PropTypes.string,
     courseAuthor: PropTypes.string,
     submissionDate: PropTypes.string,
+    isExempted: PropTypes.bool,
   }).isRequired,
   isCollapsible: PropTypes.bool,
   collapsibleProps: PropTypes.shape({

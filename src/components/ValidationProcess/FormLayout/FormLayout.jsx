@@ -14,8 +14,10 @@ const getFormValues = (data) => {
   return values;
 };
 
+const exemptedFields = ['validationBody', 'reviewer', 'submissionComments'];
+
 const FormLayout = ({
-  data, useSpecialDateUsage, onSubmit, onCancel,
+  data, useSpecialDateUsage, onSubmit, onCancel, isExempted,
 }) => {
   const { handleChange, values, handleSubmit } = useFormik({
     initialValues: getFormValues(data),
@@ -24,6 +26,9 @@ const FormLayout = ({
 
   const submissionDate = data.find((field) => useSpecialDateUsage && field.label.toLowerCase().includes('date'));
   const isValidator = false;
+
+  const exemptedConditional = (fieldName) => isExempted && !exemptedFields.includes(fieldName);
+  const isSubmissionDateField = (fieldName) => fieldName === submissionDate?.name;
 
   const fields = data
     .sort((a, b) => {
@@ -38,7 +43,7 @@ const FormLayout = ({
     .map(
       (field) => {
         const isDisabled = !isValidator || field.disabled;
-        return (field.label !== submissionDate?.label && (
+        return (!isSubmissionDateField(field.name) && exemptedConditional(field.name) && (
         <FormInput
           disabled={isDisabled}
           key={field.name}
@@ -83,12 +88,14 @@ FormLayout.propTypes = {
   useSpecialDateUsage: PropTypes.bool,
   onSubmit: PropTypes.func,
   onCancel: PropTypes.func,
+  isExempted: PropTypes.bool,
 };
 
 FormLayout.defaultProps = {
   useSpecialDateUsage: false,
   onSubmit: null,
   onCancel: null,
+  isExempted: false,
 };
 
 export default FormLayout;

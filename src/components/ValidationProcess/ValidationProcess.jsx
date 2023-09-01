@@ -1,4 +1,7 @@
-import { Form, Stack } from '@edx/paragon';
+import {
+  Form, Icon, PageBanner, Stack,
+} from '@edx/paragon';
+import { CheckCircle } from '@edx/paragon/icons';
 import { useState } from 'react';
 import { getLastReviewEventInfo, getSubmissionInfo } from '../../utils/helpers';
 import { CourseSubmissionInfo } from './CourseSubmissionInfo';
@@ -13,7 +16,7 @@ const courseSelected = {
   validation_body: 'Validator Body #1',
   validation_process_events: [
     {
-      status: 'Submitted',
+      status: 'Exempt',
       created_at: '2023-08-01',
       reason: null,
       comment: 'This is the comment of the course author. This is the comment of the course author. This is the comment of the course author',
@@ -39,18 +42,32 @@ const ValidationProcess = () => {
   };
 
   const isValidator = false;
+  const submissionInfo = getSubmissionInfo(courseSelected);
+  const isCourseExempted = !!submissionInfo.isExempted;
 
   return (
     <>
+      <div className="mb-4">
+        <PageBanner show={isCourseExempted} variant="light">
+          <Stack className="align-items-center" direction="horizontal" gap={3}>
+            <Icon src={CheckCircle} />
+            <span className="text-left">
+              This course is automatically approved without undergoing
+              a validation process, as it belongs to an exempt organization.
+            </span>
+          </Stack>
+        </PageBanner>
+      </div>
+
       <CourseSubmissionInfo
         isCollapsible={isValidator}
         collapsibleProps={{
           open: openCollapsible || !didValidatorConfirmReview,
           onToggle: () => setOpenCollapsible((prevState) => !prevState),
         }}
-        submissionInfo={getSubmissionInfo(courseSelected)}
+        submissionInfo={submissionInfo}
       />
-      {isValidator && (
+      {(isValidator && !isCourseExempted) && (
       <Stack gap={3} className="my-4">
         <span>Before validating the course, review the content!</span>
         <Form.Checkbox onChange={handleChangeReviewConfirmation} checked={didValidatorConfirmReview}>
@@ -58,10 +75,12 @@ const ValidationProcess = () => {
         </Form.Checkbox>
       </Stack>
       )}
+      {!isCourseExempted && (
       <ValidatorReview
         didValidatorConfirmReview={didValidatorConfirmReview}
         lastReviewEventInfo={getLastReviewEventInfo(courseSelected)}
       />
+      )}
     </>
   );
 };
