@@ -18,7 +18,9 @@ import store from './data/store';
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
-      <ValidationPanelPage />
+      <Routes>
+        <Route path="/validation-panel" element={<ValidationPanelPage />} />
+      </Routes>
     </AppProvider>,
     document.getElementById('root'),
   );
