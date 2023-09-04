@@ -18,13 +18,13 @@ const validatorReviewFieldUtilsProps = [
   },
 ];
 
-const ValidatorReview = ({ lastReviewEventInfo, didValidatorConfirmReview }) => {
+const ValidatorReview = ({ lastReviewEventInfo, isReviewConfirmed }) => {
   const lastValidationReviewInfoWithUtilsProps = addUtils(validatorReviewFieldUtilsProps, lastReviewEventInfo);
   const isValidator = false;
 
   return (
     <div>
-      {(!isValidator || didValidatorConfirmReview) && (
+      {(!isValidator || isReviewConfirmed) && (
         <FormLayout
           data={lastValidationReviewInfoWithUtilsProps}
           onSubmit={(formData) => console.log(formData)}
@@ -44,11 +44,11 @@ ValidatorReview.propTypes = {
     reason: PropTypes.string,
     additionalComment: PropTypes.string,
   }).isRequired,
-  didValidatorConfirmReview: PropTypes.bool,
+  isReviewConfirmed: PropTypes.bool,
 };
 
 ValidatorReview.defaultProps = {
-  didValidatorConfirmReview: false,
+  isReviewConfirmed: false,
 };
 
 export default ValidatorReview;

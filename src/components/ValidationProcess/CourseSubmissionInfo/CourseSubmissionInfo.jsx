@@ -58,7 +58,7 @@ const CourseSubmissionInfo = ({
             <div>
               {field.label !== courseName.label && (
               <p>
-                <span style={{ fontWeight: 'bold' }}>{field.label}: </span>
+                <span className="font-weight-bold">{field.label}: </span>
                 {typeof field.value === 'string' ? field.value : field.value.join(', ')}
               </p>
               )}

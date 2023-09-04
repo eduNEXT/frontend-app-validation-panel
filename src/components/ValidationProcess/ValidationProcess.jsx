@@ -33,12 +33,12 @@ const courseSelected = {
 };
 
 const ValidationProcess = () => {
-  const [didValidatorConfirmReview, setDidValidatorConfirmReview] = useState(false);
+  const [isReviewConfirmed, setIsReviewConfirmed] = useState(false);
   const [openCollapsible, setOpenCollapsible] = useState(null);
 
   const handleChangeReviewConfirmation = () => {
     setOpenCollapsible(false);
-    setDidValidatorConfirmReview((prevState) => !prevState);
+    setIsReviewConfirmed((prevState) => !prevState);
   };
 
   const isValidator = false;
@@ -62,7 +62,7 @@ const ValidationProcess = () => {
       <CourseSubmissionInfo
         isCollapsible={isValidator}
         collapsibleProps={{
-          open: openCollapsible || !didValidatorConfirmReview,
+          open: openCollapsible || !isReviewConfirmed,
           onToggle: () => setOpenCollapsible((prevState) => !prevState),
         }}
         submissionInfo={submissionInfo}
@@ -70,14 +70,14 @@ const ValidationProcess = () => {
       {(isValidator && !isCourseExempted) && (
       <Stack gap={3} className="my-4">
         <span>Before validating the course, review the content!</span>
-        <Form.Checkbox onChange={handleChangeReviewConfirmation} checked={didValidatorConfirmReview}>
+        <Form.Checkbox onChange={handleChangeReviewConfirmation} checked={isReviewConfirmed}>
           Click here to confirm that you have reviewed the content in STUDIO.
         </Form.Checkbox>
       </Stack>
       )}
       {!isCourseExempted && (
       <ValidatorReview
-        didValidatorConfirmReview={didValidatorConfirmReview}
+        isReviewConfirmed={isReviewConfirmed}
         lastReviewEventInfo={getLastReviewEventInfo(courseSelected)}
       />
       )}

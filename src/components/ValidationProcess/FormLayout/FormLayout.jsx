@@ -27,7 +27,7 @@ const FormLayout = ({
   const submissionDate = data.find((field) => useSpecialDateUsage && field.label.toLowerCase().includes('date'));
   const isValidator = false;
 
-  const exemptedConditional = (fieldName) => isExempted && !exemptedFields.includes(fieldName);
+  const exemptedConditional = (fieldName) => (isExempted ? !exemptedFields.includes(fieldName) : true);
   const isSubmissionDateField = (fieldName) => fieldName === submissionDate?.name;
 
   const fields = data

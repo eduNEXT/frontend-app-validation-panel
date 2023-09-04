@@ -20,9 +20,9 @@ export const getSubmissionInfo = (course) => {
     (validationProcess) => validationProcess.status.toLowerCase() === VALIDATION_STATUS.EXEMPT.toLowerCase(),
   );
 
-  const courseAuthor = exemptionProcessEvent.user || submissionProcessEvent.user;
-  const submissionDate = exemptionProcessEvent.created_at || submissionProcessEvent.created_at;
-  const submissionComments = exemptionProcessEvent.comment || submissionProcessEvent.comment;
+  const courseAuthor = exemptionProcessEvent?.user || submissionProcessEvent.user;
+  const submissionDate = exemptionProcessEvent?.created_at || submissionProcessEvent.created_at;
+  const submissionComments = exemptionProcessEvent?.comment || submissionProcessEvent.comment;
   const lastValidationProcessEvent = getLastReviewEvent(course);
 
   const isExempted = !!exemptionProcessEvent;
