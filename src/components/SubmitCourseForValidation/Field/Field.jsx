@@ -5,8 +5,8 @@ const Field = ({
   label, description, name, as, options, handleChange, value,
 }) => (
   <Stack>
-    <span style={{ fontSize: '1.25rem' }}>{label}</span>
-    <span style={{ fontSize: '1rem' }}>{description}</span>
+    <span>{label}</span>
+    <span className="small">{description}</span>
     <Form.Group>
       <Form.Control name={name} as={as} onChange={handleChange} value={value}>
         { options?.map((optionInfo) => (

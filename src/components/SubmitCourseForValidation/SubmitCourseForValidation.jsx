@@ -71,7 +71,7 @@ const SubmitCourseForValidation = ({ isOpen, close }) => {
   return (
     <ModalLayout isOpen={isOpen} onClose={handleClose}>
       <Stack gap={3}>
-        <p style={{ fontSize: '1.5rem' }}>Submit a course for validation</p>
+        <span className="lead">Submit a course for validation</span>
         <Stack gap={2}>
           {
             fieldsToRender.map((field) => (
