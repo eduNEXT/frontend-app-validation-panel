@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import {
-  courseCategorySlice, currentRecordSlice,
-} from './slice';
 
 import {
-  coursesReducer, courseCategoriesReducer, validationBodiesReducer, validationRecordReducer,
+  coursesReducer,
+  courseCategoriesReducer,
+  validationBodiesReducer,
+  validationRecordReducer,
+  currentValidationRecordReducer,
 } from './slices';
 
 export const initializeStore = (preloadedState = undefined) => (
@@ -14,8 +15,7 @@ export const initializeStore = (preloadedState = undefined) => (
       courseCategories: courseCategoriesReducer,
       validationRecord: validationRecordReducer,
       validationBody: validationBodiesReducer,
-      courseCategory: courseCategorySlice.reducer,
-      currentValidationRecord: currentRecordSlice.reducer,
+      currentValidationRecord: currentValidationRecordReducer,
     },
     preloadedState,
   })

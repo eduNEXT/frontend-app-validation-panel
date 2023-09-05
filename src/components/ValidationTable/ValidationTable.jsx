@@ -1,13 +1,20 @@
 /* eslint-disable react/prop-types, react/no-unstable-nested-components */
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import {
-  Button, CheckboxFilter, DataTable, TextFilter, SearchField,
-} from '@edx/paragon';
 import { Search } from '@edx/paragon/icons';
+import {
+  Button, CheckboxFilter, DataTable, TextFilter, SearchField, useToggle,
+} from '@edx/paragon';
 
+import { getTabsInfo } from './helpers';
 import { adaptToTableFormat, getColumns } from '../../utils/helpers';
+
 import CustomFilter from './CustomFilter';
+import { ModalLayout } from '../ModalLayout';
+import { ValidationProcess } from '../ValidationProcess';
+import { Timeline as PastProcesses } from '../Timeline';
+import { setCurrentRecord } from '../../data/slices';
 
 // TODO: Modify this to execute the proper needed action
 const ActionsAvailable = {
@@ -38,6 +45,8 @@ ActionButton.propTypes = {
 
 const ValidationTable = ({ data, isLoading }) => {
   const isValidator = false;
+  const dispatch = useDispatch();
+  const [isOpen, open, close] = useToggle(false);
 
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
   const [auxColumnsWithClickableNames, setAuxColumnsWithClickableNames] = useState([]);
@@ -47,8 +56,10 @@ const ValidationTable = ({ data, isLoading }) => {
     col: null,
   });
 
-  const handleClickInCourseTitle = (aux) => {
-    console.log(aux);
+  const handleClickInCourseTitle = (courseId) => {
+    const courseClicked = data.find((course) => course.course_id === courseId);
+    dispatch(setCurrentRecord(courseClicked));
+    open();
   };
 
   const handleFilterChoices = (value, col) => {
@@ -126,30 +137,33 @@ const ValidationTable = ({ data, isLoading }) => {
   }, [data?.length]);
 
   return (
-    <DataTable
-      isLoading={isLoading}
-      isFilterable
-      defaultColumnValues={{ Filter: TextFilter }}
-      itemCount={data?.length}
-      data={adaptToTableFormat(data)}
-      columns={columnsWithClickableNames}
-      additionalColumns={!isValidator ? [
-        {
-          id: 'action',
-          Header: 'Action',
-          Cell: ({ row }) => {
-            const label = ActionsAvailable[row.values.status?.toLowerCase()]?.label || '';
-            const action = ActionsAvailable[row.values.status?.toLowerCase()]?.action || '';
-            return label ? <ActionButton label={label} action={() => action(row)} /> : null;
+    <>
+      <ModalLayout isOpen={isOpen} onClose={close} tabs={getTabsInfo(<ValidationProcess />, <PastProcesses />)} />
+      <DataTable
+        isLoading={isLoading}
+        isFilterable
+        defaultColumnValues={{ Filter: TextFilter }}
+        itemCount={data?.length}
+        data={adaptToTableFormat(data)}
+        columns={columnsWithClickableNames}
+        additionalColumns={!isValidator ? [
+          {
+            id: 'action',
+            Header: 'Action',
+            Cell: ({ row }) => {
+              const label = ActionsAvailable[row.values.status?.toLowerCase()]?.label || '';
+              const action = ActionsAvailable[row.values.status?.toLowerCase()]?.action || '';
+              return label ? <ActionButton label={label} action={() => action(row)} /> : null;
+            },
           },
-        },
-      ] : false}
-    >
-      <DataTable.TableControlBar />
-      <DataTable.Table />
-      <DataTable.EmptyTable content="No results found" />
-      <DataTable.TableFooter />
-    </DataTable>
+        ] : false}
+      >
+        <DataTable.TableControlBar />
+        <DataTable.Table />
+        <DataTable.EmptyTable content="No results found" />
+        <DataTable.TableFooter />
+      </DataTable>
+    </>
   );
 };
 
