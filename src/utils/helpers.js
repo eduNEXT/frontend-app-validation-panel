@@ -82,14 +82,14 @@ export const getLastAndFirstValidationProcessEvents = (course) => {
   let lastValidationProcessEvent = null;
   let firstValidationProcessEvent = null;
 
-  course.validation_process_events.forEach((event) => {
+  course?.validation_process_events?.forEach((event) => {
     const eventCreatedAt = new Date(event.created_at);
 
-    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent.created_at)) {
+    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent?.created_at)) {
       lastValidationProcessEvent = event;
     }
 
-    if (!firstValidationProcessEvent || eventCreatedAt < new Date(firstValidationProcessEvent.created_at)) {
+    if (!firstValidationProcessEvent || eventCreatedAt < new Date(firstValidationProcessEvent?.created_at)) {
       firstValidationProcessEvent = event;
     }
   });
@@ -108,7 +108,7 @@ export const getLastAndFirstValidationProcessEvents = (course) => {
 export const adaptToTableFormat = (coursesToValidate) => {
   const adaptedCourses = [];
 
-  coursesToValidate.forEach((course) => {
+  coursesToValidate?.forEach((course) => {
     const [
       lastValidationProcessEvent,
       firstValidationProcessEvent,
@@ -118,7 +118,7 @@ export const adaptToTableFormat = (coursesToValidate) => {
     adaptedCourses.push({
       ...course,
       ...lastValidationProcessEvent,
-      created_at: firstValidationProcessEvent.created_at,
+      created_at: firstValidationProcessEvent?.created_at,
     });
   });
 
@@ -200,7 +200,7 @@ export const getColumns = (coursesToValidate) => {
       };
   };
 
-  coursesToValidate.forEach((course) => {
+  coursesToValidate?.forEach((course) => {
     Object.keys(course).forEach((key) => {
       const value = course[key];
 

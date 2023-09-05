@@ -1,13 +1,23 @@
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import { Tab, Tabs } from '@edx/paragon';
 
-import { VALIDATION_STATUS } from '../../data/constants';
+import { REQUEST_STATUS, VALIDATION_STATUS } from '../../data/constants';
 import { getLastAndFirstValidationProcessEvents } from '../../utils/helpers';
 
-import infoMockedFilled from '../../data/mocked_data';
 import { ValidationTable } from '../ValidationTable';
+import { getAvailableValidationProcesses } from '../../data/slices';
 
 const ValidationTableLayout = ({ isValidator }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAvailableValidationProcesses());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const availableValidationProcesses = useSelector((state) => (
+    state.validationRecord.availableValidationProcesses));
+
   const pendingStatuses = [VALIDATION_STATUS.IN_REVIEW, VALIDATION_STATUS.SUBMITTED];
 
   const ValidationTableTabs = [
@@ -16,9 +26,10 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Pending Courses',
       component: (
         <ValidationTable
-          data={infoMockedFilled.filter((course) => {
+          isLoading={availableValidationProcesses.status === REQUEST_STATUS.LOADING}
+          data={availableValidationProcesses.data.results?.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
-            return pendingStatuses.includes(lastValidationProcessEvent.status);
+            return pendingStatuses.includes(lastValidationProcessEvent?.status);
           })}
         />
       ),
@@ -28,9 +39,10 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Archived Courses',
       component: (
         <ValidationTable
-          data={infoMockedFilled.filter((course) => {
+          isLoading={availableValidationProcesses.status === REQUEST_STATUS.LOADING}
+          data={availableValidationProcesses.data.results?.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
-            return !pendingStatuses.includes(lastValidationProcessEvent.status);
+            return !pendingStatuses.includes(lastValidationProcessEvent?.status);
           })}
         />
       ),
@@ -48,7 +60,10 @@ const ValidationTableLayout = ({ isValidator }) => {
           ))}
         </Tabs>
       ) : (
-        <ValidationTable data={infoMockedFilled} />
+        <ValidationTable
+          data={availableValidationProcesses.data.results}
+          isLoading={availableValidationProcesses.status === REQUEST_STATUS.LOADING}
+        />
       )}
     </div>
   );

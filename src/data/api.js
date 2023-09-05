@@ -3,6 +3,7 @@ import {
 } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { VALIDATION_API_PATH } from './constants';
+import mockedValidationProcesses from './mocked_data';
 
 ensureConfig(['LMS_BASE_URL'], 'Validation Panel API');
 
@@ -35,12 +36,21 @@ export async function getCoursesByUser() {
  * @returns {Promise<[{}]>}
  */
 
-export async function getValidationProcesses(params) {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
-      params,
-    });
-  return camelCaseObject(data);
+// TODO: Allow receiving params when is connected to the API
+// export async function getValidationProcesses(params) {
+export async function getValidationProcesses() {
+  try {
+    // TODO: Allow accessing the API fot getting this information
+    const data = { results: mockedValidationProcesses };
+    // const { data } = await getAuthenticatedHttpClient()
+    //   .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
+    //     params,
+    //   });
+    return data;
+  } catch (error) {
+    console.error('Custom Attributes', error.customAttributes);
+    throw error;
+  }
 }
 
 /**

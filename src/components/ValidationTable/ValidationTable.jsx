@@ -36,7 +36,7 @@ ActionButton.propTypes = {
   action: PropTypes.func.isRequired,
 };
 
-const ValidationTable = ({ data }) => {
+const ValidationTable = ({ data, isLoading }) => {
   const isValidator = false;
 
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
@@ -123,13 +123,14 @@ const ValidationTable = ({ data }) => {
     setColumnsWithClickableNames(auxData);
     setAuxColumnsWithClickableNames(auxData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data?.length]);
 
   return (
     <DataTable
+      isLoading={isLoading}
       isFilterable
       defaultColumnValues={{ Filter: TextFilter }}
-      itemCount={data.length}
+      itemCount={data?.length}
       data={adaptToTableFormat(data)}
       columns={columnsWithClickableNames}
       additionalColumns={!isValidator ? [
@@ -153,6 +154,7 @@ const ValidationTable = ({ data }) => {
 };
 
 ValidationTable.propTypes = {
+  isLoading: PropTypes.bool,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -163,6 +165,10 @@ ValidationTable.propTypes = {
       status: PropTypes.string,
     }),
   ).isRequired,
+};
+
+ValidationTable.defaultProps = {
+  isLoading: true,
 };
 
 export default ValidationTable;
