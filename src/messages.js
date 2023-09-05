@@ -13,17 +13,9 @@ const messages = defineMessages({
     id: 'validation.panel.goBack.button',
     defaultMessage: 'Go back',
   },
-  viewLiveButton: {
-    id: 'validation.panel.viewLive.button',
-    defaultMessage: 'View live',
-  },
-  enabled: {
-    id: 'badge.enabled',
-    defaultMessage: 'Enabled',
-  },
-  contentPermissions: {
-    id: 'validation.panel.content.permissions.heading',
-    defaultMessage: 'Content permissions',
+  newRecordCreatorButton: {
+    id: 'validation.panel.content.new.record.creator.button',
+    defaultMessage: 'Submit a course for validation',
   },
 });
 
