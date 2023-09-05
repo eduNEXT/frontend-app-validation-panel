@@ -37,7 +37,7 @@ ActionButton.propTypes = {
 };
 
 const ValidationTable = ({ data }) => {
-  const isValidator = true;
+  const isValidator = false;
 
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
   const [auxColumnsWithClickableNames, setAuxColumnsWithClickableNames] = useState([]);
