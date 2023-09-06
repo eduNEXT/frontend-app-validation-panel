@@ -46,7 +46,7 @@ export async function getValidationProcesses() {
     //   .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
     //     params,
     //   });
-    return data;
+    return camelCaseObject(data);
   } catch (error) {
     console.error('Custom Attributes', error.customAttributes);
     throw error;

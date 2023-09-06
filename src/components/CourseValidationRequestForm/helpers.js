@@ -1,5 +1,3 @@
-import snakeCase from 'lodash/snakeCase';
-
 export const getDefaultValue = (options) => (options ? options[0].key : '');
 
 export const getInitialValues = (fieldData) => {
@@ -11,9 +9,7 @@ export const getInitialValues = (fieldData) => {
   return initialValues;
 };
 
-export const adaptOptions = (optionsToAdapt) => (
-  optionsToAdapt?.map((option) => ({ key: snakeCase(option.name), label: option.name }))
-);
+export const adaptOptions = (optionsToAdapt) => optionsToAdapt?.map((option) => ({ key: option.name.split(' ').join(''), label: option.name }));
 
 export const getCourseValidationRequestForm = (
   availableUserCourses,
@@ -21,7 +17,7 @@ export const getCourseValidationRequestForm = (
   availableValidationBodies,
 ) => ([
   {
-    name: 'course_name',
+    name: 'courseName',
     // select, textarea or input
     as: 'select',
     label: 'Course Name',
@@ -31,7 +27,7 @@ export const getCourseValidationRequestForm = (
     options: adaptOptions(availableUserCourses),
   },
   {
-    name: 'validation_body',
+    name: 'validationBody',
     as: 'select',
     label: 'Validation Body',
     description: 'Please select the applicable validation body for your course',

@@ -57,7 +57,7 @@ const ValidationTable = ({ data, isLoading }) => {
   });
 
   const handleClickInCourseTitle = (courseId) => {
-    const courseClicked = data.find((course) => course.course_id === courseId);
+    const courseClicked = data.find((course) => course.courseId === courseId);
     dispatch(setCurrentRecord(courseClicked));
     open();
   };
@@ -82,13 +82,13 @@ const ValidationTable = ({ data, isLoading }) => {
   };
 
   const getColumnsWithClickableNames = (dataToAdapt) => getColumns(dataToAdapt).map((col) => {
-    if (col?.accessor === 'course_name') {
+    if (col?.accessor === 'courseName') {
       return {
         ...col,
         Cell: ({ row }) => (
           <ActionButton
-            label={row.values.course_name}
-            action={() => handleClickInCourseTitle(row.values.course_id)}
+            label={row.values.courseName}
+            action={() => handleClickInCourseTitle(row.values.courseId)}
           />
         ),
       };

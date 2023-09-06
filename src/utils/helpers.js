@@ -2,9 +2,9 @@ import { VALIDATION_STATUS } from '../data/constants';
 
 export const getLastReviewEvent = (course) => {
   let lastValidationProcessEvent = null;
-  course.validation_process_events.forEach((event) => {
-    const eventCreatedAt = new Date(event.created_at);
-    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent.created_at)) {
+  course.validationProcessEvents.forEach((event) => {
+    const eventCreatedAt = new Date(event.createdAt);
+    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent.createdAt)) {
       lastValidationProcessEvent = event;
     }
   });
@@ -13,15 +13,15 @@ export const getLastReviewEvent = (course) => {
 };
 
 export const getSubmissionInfo = (course) => {
-  const submissionProcessEvent = course.validation_process_events.find(
+  const submissionProcessEvent = course.validationProcessEvents.find(
     (validationProcess) => validationProcess.status.toLowerCase() === VALIDATION_STATUS.SUBMITTED.toLowerCase(),
   );
-  const exemptionProcessEvent = course.validation_process_events.find(
+  const exemptionProcessEvent = course.validationProcessEvents.find(
     (validationProcess) => validationProcess.status.toLowerCase() === VALIDATION_STATUS.EXEMPT.toLowerCase(),
   );
 
   const courseAuthor = exemptionProcessEvent?.user || submissionProcessEvent.user;
-  const submissionDate = exemptionProcessEvent?.created_at || submissionProcessEvent.created_at;
+  const submissionDate = exemptionProcessEvent?.createdAt || submissionProcessEvent.createdAt;
   const submissionComments = exemptionProcessEvent?.comment || submissionProcessEvent.comment;
   const lastValidationProcessEvent = getLastReviewEvent(course);
 
@@ -29,14 +29,14 @@ export const getSubmissionInfo = (course) => {
 
   return {
     isExempted,
-    courseName: course.course_name,
-    courseId: course.course_id,
+    courseName: course.courseName,
+    courseId: course.courseId,
     organization: course.organization,
     categories: course.categories,
     courseAuthor,
     submissionDate,
     submissionComments,
-    validationBody: course.validation_body,
+    validationBody: course.validationBody,
     reviewer: lastValidationProcessEvent.user,
   };
 };
@@ -45,7 +45,7 @@ export const getLastReviewEventInfo = (course) => {
   const lastValidationProcessEvent = getLastReviewEvent(course);
 
   return {
-    reviewStartDate: lastValidationProcessEvent.created_at,
+    reviewStartDate: lastValidationProcessEvent.createdAt,
     status: lastValidationProcessEvent.status,
     reason: lastValidationProcessEvent.reason,
     additionalComment: lastValidationProcessEvent.comment,
@@ -61,13 +61,13 @@ export const addUtils = (utils, data) => utils.map((field) => ({
  * Mapping of column keys to their human-readable names for the table.
  */
 export const tableColumns = {
-  course_name: 'Course Name',
-  course_id: 'Course ID',
+  courseName: 'Course Name',
+  courseId: 'Course ID',
   organization: 'Organization',
   categories: 'Categories',
-  validation_body: 'Validation body',
+  validationBody: 'Validation body',
   status: 'Status',
-  created_at: 'Submission date',
+  createdAt: 'Submission date',
   reason: 'Reason',
   comment: 'Comment',
   user: 'Course author',
@@ -76,20 +76,20 @@ export const tableColumns = {
 /**
  * List of columns that will have filter options available.
  */
-const filtersToShow = ['validation_body', 'status', 'categories', 'organization'];
+const filtersToShow = ['validationBody', 'status', 'categories', 'organization'];
 
 export const getLastAndFirstValidationProcessEvents = (course) => {
   let lastValidationProcessEvent = null;
   let firstValidationProcessEvent = null;
 
-  course?.validation_process_events?.forEach((event) => {
-    const eventCreatedAt = new Date(event.created_at);
+  course?.validationProcessEvents?.forEach((event) => {
+    const eventCreatedAt = new Date(event.createdAt);
 
-    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent?.created_at)) {
+    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent?.createdAt)) {
       lastValidationProcessEvent = event;
     }
 
-    if (!firstValidationProcessEvent || eventCreatedAt < new Date(firstValidationProcessEvent?.created_at)) {
+    if (!firstValidationProcessEvent || eventCreatedAt < new Date(firstValidationProcessEvent?.createdAt)) {
       firstValidationProcessEvent = event;
     }
   });
@@ -118,7 +118,7 @@ export const adaptToTableFormat = (coursesToValidate) => {
     adaptedCourses.push({
       ...course,
       ...lastValidationProcessEvent,
-      created_at: firstValidationProcessEvent?.created_at,
+      createdAt: firstValidationProcessEvent?.createdAt,
     });
   });
 
@@ -178,7 +178,7 @@ export const getColumns = (coursesToValidate) => {
   const availableColumns = new Set();
 
   const processColumn = (key, includeFilter, filterChoices) => {
-    const isCourseNameProperty = key === 'course_name';
+    const isCourseNameProperty = key === 'courseName';
 
     const shouldEnableTheFilter = includeFilter
       ? {
@@ -189,7 +189,7 @@ export const getColumns = (coursesToValidate) => {
         disableFilters: true,
       };
 
-    // Define column properties based on whether it's the course_name column
+    // Define column properties based on whether it's the courseName column
     return isCourseNameProperty
       // Allow looking for courses in a searchbar through a string
       ? { Header: tableColumns[key], accessor: key }

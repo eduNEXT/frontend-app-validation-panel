@@ -1,32 +1,21 @@
 import { render } from '@testing-library/react';
+import { Provider } from 'react-redux';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
+
 import Timeline from './Timeline';
+import { initializeStore } from '../../data/store';
+import mockedValidationProcesses from '../../data/mocked_data';
 
-const mockEvents = [
-  {
-    status: 'Submitted',
-    createdAt: '2023-08-10',
-    reason: null,
-    comment: 'This is another comment of the course author',
-    user: 'Course Author 2',
-    validationBody: 'Validator Body #1',
+const testStore = initializeStore({ currentValidationRecord: mockedValidationProcesses[0] });
+const mockEvents = testStore.getState().currentValidationRecord.validationProcessEvents;
+const mockData = { validationBody: testStore.getState().currentValidationRecord.validationBody };
 
-  },
-  {
-    status: 'Approved',
-    createdAt: '2023-08-20',
-    reason: null,
-    comment: 'This is the comment of Validator 2',
-    user: 'Validator 2',
-  },
-];
-
-const mockData = { passProcessEvents: mockEvents, validationBody: 'Validator Body #1' };
-
-const renderComponent = (props) => render(
-  <IntlProvider locale="en">
-    <Timeline {...props} />
-  </IntlProvider>,
+const renderComponent = () => render(
+  <Provider store={testStore}>
+    <IntlProvider locale="en">
+      <Timeline />
+    </IntlProvider>
+  </Provider>,
 );
 
 describe('Timeline', () => {
@@ -34,7 +23,7 @@ describe('Timeline', () => {
   const formatedMockDate = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' }).format(mockCreatedAt);
 
   it('should create a list items to display the past process events information', () => {
-    const { container, getByText, getAllByText } = renderComponent(mockData);
+    const { container, getByText, getAllByText } = renderComponent();
 
     expect(container.querySelectorAll('li').length).toBe(2);
     expect(getByText(formatedMockDate, { exact: false })).toBeInTheDocument();
@@ -44,12 +33,12 @@ describe('Timeline', () => {
   });
 
   it('should not render the top line when is the first element', () => {
-    const { container } = renderComponent(mockData);
+    const { container } = renderComponent();
     expect(container.querySelector('ul').firstChild.querySelector('.record-line-top')).not.toBeInTheDocument();
   });
 
   it('should not render bottom divider when it is the last element', () => {
-    const { container } = renderComponent(mockData);
+    const { container } = renderComponent();
     expect(container.querySelector('ul').lastChild.querySelector('article').className).toBe('mb-3 pb-4');
   });
 });
