@@ -9,7 +9,7 @@ export const getInitialValues = (fieldData) => {
   return initialValues;
 };
 
-export const adaptOptions = (optionsToAdapt) => optionsToAdapt?.map((option) => ({ key: option.name.split(' ').join(''), label: option.name }));
+export const adaptOptions = (optionsToAdapt) => optionsToAdapt?.map((option) => ({ key: option.name.replaceAll(' ', ''), label: option.name }));
 
 export const getCourseValidationRequestForm = (
   availableUserCourses,

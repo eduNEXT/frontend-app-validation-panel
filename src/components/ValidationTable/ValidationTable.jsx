@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types, react/no-unstable-nested-components */
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { Search } from '@edx/paragon/icons';
 import {
@@ -136,9 +136,21 @@ const ValidationTable = ({ data, isLoading }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.length]);
 
+  const currentValidationRecord = useSelector((state) => state.currentValidationRecord);
+
   return (
     <>
-      <ModalLayout isOpen={isOpen} onClose={close} tabs={getTabsInfo(<ValidationProcess />, <PastProcesses />)} />
+      <ModalLayout
+        isOpen={isOpen}
+        onClose={close}
+        tabs={getTabsInfo(
+          <ValidationProcess />,
+          <PastProcesses
+            pastProcessEvents={currentValidationRecord.validationProcessEvents}
+            validationBody={currentValidationRecord.validationBody}
+          />,
+        )}
+      />
       <DataTable
         isLoading={isLoading}
         isFilterable
