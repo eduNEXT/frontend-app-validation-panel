@@ -9,8 +9,9 @@ const Field = ({
     <span className="small">{description}</span>
     <Form.Group>
       <Form.Control name={name} as={as} onChange={handleChange} value={value}>
+        <option hidden selected> Select one... </option>
         { options?.map((optionInfo) => (
-          <option key={optionInfo.key} value={optionInfo.key}>{optionInfo.label}</option>
+          <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
         ))}
       </Form.Control>
     </Form.Group>

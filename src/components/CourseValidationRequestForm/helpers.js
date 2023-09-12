@@ -1,15 +1,4 @@
-export const getDefaultValue = (options) => (options ? options[0]?.key : '');
-
-export const getInitialValues = (fieldData) => {
-  const initialValues = {};
-  fieldData?.forEach((field) => {
-    initialValues[field.name] = getDefaultValue(field?.options);
-  });
-
-  return initialValues;
-};
-
-export const adaptOptions = (optionsToAdapt) => optionsToAdapt?.map((option) => ({ key: option.name.replaceAll(' ', ''), label: option.name }));
+export const adaptOptions = (optionsToAdapt) => optionsToAdapt?.map((option) => ({ key: option.name.replaceAll(' ', ''), id: option.id, label: option.name }));
 
 export const getCourseValidationRequestForm = (
   availableUserCourses,
@@ -17,7 +6,7 @@ export const getCourseValidationRequestForm = (
   availableValidationBodies,
 ) => ([
   {
-    name: 'courseName',
+    name: 'courseId',
     // select, textarea or input
     as: 'select',
     label: 'Course Name',

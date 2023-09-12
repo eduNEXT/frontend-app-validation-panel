@@ -8,7 +8,7 @@ import { getAvailableValidationBodies, getCourseCategoriesByCourseId, getCourses
 
 import { Field } from './Field';
 import { ModalLayout } from '../ModalLayout';
-import { getInitialValues, getCourseValidationRequestForm } from './helpers';
+import { getCourseValidationRequestForm } from './helpers';
 
 const CourseValidationRequestForm = ({ isOpen, close }) => {
   const dispatch = useDispatch();
@@ -30,7 +30,12 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     availableCourseCategories,
     availableValidationBodies,
   );
-  const initialValues = getInitialValues(validationRequestFormFields);
+  const initialValues = {
+    courseId: '',
+    comments: '',
+    validationBody: null,
+    category: null,
+  };
 
   const {
     handleChange, values, handleSubmit, setValues,
