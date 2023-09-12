@@ -45,7 +45,7 @@ export const coursesSlice = createSlice({
     });
     builder.addCase(getCoursesByUsername.rejected, (state, action) => {
       state.availableUserCourses = {
-        loadStatus: REQUEST_STATUS.LOADED,
+        loadStatus: REQUEST_STATUS.FAILED,
         data: [],
         error: action.error,
       };

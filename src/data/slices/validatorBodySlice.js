@@ -37,7 +37,7 @@ export const validationBodiesSlice = createSlice({
     });
     builder.addCase(getAvailableValidationBodies.rejected, (state, action) => {
       state.availableValidationBodies = {
-        loadStatus: REQUEST_STATUS.LOADED,
+        loadStatus: REQUEST_STATUS.FAILED,
         data: [],
         error: action.error,
       };

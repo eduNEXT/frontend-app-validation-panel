@@ -37,7 +37,7 @@ export const validationRecordSlice = createSlice({
     });
     builder.addCase(getAvailableValidationProcesses.rejected, (state, action) => {
       state.availableValidationProcesses = {
-        loadStatus: REQUEST_STATUS.LOADED,
+        loadStatus: REQUEST_STATUS.FAILED,
         data: [],
         error: action.error,
       };

@@ -136,7 +136,6 @@ const ValidationTable = ({ data, isLoading }) => {
   }, [data?.length]);
 
   const currentValidationRecord = useSelector((state) => state.currentValidationRecord);
-  const courseSelected = useSelector((state) => state.currentValidationRecord);
 
   return (
     <>
@@ -147,7 +146,7 @@ const ValidationTable = ({ data, isLoading }) => {
           {
             name: 'validation_process',
             label: 'Validation process',
-            component: <ValidationProcess courseSelected={courseSelected} />,
+            component: <ValidationProcess courseSelected={currentValidationRecord} />,
           },
           {
             name: 'past_processes',
