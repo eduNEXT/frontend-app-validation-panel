@@ -17,17 +17,12 @@ export const getValidationApiUrl = (service) => `${getApiBaseUrl()}/plugin-cvw/a
  */
 
 export async function getCoursesByUser() {
-  try {
-    const { data } = await getAuthenticatedHttpClient().get(getCoursesApiUrl(), {
-      params: {
-        username: getAuthenticatedUser().username,
-      },
-    });
-    return camelCaseObject(data);
-  } catch (error) {
-    console.error('Custom Attributes', error.customAttributes);
-    throw error;
-  }
+  const { data } = await getAuthenticatedHttpClient().get(getCoursesApiUrl(), {
+    params: {
+      username: getAuthenticatedUser().username,
+    },
+  });
+  return camelCaseObject(data);
 }
 
 /**
@@ -39,18 +34,13 @@ export async function getCoursesByUser() {
 // TODO: Allow receiving params when is connected to the API
 // export async function getValidationProcesses(params) {
 export async function getValidationProcesses() {
-  try {
-    // TODO: Allow accessing the API fot getting this information
-    const data = { results: mockedValidationProcesses };
-    // const { data } = await getAuthenticatedHttpClient()
-    //   .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
-    //     params,
-    //   });
-    return camelCaseObject(data);
-  } catch (error) {
-    console.error('Custom Attributes', error.customAttributes);
-    throw error;
-  }
+  // TODO: Allow accessing the API fot getting this information
+  const data = { results: mockedValidationProcesses };
+  // const { data } = await getAuthenticatedHttpClient()
+  //   .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
+  //     params,
+  //   });
+  return camelCaseObject(data);
 }
 
 /**
@@ -62,25 +52,19 @@ export async function getValidationProcesses() {
 // TODO: Allow receiving org id when is connected to the API
 // export async function getValidationBody(org) {
 export async function getValidationBody() {
-  try {
-    // TODO: Allow accessing the API fot getting this information
-    const data = {
-      results: [
-        { name: 'Validator body 1' },
-        { name: 'Validator body 2' },
-      ],
-    };
+  const data = {
+    results: [
+      { name: 'Validator body 1' },
+      { name: 'Validator body 2' },
+    ],
+  };
     // const { data } = await getAuthenticatedHttpClient()
     //  .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_BODY), {
     //    params: {
     //      org,
     //    },
     //  });
-    return camelCaseObject(data);
-  } catch (error) {
-    console.error('Custom Attributes', error.customAttributes);
-    throw error;
-  }
+  return camelCaseObject(data);
 }
 
 /**
@@ -89,23 +73,18 @@ export async function getValidationBody() {
  */
 
 export async function getAvailableCategories() {
-  try {
-    // TODO: Allow accessing the API fot getting this information
-    const data = {
-      results: [
-        { name: 'Category 1' },
-        { name: 'Category 2' },
-        { name: 'Category 3' },
-        { name: 'Category 4' },
-      ],
-    };
+  // TODO: Allow accessing the API fot getting this information
+  const data = {
+    results: [
+      { name: 'Category 1' },
+      { name: 'Category 2' },
+      { name: 'Category 3' },
+      { name: 'Category 4' },
+    ],
+  };
     // const { data } = await getAuthenticatedHttpClient()
     //   .get(getValidationApiUrl(VALIDATION_API_PATH.COURSE_CATEGORY));
-    return camelCaseObject(data);
-  } catch (error) {
-    console.error('Custom Attributes', error.customAttributes);
-    throw error;
-  }
+  return camelCaseObject(data);
 }
 
 /**
@@ -115,18 +94,13 @@ export async function getAvailableCategories() {
  */
 
 export async function getCourseCategories(courseId) {
-  try {
-    const { data } = await getAuthenticatedHttpClient()
-      .get(getValidationApiUrl(VALIDATION_API_PATH.COURSE_CATEGORY), {
-        params: {
-          courseId,
-        },
-      });
-    return camelCaseObject(data);
-  } catch (error) {
-    console.error('Custom Attributes', error.customAttributes);
-    throw error;
-  }
+  const { data } = await getAuthenticatedHttpClient()
+    .get(getValidationApiUrl(VALIDATION_API_PATH.COURSE_CATEGORY), {
+      params: {
+        courseId,
+      },
+    });
+  return camelCaseObject(data);
 }
 
 /**
