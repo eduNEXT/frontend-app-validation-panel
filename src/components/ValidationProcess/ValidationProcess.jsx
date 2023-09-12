@@ -1,5 +1,5 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { CheckCircle } from '@edx/paragon/icons';
 import {
   Form, Icon, PageBanner, Stack,
@@ -9,9 +9,7 @@ import { ValidatorReview } from './ValidatorReview';
 import { CourseSubmissionInfo } from './CourseSubmissionInfo';
 import { getLastReviewEventInfo, getSubmissionInfo } from '../../utils/helpers';
 
-const ValidationProcess = () => {
-  const courseSelected = useSelector((state) => state.currentValidationRecord);
-
+const ValidationProcess = ({ courseSelected }) => {
   const [isReviewConfirmed, setIsReviewConfirmed] = useState(false);
   const [openCollapsible, setOpenCollapsible] = useState(null);
 
@@ -62,6 +60,23 @@ const ValidationProcess = () => {
       )}
     </>
   );
+};
+
+ValidationProcess.propTypes = {
+  courseSelected: PropTypes.shape({
+    courseName: PropTypes.string.isRequired,
+    courseId: PropTypes.string.isRequired,
+    organization: PropTypes.string.isRequired,
+    categories: PropTypes.string.isRequired,
+    validationBody: PropTypes.string.isRequired,
+    validationProcessEvents: PropTypes.arrayOf({
+      status: PropTypes.string.isRequired,
+      createdAt: PropTypes.string.isRequired,
+      reason: PropTypes.number,
+      comment: PropTypes.string,
+      user: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
 };
 
 export default ValidationProcess;

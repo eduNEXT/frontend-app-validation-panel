@@ -7,7 +7,6 @@ import {
   Button, CheckboxFilter, DataTable, TextFilter, SearchField, useToggle,
 } from '@edx/paragon';
 
-import { getTabsInfo } from './helpers';
 import { adaptToTableFormat, getColumns } from '../../utils/helpers';
 
 import CustomFilter from './CustomFilter';
@@ -137,19 +136,28 @@ const ValidationTable = ({ data, isLoading }) => {
   }, [data?.length]);
 
   const currentValidationRecord = useSelector((state) => state.currentValidationRecord);
+  const courseSelected = useSelector((state) => state.currentValidationRecord);
 
   return (
     <>
       <ModalLayout
         isOpen={isOpen}
         onClose={close}
-        tabs={getTabsInfo(
-          <ValidationProcess />,
-          <PastProcesses
-            pastProcessEvents={currentValidationRecord.validationProcessEvents}
-            validationBody={currentValidationRecord.validationBody}
-          />,
-        )}
+        tabs={[
+          {
+            name: 'validation_process',
+            label: 'Validation process',
+            component: <ValidationProcess courseSelected={courseSelected} />,
+          },
+          {
+            name: 'past_processes',
+            label: 'Past process(es)',
+            component: <PastProcesses
+              pastProcessEvents={currentValidationRecord.validationProcessEvents}
+              validationBody={currentValidationRecord.validationBody}
+            />,
+          },
+        ]}
       />
       <DataTable
         isLoading={isLoading}
