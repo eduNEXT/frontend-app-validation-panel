@@ -1,16 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
+
 import {
-  coursesSlice, validationRecordslice, validationBodySlice, courseCategorySlice, currentRecordSlice,
-} from './slice';
+  coursesReducer,
+  courseCategoriesReducer,
+  validationBodiesReducer,
+  validationRecordReducer,
+  currentValidationRecordReducer,
+} from './slices';
 
 export const initializeStore = (preloadedState = undefined) => (
   configureStore({
     reducer: {
-      courses: coursesSlice.reducer,
-      validationRecord: validationRecordslice.reducer,
-      validationBody: validationBodySlice.reducer,
-      courseCategory: courseCategorySlice.reducer,
-      currentValidationRecord: currentRecordSlice.reducer,
+      courses: coursesReducer,
+      courseCategories: courseCategoriesReducer,
+      validationRecord: validationRecordReducer,
+      validationBody: validationBodiesReducer,
+      currentValidationRecord: currentValidationRecordReducer,
     },
     preloadedState,
   })

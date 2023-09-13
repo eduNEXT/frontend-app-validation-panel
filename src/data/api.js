@@ -1,11 +1,9 @@
 import {
-  camelCaseObject,
-  ensureConfig,
-  getConfig,
-  snakeCaseObject,
+  camelCaseObject, ensureConfig, getConfig, snakeCaseObject,
 } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { VALIDATION_API_PATH } from './constants';
+import mockedValidationProcesses from './mocked_data';
 
 ensureConfig(['LMS_BASE_URL'], 'Validation Panel API');
 
@@ -19,12 +17,11 @@ export const getValidationApiUrl = (service) => `${getApiBaseUrl()}/plugin-cvw/a
  */
 
 export async function getCoursesByUser() {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getCoursesApiUrl(), {
-      params: {
-        username: getAuthenticatedUser().username,
-      },
-    });
+  const { data } = await getAuthenticatedHttpClient().get(getCoursesApiUrl(), {
+    params: {
+      username: getAuthenticatedUser().username,
+    },
+  });
   return camelCaseObject(data);
 }
 
@@ -34,11 +31,15 @@ export async function getCoursesByUser() {
  * @returns {Promise<[{}]>}
  */
 
-export async function getValidationProcesses(params) {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
-      params,
-    });
+// TODO: Allow receiving params when is connected to the API
+// export async function getValidationProcesses(params) {
+export async function getValidationProcesses() {
+  // TODO: Allow accessing the API fot getting this information
+  const data = { results: mockedValidationProcesses };
+  // const { data } = await getAuthenticatedHttpClient()
+  //   .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
+  //     params,
+  //   });
   return camelCaseObject(data);
 }
 
@@ -48,13 +49,41 @@ export async function getValidationProcesses(params) {
  * @returns {Promise<[{}]>}
  */
 
-export async function getValidationBody(org) {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_BODY), {
-      params: {
-        org,
-      },
-    });
+// TODO: Allow receiving org id when is connected to the API
+// export async function getValidationBody(org) {
+export async function getValidationBody() {
+  const data = {
+    results: [
+      { name: 'Validator body 1' },
+      { name: 'Validator body 2' },
+    ],
+  };
+    // const { data } = await getAuthenticatedHttpClient()
+    //  .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_BODY), {
+    //    params: {
+    //      org,
+    //    },
+    //  });
+  return camelCaseObject(data);
+}
+
+/**
+ * Fetches all available categories to associate with course validation processes
+ * @returns {Promise<[{}]>}
+ */
+
+export async function getAvailableCategories() {
+  // TODO: Allow accessing the API fot getting this information
+  const data = {
+    results: [
+      { name: 'Category 1' },
+      { name: 'Category 2' },
+      { name: 'Category 3' },
+      { name: 'Category 4' },
+    ],
+  };
+    // const { data } = await getAuthenticatedHttpClient()
+    //   .get(getValidationApiUrl(VALIDATION_API_PATH.COURSE_CATEGORY));
   return camelCaseObject(data);
 }
 

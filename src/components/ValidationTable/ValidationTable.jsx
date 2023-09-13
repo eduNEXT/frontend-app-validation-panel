@@ -1,13 +1,19 @@
 /* eslint-disable react/prop-types, react/no-unstable-nested-components */
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import {
-  Button, CheckboxFilter, DataTable, TextFilter, SearchField,
-} from '@edx/paragon';
 import { Search } from '@edx/paragon/icons';
+import {
+  Button, CheckboxFilter, DataTable, TextFilter, SearchField, useToggle,
+} from '@edx/paragon';
 
 import { adaptToTableFormat, getColumns } from '../../utils/helpers';
+
 import CustomFilter from './CustomFilter';
+import { ModalLayout } from '../ModalLayout';
+import { ValidationProcess } from '../ValidationProcess';
+import { Timeline as PastProcesses } from '../Timeline';
+import { setCurrentRecord } from '../../data/slices';
 
 // TODO: Modify this to execute the proper needed action
 const ActionsAvailable = {
@@ -36,8 +42,10 @@ ActionButton.propTypes = {
   action: PropTypes.func.isRequired,
 };
 
-const ValidationTable = ({ data }) => {
-  const isValidator = true;
+const ValidationTable = ({ data, isLoading }) => {
+  const isValidator = false;
+  const dispatch = useDispatch();
+  const [isOpen, open, close] = useToggle(false);
 
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
   const [auxColumnsWithClickableNames, setAuxColumnsWithClickableNames] = useState([]);
@@ -47,8 +55,10 @@ const ValidationTable = ({ data }) => {
     col: null,
   });
 
-  const handleClickInCourseTitle = (aux) => {
-    console.log(aux);
+  const handleClickInCourseTitle = (courseId) => {
+    const courseClicked = data.find((course) => course.courseId === courseId);
+    dispatch(setCurrentRecord(courseClicked));
+    open();
   };
 
   const handleFilterChoices = (value, col) => {
@@ -71,13 +81,13 @@ const ValidationTable = ({ data }) => {
   };
 
   const getColumnsWithClickableNames = (dataToAdapt) => getColumns(dataToAdapt).map((col) => {
-    if (col?.accessor === 'course_name') {
+    if (col?.accessor === 'courseName') {
       return {
         ...col,
         Cell: ({ row }) => (
           <ActionButton
-            label={row.values.course_name}
-            action={() => handleClickInCourseTitle(row.values.course_id)}
+            label={row.values.courseName}
+            action={() => handleClickInCourseTitle(row.values.courseId)}
           />
         ),
       };
@@ -123,36 +133,61 @@ const ValidationTable = ({ data }) => {
     setColumnsWithClickableNames(auxData);
     setAuxColumnsWithClickableNames(auxData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data?.length]);
+
+  const currentValidationRecord = useSelector((state) => state.currentValidationRecord);
 
   return (
-    <DataTable
-      isFilterable
-      defaultColumnValues={{ Filter: TextFilter }}
-      itemCount={data.length}
-      data={adaptToTableFormat(data)}
-      columns={columnsWithClickableNames}
-      additionalColumns={!isValidator ? [
-        {
-          id: 'action',
-          Header: 'Action',
-          Cell: ({ row }) => {
-            const label = ActionsAvailable[row.values.status?.toLowerCase()]?.label || '';
-            const action = ActionsAvailable[row.values.status?.toLowerCase()]?.action || '';
-            return label ? <ActionButton label={label} action={() => action(row)} /> : null;
+    <>
+      <ModalLayout
+        isOpen={isOpen}
+        onClose={close}
+        tabs={[
+          {
+            name: 'validation_process',
+            label: 'Validation process',
+            component: <ValidationProcess courseSelected={currentValidationRecord} />,
           },
-        },
-      ] : false}
-    >
-      <DataTable.TableControlBar />
-      <DataTable.Table />
-      <DataTable.EmptyTable content="No results found" />
-      <DataTable.TableFooter />
-    </DataTable>
+          {
+            name: 'past_processes',
+            label: 'Past process(es)',
+            component: <PastProcesses
+              pastProcessEvents={currentValidationRecord.validationProcessEvents}
+              validationBody={currentValidationRecord.validationBody}
+            />,
+          },
+        ]}
+      />
+      <DataTable
+        isLoading={isLoading}
+        isFilterable
+        defaultColumnValues={{ Filter: TextFilter }}
+        itemCount={data?.length}
+        data={adaptToTableFormat(data)}
+        columns={columnsWithClickableNames}
+        additionalColumns={!isValidator ? [
+          {
+            id: 'action',
+            Header: 'Action',
+            Cell: ({ row }) => {
+              const label = ActionsAvailable[row.values.status?.toLowerCase()]?.label || '';
+              const action = ActionsAvailable[row.values.status?.toLowerCase()]?.action || '';
+              return label ? <ActionButton label={label} action={() => action(row)} /> : null;
+            },
+          },
+        ] : false}
+      >
+        <DataTable.TableControlBar />
+        <DataTable.Table />
+        <DataTable.EmptyTable content="No results found" />
+        <DataTable.TableFooter />
+      </DataTable>
+    </>
   );
 };
 
 ValidationTable.propTypes = {
+  isLoading: PropTypes.bool,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -163,6 +198,10 @@ ValidationTable.propTypes = {
       status: PropTypes.string,
     }),
   ).isRequired,
+};
+
+ValidationTable.defaultProps = {
+  isLoading: true,
 };
 
 export default ValidationTable;

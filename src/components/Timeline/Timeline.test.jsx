@@ -21,7 +21,7 @@ const mockEvents = [
   },
 ];
 
-const mockData = { passProcessEvents: mockEvents, validationBody: 'Validator Body #1' };
+const mockData = { pastProcessEvents: mockEvents, validationBody: 'Validator Body #1' };
 
 const renderComponent = (props) => render(
   <IntlProvider locale="en">
