@@ -4,7 +4,7 @@ import { getCoursesByUser } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
 export const getCoursesByUsername = createAsyncThunk('courses/availableUserCourses', async () => {
-  const response = getCoursesByUser();
+  const response = await getCoursesByUser();
   return response;
 });
 

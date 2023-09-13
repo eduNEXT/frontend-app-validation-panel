@@ -4,7 +4,7 @@ import { getAvailableCategories } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
 export const getCourseCategoriesByCourseId = createAsyncThunk('courses/courseCategories', async () => {
-  const response = getAvailableCategories();
+  const response = await getAvailableCategories();
   return response;
 });
 

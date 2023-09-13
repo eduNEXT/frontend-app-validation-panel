@@ -4,7 +4,7 @@ import { getValidationBody } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
 export const getAvailableValidationBodies = createAsyncThunk('organization/validationBodies', async () => {
-  const response = getValidationBody();
+  const response = await getValidationBody();
   return response;
 });
 
