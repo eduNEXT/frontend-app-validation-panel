@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getAvailableCategories } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
-export const getCourseCategoriesByCourseId = createAsyncThunk('courses/courseCategories', async () => {
+export const getAvailableCourseCategories = createAsyncThunk('courses/courseCategories', async () => {
   const response = await getAvailableCategories();
   return response;
 });
@@ -21,21 +21,21 @@ export const courseCategoriesSlice = createSlice({
   initialState: courseCategoriesInitialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getCourseCategoriesByCourseId.pending, (state) => {
+    builder.addCase(getAvailableCourseCategories.pending, (state) => {
       state.availableCourseCategories = {
         loadStatus: REQUEST_STATUS.LOADING,
         data: [],
         error: {},
       };
     });
-    builder.addCase(getCourseCategoriesByCourseId.fulfilled, (state, action) => {
+    builder.addCase(getAvailableCourseCategories.fulfilled, (state, action) => {
       state.availableCourseCategories = {
         loadStatus: REQUEST_STATUS.LOADED,
         data: action.payload,
         error: {},
       };
     });
-    builder.addCase(getCourseCategoriesByCourseId.rejected, (state, action) => {
+    builder.addCase(getAvailableCourseCategories.rejected, (state, action) => {
       state.availableCourseCategories = {
         loadStatus: REQUEST_STATUS.FAILED,
         data: [],

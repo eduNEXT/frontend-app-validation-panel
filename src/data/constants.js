@@ -18,9 +18,9 @@ const VALIDATION_ACTION = {
   CANCEL: 'Cancel validation',
 };
 const VALIDATION_API_PATH = {
-  COURSE_CATEGORY: 'course-category',
-  VALIDATION_BODY: 'validation-body',
-  VALIDATION_PROCESS: 'validation-process',
+  CATEGORIES: 'categories',
+  VALIDATION_BODY: 'validation-bodies',
+  VALIDATION_PROCESS: 'validation-processes',
   VALIDATION_EVENT: 'validation-process-event',
 };
 

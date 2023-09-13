@@ -1,12 +1,14 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getValidationProcesses } from '../api';
+import { getValidationProcesses, postValidationProcess } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
 export const getAvailableValidationProcesses = createAsyncThunk('organization/validationProcesses', async () => {
   const response = await getValidationProcesses();
   return response;
 });
+
+export const postNewValidationProcess = createAsyncThunk('organization/validationProcesses/Post', async (formData) => postValidationProcess(formData));
 
 const validationProcessesInitialState = {
   availableValidationProcesses: {
@@ -39,6 +41,29 @@ export const validationRecordSlice = createSlice({
       state.availableValidationProcesses = {
         loadStatus: REQUEST_STATUS.FAILED,
         data: [],
+        error: action.error,
+      };
+    });
+    builder.addCase(postNewValidationProcess.pending, (state) => {
+      state.availableValidationProcesses = {
+        ...state.availableValidationProcesses,
+        loadStatus: REQUEST_STATUS.LOADING,
+        data: [],
+        error: {},
+      };
+    });
+    builder.addCase(postNewValidationProcess.fulfilled, (state) => {
+      // TODO: When the GET validationProcesses exists, solve this
+      state.availableValidationProcesses = {
+        ...state.availableValidationProcesses,
+        loadStatus: REQUEST_STATUS.LOADED,
+        error: {},
+      };
+    });
+    builder.addCase(postNewValidationProcess.rejected, (state, action) => {
+      state.availableValidationProcesses = {
+        ...state.availableValidationProcesses,
+        loadStatus: REQUEST_STATUS.LOADED,
         error: action.error,
       };
     });

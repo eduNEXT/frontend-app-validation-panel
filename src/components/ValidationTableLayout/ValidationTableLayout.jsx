@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { Tab, Tabs } from '@edx/paragon';
 
-import { REQUEST_STATUS, VALIDATION_STATUS } from '../../data/constants';
+import { VALIDATION_STATUS } from '../../data/constants';
 import { getLastAndFirstValidationProcessEvents } from '../../utils/helpers';
 
 import { ValidationTable } from '../ValidationTable';
@@ -26,7 +26,6 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Pending Courses',
       component: (
         <ValidationTable
-          isLoading={availableValidationProcesses.status === REQUEST_STATUS.LOADING}
           data={availableValidationProcesses.data.results?.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
             return pendingStatuses.includes(lastValidationProcessEvent?.status);
@@ -39,7 +38,6 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Archived Courses',
       component: (
         <ValidationTable
-          isLoading={availableValidationProcesses.status === REQUEST_STATUS.LOADING}
           data={availableValidationProcesses.data.results?.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
             return !pendingStatuses.includes(lastValidationProcessEvent?.status);
@@ -62,7 +60,6 @@ const ValidationTableLayout = ({ isValidator }) => {
       ) : (
         <ValidationTable
           data={availableValidationProcesses.data.results}
-          isLoading={availableValidationProcesses.status === REQUEST_STATUS.LOADING}
         />
       )}
     </div>

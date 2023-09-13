@@ -42,7 +42,7 @@ ActionButton.propTypes = {
   action: PropTypes.func.isRequired,
 };
 
-const ValidationTable = ({ data, isLoading }) => {
+const ValidationTable = ({ data }) => {
   const isValidator = false;
   const dispatch = useDispatch();
   const [isOpen, open, close] = useToggle(false);
@@ -159,7 +159,6 @@ const ValidationTable = ({ data, isLoading }) => {
         ]}
       />
       <DataTable
-        isLoading={isLoading}
         isFilterable
         defaultColumnValues={{ Filter: TextFilter }}
         itemCount={data?.length}
@@ -187,7 +186,6 @@ const ValidationTable = ({ data, isLoading }) => {
 };
 
 ValidationTable.propTypes = {
-  isLoading: PropTypes.bool,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -198,10 +196,6 @@ ValidationTable.propTypes = {
       status: PropTypes.string,
     }),
   ).isRequired,
-};
-
-ValidationTable.defaultProps = {
-  isLoading: true,
 };
 
 export default ValidationTable;

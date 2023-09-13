@@ -5,11 +5,12 @@ import { getAuthenticatedHttpClient, getAuthenticatedUser } from '@edx/frontend-
 import { VALIDATION_API_PATH } from './constants';
 import mockedValidationProcesses from './mocked_data';
 
-ensureConfig(['LMS_BASE_URL'], 'Validation Panel API');
+ensureConfig(['LMS_BASE_URL', 'STUDIO_BASE_URL'], 'Validation Panel API');
 
-export const getApiBaseUrl = () => getConfig().LMS_BASE_URL;
-export const getCoursesApiUrl = () => `${getApiBaseUrl()}/api/courses/v1/courses/`;
-export const getValidationApiUrl = (service) => `${getApiBaseUrl()}/plugin-cvw/api/v1/${service}/`;
+export const getApiLmsBaseUrl = () => getConfig().LMS_BASE_URL;
+export const getApiStudioBaseUrl = () => getConfig().STUDIO_BASE_URL;
+export const getCoursesApiUrl = () => `${getApiLmsBaseUrl()}/api/courses/v1/courses/`;
+export const getValidationApiUrl = (service) => `${getApiStudioBaseUrl()}/plugin-cvw/api/v1/${service}/`;
 
 /**
  * Fetches all courses created by the current user (course author).
@@ -51,19 +52,13 @@ export async function getValidationProcesses() {
 
 // TODO: Allow receiving org id when is connected to the API
 // export async function getValidationBody(org) {
-export async function getValidationBody() {
-  const data = {
-    results: [
-      { name: 'Validator body 1' },
-      { name: 'Validator body 2' },
-    ],
-  };
-    // const { data } = await getAuthenticatedHttpClient()
-    //  .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_BODY), {
-    //    params: {
-    //      org,
-    //    },
-    //  });
+export async function getValidationBody(org) {
+  const { data } = await getAuthenticatedHttpClient()
+    .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_BODY), {
+      params: {
+        org,
+      },
+    });
   return camelCaseObject(data);
 }
 
@@ -73,17 +68,8 @@ export async function getValidationBody() {
  */
 
 export async function getAvailableCategories() {
-  // TODO: Allow accessing the API fot getting this information
-  const data = {
-    results: [
-      { name: 'Category 1' },
-      { name: 'Category 2' },
-      { name: 'Category 3' },
-      { name: 'Category 4' },
-    ],
-  };
-    // const { data } = await getAuthenticatedHttpClient()
-    //   .get(getValidationApiUrl(VALIDATION_API_PATH.COURSE_CATEGORY));
+  const { data } = await getAuthenticatedHttpClient()
+    .get(getValidationApiUrl(VALIDATION_API_PATH.CATEGORIES));
   return camelCaseObject(data);
 }
 
@@ -113,7 +99,7 @@ export async function getCourseCategories(courseId) {
  *  */
 export async function postValidationProcess(config) {
   const { data } = await getAuthenticatedHttpClient().post(
-    getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS),
+    getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_PROCESS}/${config.courseId}/submit`),
     snakeCaseObject(config),
   );
   return camelCaseObject(data);

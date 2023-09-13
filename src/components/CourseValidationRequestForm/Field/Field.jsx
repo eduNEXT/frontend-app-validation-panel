@@ -1,21 +1,73 @@
-import { Form, Stack } from '@edx/paragon';
 import PropTypes from 'prop-types';
+import { FieldArray } from 'formik';
+import { Close } from '@edx/paragon/icons';
+import { Chip, Form, Stack } from '@edx/paragon';
 
 const Field = ({
-  label, description, name, as, options, handleChange, value,
+  label, description, name, as, options, handleChange, value, errorMessage, isArray,
 }) => (
-  <Stack>
-    <span>{label}</span>
-    <span className="small">{description}</span>
-    <Form.Group>
-      <Form.Control name={name} as={as} onChange={handleChange} value={value}>
-        <option hidden selected> Select one... </option>
-        { options?.map((optionInfo) => (
-          <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
-        ))}
-      </Form.Control>
-    </Form.Group>
-  </Stack>
+  <div>
+    {isArray ? (
+      <FieldArray
+        name={name}
+        render={({ push, remove }) => (
+          <Stack>
+            <span>{label}</span>
+            <span className="small">{description}</span>
+            <Form.Autosuggest
+              placeholder="Select at least one..."
+              isInvalid={!!errorMessage}
+              onSelected={(newValue) => {
+                const valueFoundIndex = value.findIndex((el) => el === newValue);
+                if (valueFoundIndex !== -1) {
+                  remove(valueFoundIndex);
+                } else {
+                  push(newValue);
+                }
+              }}
+            >
+              { options?.map((optionInfo) => (
+                <Form.AutosuggestOption
+                  key={optionInfo.key}
+                  value={optionInfo.id}
+                >
+                  {optionInfo.label}
+                </Form.AutosuggestOption>
+              ))}
+            </Form.Autosuggest>
+            <Form.Control.Feedback hidden={!errorMessage} type="invalid">{errorMessage}</Form.Control.Feedback>
+
+            <Stack direction="horizontal" gap={3}>
+              {value.map((category, idx) => (
+                <Chip
+                  iconAfter={Close}
+                  onIconAfterClick={() => {
+                    remove(idx);
+                  }}
+                >
+                  {category}
+                </Chip>
+              ))}
+            </Stack>
+          </Stack>
+        )}
+      />
+    ) : (
+      <Stack>
+        <span>{label}</span>
+        <span className="small">{description}</span>
+        <Form.Group isInvalid={!!errorMessage}>
+          <Form.Control name={name} as={as} onChange={handleChange} value={value}>
+            <option hidden selected> Select one... </option>
+            { options?.map((optionInfo) => (
+              <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
+            ))}
+          </Form.Control>
+          <Form.Control.Feedback hidden={!errorMessage} type="invalid">{errorMessage}</Form.Control.Feedback>
+        </Form.Group>
+      </Stack>
+    )}
+  </div>
 );
 
 Field.propTypes = {
@@ -26,12 +78,16 @@ Field.propTypes = {
   options: PropTypes.arrayOf(PropTypes.shape({ key: PropTypes.string, label: PropTypes.string })),
   handleChange: PropTypes.func.isRequired,
   value: PropTypes.string,
+  errorMessage: PropTypes.string,
+  isArray: PropTypes.bool,
 };
 
 Field.defaultProps = {
   as: 'input',
   value: '',
   options: [],
+  errorMessage: null,
+  isArray: false,
 };
 
 export default Field;
