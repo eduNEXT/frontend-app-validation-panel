@@ -8,7 +8,7 @@ export const getAvailableValidationProcesses = createAsyncThunk('organization/va
   return response;
 });
 
-export const postNewValidationProcess = createAsyncThunk('organization/validationProcesses/Post', async (formData) => postValidationProcess(formData));
+export const createValidationProcess = createAsyncThunk('organization/validationProcesses/post', async (formData) => postValidationProcess(formData));
 
 const validationProcessesInitialState = {
   availableValidationProcesses: {
@@ -44,7 +44,7 @@ export const validationRecordSlice = createSlice({
         error: action.error,
       };
     });
-    builder.addCase(postNewValidationProcess.pending, (state) => {
+    builder.addCase(createValidationProcess.pending, (state) => {
       state.availableValidationProcesses = {
         ...state.availableValidationProcesses,
         loadStatus: REQUEST_STATUS.LOADING,
@@ -52,7 +52,7 @@ export const validationRecordSlice = createSlice({
         error: {},
       };
     });
-    builder.addCase(postNewValidationProcess.fulfilled, (state) => {
+    builder.addCase(createValidationProcess.fulfilled, (state) => {
       // TODO: When the GET validationProcesses exists, solve this
       state.availableValidationProcesses = {
         ...state.availableValidationProcesses,
@@ -60,10 +60,10 @@ export const validationRecordSlice = createSlice({
         error: {},
       };
     });
-    builder.addCase(postNewValidationProcess.rejected, (state, action) => {
+    builder.addCase(createValidationProcess.rejected, (state, action) => {
       state.availableValidationProcesses = {
         ...state.availableValidationProcesses,
-        loadStatus: REQUEST_STATUS.LOADED,
+        loadStatus: REQUEST_STATUS.FAILED,
         error: action.error,
       };
     });

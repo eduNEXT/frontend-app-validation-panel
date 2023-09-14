@@ -13,7 +13,8 @@ import CustomFilter from './CustomFilter';
 import { ModalLayout } from '../ModalLayout';
 import { ValidationProcess } from '../ValidationProcess';
 import { Timeline as PastProcesses } from '../Timeline';
-import { setCurrentRecord } from '../../data/slices';
+import { getCurrentValidationProcess } from '../../data/slices';
+import { REQUEST_STATUS } from '../../data/constants';
 
 // TODO: Modify this to execute the proper needed action
 const ActionsAvailable = {
@@ -56,8 +57,7 @@ const ValidationTable = ({ data }) => {
   });
 
   const handleClickInCourseTitle = (courseId) => {
-    const courseClicked = data.find((course) => course.courseId === courseId);
-    dispatch(setCurrentRecord(courseClicked));
+    dispatch(getCurrentValidationProcess(courseId));
     open();
   };
 
@@ -142,7 +142,7 @@ const ValidationTable = ({ data }) => {
       <ModalLayout
         isOpen={isOpen}
         onClose={close}
-        tabs={[
+        tabs={currentValidationRecord.loadStatus !== REQUEST_STATUS.LOADING && [
           {
             name: 'validation_process',
             label: 'Validation process',

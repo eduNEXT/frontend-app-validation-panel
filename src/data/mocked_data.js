@@ -1,7 +1,7 @@
 export default [
   {
     courseName: 'Test Course #1 Test Course #1 Test Course #1 Test Course #1',
-    courseId: 'course-v1:org1+test-course-1 course-v1:org1+test-course-1 course-v1:org1+test-course-1',
+    courseId: 'course-v1:Demo+CS101+2014_T1',
     organization: 'Organization 1 Organization 1 Organization 1 Organization 1',
     categories: 'Category 1 Category 1 Category 1 Category 1',
     validationBody: 'Validator Body #1',
@@ -24,7 +24,7 @@ export default [
   },
   {
     courseName: 'Test Course #2 Test Course #2 Test Course #2 Test Course #2',
-    courseId: 'course-v1:org2+test-course-2 course-v1:org2+test-course-2 course-v1:org2+test-course-2',
+    courseId: 'course-v1:edX+DemoX+Demo_Course',
     organization: 'Organization 2 Organization 2 Organization 2 Organization 2',
     categories: 'Category 1 Category 1 Category 1 Category 1',
     validationBody: 'Validator Body #2',

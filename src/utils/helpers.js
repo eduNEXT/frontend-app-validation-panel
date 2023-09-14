@@ -1,60 +1,68 @@
-import { VALIDATION_STATUS } from '../data/constants';
+import { VALIDATION_STATUS, VALIDATION_STATUS_LABEL } from '../data/constants';
 
-export const getLastReviewEvent = (course) => {
+export const getLastAndFirstValidationProcessEvents = (course) => {
   let lastValidationProcessEvent = null;
-  course.validationProcessEvents.forEach((event) => {
-    const eventCreatedAt = new Date(event.createdAt);
-    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent.createdAt)) {
+  let firstValidationProcessEvent = null;
+
+  course?.validationProcessEvents?.forEach((event) => {
+    const eventCreatedAt = new Date(event?.createdAt);
+
+    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent?.createdAt)) {
       lastValidationProcessEvent = event;
+    }
+
+    if (!firstValidationProcessEvent || eventCreatedAt < new Date(firstValidationProcessEvent?.createdAt)) {
+      firstValidationProcessEvent = event;
     }
   });
 
-  return lastValidationProcessEvent;
+  return [lastValidationProcessEvent, firstValidationProcessEvent];
 };
 
 export const getSubmissionInfo = (course) => {
-  const submissionProcessEvent = course.validationProcessEvents.find(
-    (validationProcess) => validationProcess.status.toLowerCase() === VALIDATION_STATUS.SUBMITTED.toLowerCase(),
+  const submissionProcessEvent = course?.validationProcessEvents?.find(
+    (validationProcess) => validationProcess?.status.toLowerCase() === VALIDATION_STATUS.SUBMITTED.toLowerCase(),
   );
-  const exemptionProcessEvent = course.validationProcessEvents.find(
-    (validationProcess) => validationProcess.status.toLowerCase() === VALIDATION_STATUS.EXEMPT.toLowerCase(),
+  const exemptionProcessEvent = course?.validationProcessEvents?.find(
+    (validationProcess) => validationProcess?.status.toLowerCase() === VALIDATION_STATUS.EXEMPT.toLowerCase(),
   );
 
-  const courseAuthor = exemptionProcessEvent?.user || submissionProcessEvent.user;
-  const submissionDate = exemptionProcessEvent?.createdAt || submissionProcessEvent.createdAt;
-  const submissionComments = exemptionProcessEvent?.comment || submissionProcessEvent.comment;
-  const lastValidationProcessEvent = getLastReviewEvent(course);
+  const courseAuthor = exemptionProcessEvent?.user || submissionProcessEvent?.user;
+  const submissionDate = exemptionProcessEvent?.createdAt || submissionProcessEvent?.createdAt;
+  const submissionComments = exemptionProcessEvent?.comment || submissionProcessEvent?.comment;
 
   const isExempted = !!exemptionProcessEvent;
+
+  const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
 
   return {
     isExempted,
     courseName: course.courseName,
     courseId: course.courseId,
-    organization: course.organization,
-    categories: course.categories,
+    reviewer: course.currentValidationUser || lastValidationProcessEvent.user,
+    organization: course.organization?.name,
+    categories: course.categories?.map((category) => category?.name),
     courseAuthor,
     submissionDate,
     submissionComments,
-    validationBody: course.validationBody,
-    reviewer: lastValidationProcessEvent.user,
+    validationBody: course.validationBody?.name,
   };
 };
 
 export const getLastReviewEventInfo = (course) => {
-  const lastValidationProcessEvent = getLastReviewEvent(course);
+  const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
 
   return {
-    reviewStartDate: lastValidationProcessEvent.createdAt,
-    status: lastValidationProcessEvent.status,
-    reason: lastValidationProcessEvent.reason,
-    additionalComment: lastValidationProcessEvent.comment,
+    reviewStartDate: lastValidationProcessEvent?.createdAt,
+    status: VALIDATION_STATUS_LABEL[lastValidationProcessEvent?.status],
+    reason: lastValidationProcessEvent?.reason,
+    additionalComment: lastValidationProcessEvent?.comment,
   };
 };
 
 export const addUtils = (utils, data) => utils.map((field) => ({
   ...field,
-  value: data[field.name],
+  value: data[field?.name],
 }));
 
 /**
@@ -77,25 +85,6 @@ export const tableColumns = {
  * List of columns that will have filter options available.
  */
 const filtersToShow = ['validationBody', 'status', 'categories', 'organization'];
-
-export const getLastAndFirstValidationProcessEvents = (course) => {
-  let lastValidationProcessEvent = null;
-  let firstValidationProcessEvent = null;
-
-  course?.validationProcessEvents?.forEach((event) => {
-    const eventCreatedAt = new Date(event.createdAt);
-
-    if (!lastValidationProcessEvent || eventCreatedAt > new Date(lastValidationProcessEvent?.createdAt)) {
-      lastValidationProcessEvent = event;
-    }
-
-    if (!firstValidationProcessEvent || eventCreatedAt < new Date(firstValidationProcessEvent?.createdAt)) {
-      firstValidationProcessEvent = event;
-    }
-  });
-
-  return [lastValidationProcessEvent, firstValidationProcessEvent];
-};
 
 /**
  * Adapt the last validation process event so that it can be accessed and rendered by

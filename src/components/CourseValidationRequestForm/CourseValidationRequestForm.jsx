@@ -9,7 +9,7 @@ import {
   getAvailableValidationBodies,
   getAvailableCourseCategories,
   getCoursesByUsername,
-  postNewValidationProcess,
+  createValidationProcess,
   getAvailableValidationProcesses,
 } from '../../data/slices';
 
@@ -62,7 +62,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     initialValues,
     validationSchema: FormSchema,
     onSubmit: (formData) => {
-      dispatch(postNewValidationProcess(getAdaptedData(formData)));
+      dispatch(createValidationProcess(getAdaptedData(formData)));
       dispatch(getAvailableValidationProcesses());
     },
   });

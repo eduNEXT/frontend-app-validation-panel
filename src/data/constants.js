@@ -1,11 +1,21 @@
 const VALIDATION_STATUS = {
-  SUBMITTED: 'Submitted',
-  IN_REVIEW: 'In Review',
-  DRAFT: 'Draft',
-  APPROVED: 'Approved',
-  DISAPPROVED: 'Disapproved',
-  CANCELLED: 'Cancelled',
-  EXEMPT: 'Exempt',
+  SUBMITTED: 'subm',
+  IN_REVIEW: 'revi',
+  DRAFT: 'drft',
+  APPROVED: 'aprv',
+  DISAPPROVED: 'dprv',
+  CANCELLED: 'cncl',
+  EXEMPT: 'exmp',
+};
+
+const VALIDATION_STATUS_LABEL = {
+  subm: 'Submitted',
+  revi: 'In Review',
+  drft: 'Draft',
+  aprv: 'Approved',
+  dprv: 'Disapproved',
+  cncl: 'Cancelled',
+  exmp: 'Exempt',
 };
 
 const VALIDATION_ACCESS_ROLE = {
@@ -39,4 +49,5 @@ export {
   VALIDATION_ACTION,
   VALIDATION_API_PATH,
   VALIDATION_STATUS,
+  VALIDATION_STATUS_LABEL,
 };

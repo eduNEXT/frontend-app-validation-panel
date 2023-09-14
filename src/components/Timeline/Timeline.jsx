@@ -3,11 +3,11 @@ import RecordItem from './RecordItem';
 
 const Timeline = ({ pastProcessEvents, validationBody }) => (
   <ul className="px-2">
-    {pastProcessEvents.map((processEvent, index) => (
+    {pastProcessEvents?.map((processEvent, index) => (
       <RecordItem
         key={`validationEvent-${processEvent.createdAt}-${processEvent.user}`}
         {...processEvent}
-        validationBody={validationBody}
+        validationBody={validationBody.name}
         first={index === 0}
         last={index === pastProcessEvents.length - 1}
       />

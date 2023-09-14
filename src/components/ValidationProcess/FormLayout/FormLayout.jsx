@@ -43,13 +43,17 @@ const FormLayout = ({
     .map(
       (field) => {
         const isDisabled = !isValidator || field.disabled;
+        const value = field.name.toLowerCase().includes('date')
+          ? new Date(values[field.name]).toLocaleDateString()
+          : values[field.name];
+
         return (!isSubmissionDateField(field.name) && exemptedConditional(field.name) && (
         <FormInput
           disabled={isDisabled}
           key={field.name}
           name={field.name}
           handleChange={handleChange}
-          value={values[field.name]}
+          value={value}
           type={field.type}
           label={field.label}
           labelAssistant={(field.label.toLowerCase().includes('name') && submissionDate) && (

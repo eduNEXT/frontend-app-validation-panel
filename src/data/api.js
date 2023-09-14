@@ -10,7 +10,7 @@ ensureConfig(['LMS_BASE_URL', 'STUDIO_BASE_URL'], 'Validation Panel API');
 export const getApiLmsBaseUrl = () => getConfig().LMS_BASE_URL;
 export const getApiStudioBaseUrl = () => getConfig().STUDIO_BASE_URL;
 export const getCoursesApiUrl = () => `${getApiLmsBaseUrl()}/api/courses/v1/courses/`;
-export const getValidationApiUrl = (service) => `${getApiStudioBaseUrl()}/plugin-cvw/api/v1/${service}/`;
+export const getValidationApiUrl = (service) => `${getApiStudioBaseUrl()}/plugin-cvw/api/v1/${service}`;
 
 /**
  * Fetches all courses created by the current user (course author).
@@ -45,14 +45,26 @@ export async function getValidationProcesses() {
 }
 
 /**
+ * Fetches a specific validation process by course id.
+ *  * @param {string} courseId
+ * @returns {Promise<[{}]>}
+ */
+
+export async function getValidationProcess(courseId) {
+  const { data } = await getAuthenticatedHttpClient()
+    .get(getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_PROCESS}/${courseId}`));
+  return camelCaseObject(data);
+}
+
+/**
  * Fetches validation body acording with the organization.
  * @param {string} org
  * @returns {Promise<[{}]>}
  */
 
 // TODO: Allow receiving org id when is connected to the API
-// export async function getValidationBody(org) {
-export async function getValidationBody(org) {
+// export async function getValidationBodies(org) {
+export async function getValidationBodies(org) {
   const { data } = await getAuthenticatedHttpClient()
     .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_BODY), {
       params: {
@@ -70,22 +82,6 @@ export async function getValidationBody(org) {
 export async function getAvailableCategories() {
   const { data } = await getAuthenticatedHttpClient()
     .get(getValidationApiUrl(VALIDATION_API_PATH.CATEGORIES));
-  return camelCaseObject(data);
-}
-
-/**
- * Fetches all the categories associated with the current course.
- *  @param {string} courseId
- * @returns {Promise<[{}]>}
- */
-
-export async function getCourseCategories(courseId) {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getValidationApiUrl(VALIDATION_API_PATH.COURSE_CATEGORY), {
-      params: {
-        courseId,
-      },
-    });
   return camelCaseObject(data);
 }
 

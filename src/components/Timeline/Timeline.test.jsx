@@ -1,10 +1,10 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import Timeline from './Timeline';
 
 const mockEvents = [
   {
-    status: 'Submitted',
+    status: 'subm',
     createdAt: '2023-08-10',
     reason: null,
     comment: 'This is another comment of the course author',
@@ -13,7 +13,7 @@ const mockEvents = [
 
   },
   {
-    status: 'Approved',
+    status: 'aprv',
     createdAt: '2023-08-20',
     reason: null,
     comment: 'This is the comment of Validator 2',
@@ -21,7 +21,7 @@ const mockEvents = [
   },
 ];
 
-const mockData = { pastProcessEvents: mockEvents, validationBody: 'Validator Body #1' };
+const mockData = { pastProcessEvents: mockEvents, validationBody: { name: 'Validator Body #1' } };
 
 const renderComponent = (props) => render(
   <IntlProvider locale="en">
@@ -39,8 +39,9 @@ describe('Timeline', () => {
     expect(container.querySelectorAll('li').length).toBe(2);
     expect(getByText(formatedMockDate, { exact: false })).toBeInTheDocument();
     expect(getByText(mockEvents[0].comment, { exact: false })).toBeInTheDocument();
+    screen.debug();
     expect(getByText(mockEvents[0].status, { exact: false })).toBeInTheDocument();
-    expect(getAllByText(mockData.validationBody, { exact: false }).length).toBe(2);
+    expect(getAllByText(mockData.validationBody.name, { exact: false }).length).toBe(2);
   });
 
   it('should not render the top line when is the first element', () => {

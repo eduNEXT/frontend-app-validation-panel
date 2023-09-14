@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getValidationBody } from '../api';
+import { getValidationBodies } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
 export const getAvailableValidationBodies = createAsyncThunk('organization/validationBodies', async () => {
-  const response = await getValidationBody();
+  const response = await getValidationBodies();
   return response;
 });
 
