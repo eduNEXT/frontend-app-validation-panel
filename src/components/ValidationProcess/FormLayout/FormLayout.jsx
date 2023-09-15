@@ -4,6 +4,7 @@ import { FormattedDate } from '@edx/frontend-platform/i18n';
 import { useFormik } from 'formik';
 
 import { FormInput } from './FormInput';
+import { formatDateIfDateField } from './helpers';
 
 const getFormValues = (data) => {
   const values = {};
@@ -43,17 +44,13 @@ const FormLayout = ({
     .map(
       (field) => {
         const isDisabled = !isValidator || field.disabled;
-        const value = field.name.toLowerCase().includes('date')
-          ? new Date(values[field.name]).toLocaleDateString()
-          : values[field.name];
-
         return (!isSubmissionDateField(field.name) && exemptedConditional(field.name) && (
         <FormInput
           disabled={isDisabled}
           key={field.name}
           name={field.name}
           handleChange={handleChange}
-          value={value}
+          value={formatDateIfDateField(field.name, values[field.name])}
           type={field.type}
           label={field.label}
           labelAssistant={(field.label.toLowerCase().includes('name') && submissionDate) && (

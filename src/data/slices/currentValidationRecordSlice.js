@@ -3,10 +3,13 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getValidationProcess } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
-export const getCurrentValidationProcess = createAsyncThunk('organization/validationProcesses/selected', async (courseId) => {
-  const response = await getValidationProcess(courseId);
-  return response;
-});
+export const getCurrentValidationProcessByCourseId = createAsyncThunk(
+  'organization/validationProcesses/selected',
+  async (courseId) => {
+    const response = await getValidationProcess(courseId);
+    return response;
+  },
+);
 
 const currentValidationRecordInitialState = {
   loadStatus: 'idle',
@@ -42,7 +45,7 @@ const currentRecordSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getCurrentValidationProcess.pending, (state) => {
+    builder.addCase(getCurrentValidationProcessByCourseId.pending, (state) => {
       state.loadStatus = REQUEST_STATUS.LOADING;
       state.error = null;
       state.courseName = null;
@@ -53,7 +56,7 @@ const currentRecordSlice = createSlice({
       state.validationBody = null;
       state.validationProcessEvents = null;
     });
-    builder.addCase(getCurrentValidationProcess.fulfilled, (state, action) => {
+    builder.addCase(getCurrentValidationProcessByCourseId.fulfilled, (state, action) => {
       state.loadStatus = REQUEST_STATUS.LOADED;
       state.error = null;
       state.courseName = action.payload.course.name;
@@ -68,7 +71,7 @@ const currentRecordSlice = createSlice({
         createdAt: event.createAt ?? event.createdAt,
       }));
     });
-    builder.addCase(getCurrentValidationProcess.rejected, (state, action) => {
+    builder.addCase(getCurrentValidationProcessByCourseId.rejected, (state, action) => {
       state.loadStatus = REQUEST_STATUS.FAILED;
       state.error = action.error;
       state.courseName = null;

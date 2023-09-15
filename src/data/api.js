@@ -5,12 +5,11 @@ import { getAuthenticatedHttpClient, getAuthenticatedUser } from '@edx/frontend-
 import { VALIDATION_API_PATH } from './constants';
 import mockedValidationProcesses from './mocked_data';
 
-ensureConfig(['LMS_BASE_URL', 'STUDIO_BASE_URL'], 'Validation Panel API');
+ensureConfig(['LMS_BASE_URL'], 'Validation Panel API');
 
-export const getApiLmsBaseUrl = () => getConfig().LMS_BASE_URL;
-export const getApiStudioBaseUrl = () => getConfig().STUDIO_BASE_URL;
-export const getCoursesApiUrl = () => `${getApiLmsBaseUrl()}/api/courses/v1/courses/`;
-export const getValidationApiUrl = (service) => `${getApiStudioBaseUrl()}/plugin-cvw/api/v1/${service}/`;
+export const getApiBaseUrl = () => getConfig().LMS_BASE_URL;
+export const getCoursesApiUrl = () => `${getApiBaseUrl()}/api/courses/v1/courses/`;
+export const getValidationApiUrl = (service) => `${getApiBaseUrl()}/plugin-cvw/api/v1/${service}`;
 
 /**
  * Fetches all courses created by the current user (course author).
@@ -51,8 +50,9 @@ export async function getValidationProcesses() {
  */
 
 export async function getValidationProcess(courseId) {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_PROCESS}/${courseId}`));
+  const { data } = await getAuthenticatedHttpClient().get(
+    getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_PROCESS}/${courseId}`),
+  );
   return camelCaseObject(data);
 }
 
@@ -65,12 +65,11 @@ export async function getValidationProcess(courseId) {
 // TODO: Allow receiving org id when is connected to the API
 // export async function getValidationBodies(org) {
 export async function getValidationBodies(org) {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_BODY), {
-      params: {
-        org,
-      },
-    });
+  const { data } = await getAuthenticatedHttpClient().get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_BODY), {
+    params: {
+      org,
+    },
+  });
   return camelCaseObject(data);
 }
 
@@ -79,19 +78,18 @@ export async function getValidationBodies(org) {
  * @returns {Promise<[{}]>}
  */
 
-export async function getAvailableCategories() {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getValidationApiUrl(VALIDATION_API_PATH.CATEGORIES));
+export async function getCategories() {
+  const { data } = await getAuthenticatedHttpClient().get(getValidationApiUrl(VALIDATION_API_PATH.CATEGORIES));
   return camelCaseObject(data);
 }
 
 /**
  * Creates a new validation process for the course
  *  @param {object} config
-      * courseId: { string }
-      * organization: { string }
-      * categories: { array<string> },
-      * validationBody: { string }
+  * @param { string } config.courseId
+  * @param { number } config.validationBodyId
+  * @param { string } config.comment
+  * @param { array<number> } config.categoryIds
  *  */
 export async function postValidationProcess(config) {
   const { data } = await getAuthenticatedHttpClient().post(
@@ -104,11 +102,11 @@ export async function postValidationProcess(config) {
 /**
  * Creates a new validation process event
  *  @param {object} config
-     * status: { string }
-     * reason: { string | null }
-     * comment: { string }
-     * user { string }
-* */
+ * status: { string }
+ * reason: { string | null }
+ * comment: { string }
+ * user { string }
+ * */
 export async function postValidationProcessEvent(config) {
   const { data } = await getAuthenticatedHttpClient().post(
     getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_EVENT),

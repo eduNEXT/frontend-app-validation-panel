@@ -13,7 +13,7 @@ import CustomFilter from './CustomFilter';
 import { ModalLayout } from '../ModalLayout';
 import { ValidationProcess } from '../ValidationProcess';
 import { Timeline as PastProcesses } from '../Timeline';
-import { getCurrentValidationProcess } from '../../data/slices';
+import { getCurrentValidationProcessByCourseId } from '../../data/slices';
 import { REQUEST_STATUS } from '../../data/constants';
 
 // TODO: Modify this to execute the proper needed action
@@ -57,7 +57,7 @@ const ValidationTable = ({ data }) => {
   });
 
   const handleClickInCourseTitle = (courseId) => {
-    dispatch(getCurrentValidationProcess(courseId));
+    dispatch(getCurrentValidationProcessByCourseId(courseId));
     open();
   };
 
@@ -140,9 +140,10 @@ const ValidationTable = ({ data }) => {
   return (
     <>
       <ModalLayout
+        isLoading={currentValidationRecord.loadStatus === REQUEST_STATUS.LOADING}
         isOpen={isOpen}
         onClose={close}
-        tabs={currentValidationRecord.loadStatus !== REQUEST_STATUS.LOADING && [
+        tabs={[
           {
             name: 'validation_process',
             label: 'Validation process',
@@ -153,7 +154,7 @@ const ValidationTable = ({ data }) => {
             label: 'Past process(es)',
             component: <PastProcesses
               pastProcessEvents={currentValidationRecord.validationProcessEvents}
-              validationBody={currentValidationRecord.validationBody}
+              validationBody={currentValidationRecord?.validationBody?.name}
             />,
           },
         ]}

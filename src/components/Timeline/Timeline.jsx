@@ -7,7 +7,7 @@ const Timeline = ({ pastProcessEvents, validationBody }) => (
       <RecordItem
         key={`validationEvent-${processEvent.createdAt}-${processEvent.user}`}
         {...processEvent}
-        validationBody={validationBody.name}
+        validationBody={validationBody}
         first={index === 0}
         last={index === pastProcessEvents.length - 1}
       />

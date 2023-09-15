@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
   getAvailableValidationBodies,
-  getAvailableCourseCategories,
+  getCourseCategories,
   getCoursesByUsername,
   createValidationProcess,
   getAvailableValidationProcesses,
@@ -15,7 +15,7 @@ import {
 
 import { Field } from './Field';
 import { ModalLayout } from '../ModalLayout';
-import { getCourseValidationRequestForm } from './helpers';
+import { getAdaptedData, getCourseValidationRequestForm } from './helpers';
 
 const CourseValidationRequestForm = ({ isOpen, close }) => {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
 
   useEffect(() => {
     dispatch(getCoursesByUsername());
-    dispatch(getAvailableCourseCategories());
+    dispatch(getCourseCategories());
     dispatch(getAvailableValidationBodies());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -52,18 +52,14 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     comment: Yup.string().required('Please insert at least a short description about your submission'),
   });
 
-  const getAdaptedData = (formData) => ({
-    ...formData,
-    categoryIds: formData.categoryIds.map((categoryName) => (
-      availableCourseCategories.find(category => category.name === categoryName).id)),
-  });
-
   const formik = useFormik({
     initialValues,
     validationSchema: FormSchema,
     onSubmit: (formData) => {
-      dispatch(createValidationProcess(getAdaptedData(formData)));
+      dispatch(createValidationProcess(getAdaptedData(formData, availableCourseCategories)));
       dispatch(getAvailableValidationProcesses());
+      // eslint-disable-next-line no-use-before-define
+      handleClose();
     },
   });
 

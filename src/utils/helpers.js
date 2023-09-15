@@ -33,13 +33,11 @@ export const getSubmissionInfo = (course) => {
 
   const isExempted = !!exemptionProcessEvent;
 
-  const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
-
   return {
     isExempted,
     courseName: course.courseName,
     courseId: course.courseId,
-    reviewer: course.currentValidationUser || lastValidationProcessEvent?.user,
+    reviewer: course.currentValidationUser,
     organization: course.organization?.name,
     categories: course.categories?.map((category) => category?.name),
     courseAuthor,
