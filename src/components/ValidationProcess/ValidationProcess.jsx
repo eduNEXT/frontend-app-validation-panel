@@ -21,7 +21,7 @@ const ValidationProcess = ({ courseSelected }) => {
 
   // TODO: Delete when backend sends the courseName through "/validation_process/<course_id>"
   const availableCourses = useSelector((state) => state.courses.availableUserCourses.data.results);
-  const altCourseName = availableCourses.find((course) => course.courseId === courseSelected.courseId).name;
+  const altCourseName = availableCourses.find((course) => course.courseId === courseSelected.courseId)?.name;
 
   const isValidator = false;
   const submissionInfo = getSubmissionInfo(

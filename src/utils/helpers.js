@@ -39,7 +39,7 @@ export const getSubmissionInfo = (course) => {
     isExempted,
     courseName: course.courseName,
     courseId: course.courseId,
-    reviewer: course.currentValidationUser || lastValidationProcessEvent.user,
+    reviewer: course.currentValidationUser || lastValidationProcessEvent?.user,
     organization: course.organization?.name,
     categories: course.categories?.map((category) => category?.name),
     courseAuthor,
