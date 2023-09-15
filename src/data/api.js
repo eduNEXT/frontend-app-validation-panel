@@ -10,7 +10,7 @@ ensureConfig(['LMS_BASE_URL', 'STUDIO_BASE_URL'], 'Validation Panel API');
 export const getApiLmsBaseUrl = () => getConfig().LMS_BASE_URL;
 export const getApiStudioBaseUrl = () => getConfig().STUDIO_BASE_URL;
 export const getCoursesApiUrl = () => `${getApiLmsBaseUrl()}/api/courses/v1/courses/`;
-export const getValidationApiUrl = (service) => `${getApiStudioBaseUrl()}/plugin-cvw/api/v1/${service}`;
+export const getValidationApiUrl = (service) => `${getApiStudioBaseUrl()}/plugin-cvw/api/v1/${service}/`;
 
 /**
  * Fetches all courses created by the current user (course author).
