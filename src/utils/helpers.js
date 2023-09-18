@@ -43,7 +43,7 @@ export const getSubmissionInfo = (course) => {
     courseAuthor,
     submissionDate,
     submissionComments,
-    validationBody: course.validationBody?.name,
+    validationBody: course.validationBody,
   };
 };
 
@@ -105,7 +105,8 @@ export const adaptToTableFormat = (coursesToValidate) => {
     adaptedCourses.push({
       ...course,
       ...lastValidationProcessEvent,
-      createdAt: firstValidationProcessEvent?.createdAt,
+      status: VALIDATION_STATUS_LABEL[lastValidationProcessEvent.status],
+      createdAt: new Date(firstValidationProcessEvent?.createdAt).toLocaleDateString('en-GB'),
     });
   });
 

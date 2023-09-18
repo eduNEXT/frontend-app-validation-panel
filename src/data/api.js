@@ -3,13 +3,12 @@ import {
 } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { VALIDATION_API_PATH } from './constants';
-import mockedValidationProcesses from './mocked_data';
 
 ensureConfig(['LMS_BASE_URL'], 'Validation Panel API');
 
 export const getApiBaseUrl = () => getConfig().LMS_BASE_URL;
 export const getCoursesApiUrl = () => `${getApiBaseUrl()}/api/courses/v1/courses/`;
-export const getValidationApiUrl = (service) => `${getApiBaseUrl()}/plugin-cvw/api/v1/${service}`;
+export const getValidationApiUrl = (service) => `${getApiBaseUrl()}/plugin-cvw/api/v1/${service}/`;
 
 /**
  * Fetches all courses created by the current user (course author).
@@ -31,23 +30,16 @@ export async function getCoursesByUser() {
  * @returns {Promise<[{}]>}
  */
 
-// TODO: Allow receiving params when is connected to the API
-// export async function getValidationProcesses(params) {
-export async function getValidationProcesses() {
-  // TODO: Allow accessing the API fot getting this information
-  const data = { results: mockedValidationProcesses };
-  // const { data } = await getAuthenticatedHttpClient()
-  //   .get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS), {
-  //     params,
-  //   });
-  return camelCaseObject(data);
-}
-
 /**
  * Fetches a specific validation process by course id.
  *  * @param {string} courseId
  * @returns {Promise<[{}]>}
  */
+
+export async function getAllValidationProcesses() {
+  const { data } = await getAuthenticatedHttpClient().get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_PROCESS));
+  return camelCaseObject(data);
+}
 
 export async function getValidationProcess(courseId) {
   const { data } = await getAuthenticatedHttpClient().get(

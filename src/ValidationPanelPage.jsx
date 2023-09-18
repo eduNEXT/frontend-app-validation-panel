@@ -13,16 +13,16 @@ const ValidationPanelPage = () => {
   return (
     <>
       <CourseValidationRequestForm isOpen={isOpen} close={close} />
-      <Stack gap={3} className="bg-secondary-100">
+      <main className="bg-secondary-100" style={{ minHeight: '100vh' }}>
         <Header intl={intl} />
-        <main className="container">
-          <Stack direction="horizontal" className="my-4 justify-content-between">
+        <div className="container-lg">
+          <Stack direction="horizontal" className="my-5 justify-content-between">
             <h1>{intl.formatMessage(messages.heading)}</h1>
             {!isValidator && <Button onClick={open} variant="brand">{intl.formatMessage(messages.newRecordCreatorButton)}</Button>}
           </Stack>
           <ValidationTableLayout isValidator={isValidator} />
-        </main>
-      </Stack>
+        </div>
+      </main>
     </>
   );
 };

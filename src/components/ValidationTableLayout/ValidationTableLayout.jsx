@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { Tab, Tabs } from '@edx/paragon';
 
-import { VALIDATION_STATUS } from '../../data/constants';
+import { REQUEST_STATUS, VALIDATION_STATUS } from '../../data/constants';
 import { getLastAndFirstValidationProcessEvents } from '../../utils/helpers';
 
 import { ValidationTable } from '../ValidationTable';
@@ -18,6 +18,8 @@ const ValidationTableLayout = ({ isValidator }) => {
   const availableValidationProcesses = useSelector((state) => (
     state.validationRecord.availableValidationProcesses));
 
+  const areValidationProcessesLoading = availableValidationProcesses.loadStatus === REQUEST_STATUS.LOADING;
+
   const pendingStatuses = [VALIDATION_STATUS.IN_REVIEW, VALIDATION_STATUS.SUBMITTED];
 
   const ValidationTableTabs = [
@@ -26,7 +28,8 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Pending Courses',
       component: (
         <ValidationTable
-          data={availableValidationProcesses.data.results?.filter((course) => {
+          isLoading={areValidationProcessesLoading}
+          data={availableValidationProcesses?.data?.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
             return pendingStatuses.includes(lastValidationProcessEvent?.status);
           })}
@@ -38,7 +41,8 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Archived Courses',
       component: (
         <ValidationTable
-          data={availableValidationProcesses.data.results?.filter((course) => {
+          isLoading={areValidationProcessesLoading}
+          data={availableValidationProcesses?.data?.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
             return !pendingStatuses.includes(lastValidationProcessEvent?.status);
           })}
@@ -59,7 +63,8 @@ const ValidationTableLayout = ({ isValidator }) => {
         </Tabs>
       ) : (
         <ValidationTable
-          data={availableValidationProcesses.data.results}
+          isLoading={areValidationProcessesLoading}
+          data={availableValidationProcesses?.data}
         />
       )}
     </div>

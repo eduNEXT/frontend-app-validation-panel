@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+import { camelCaseObject } from '@edx/frontend-platform';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getValidationProcess } from '../api';
 import { REQUEST_STATUS } from '../constants';
@@ -64,9 +65,9 @@ const currentRecordSlice = createSlice({
       state.currentValidationUser = action.payload.currentValidationUser;
       state.organization = action.payload.organization;
       state.categories = action.payload.categories;
-      state.validationBody = action.payload.validationBody;
+      state.validationBody = action.payload.validationBody.name;
       // Is adapted the property createdAt 'cause backend send it as createAt
-      state.validationProcessEvents = action.payload.events.map((event) => ({
+      state.validationProcessEvents = camelCaseObject(action.payload.events).map((event) => ({
         ...event,
         createdAt: event.createAt ?? event.createdAt,
       }));

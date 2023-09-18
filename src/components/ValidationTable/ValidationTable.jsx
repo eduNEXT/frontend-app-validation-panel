@@ -43,7 +43,7 @@ ActionButton.propTypes = {
   action: PropTypes.func.isRequired,
 };
 
-const ValidationTable = ({ data }) => {
+const ValidationTable = ({ data, isLoading }) => {
   const isValidator = false;
   const dispatch = useDispatch();
   const [isOpen, open, close] = useToggle(false);
@@ -81,6 +81,8 @@ const ValidationTable = ({ data }) => {
   };
 
   const getColumnsWithClickableNames = (dataToAdapt) => getColumns(dataToAdapt).map((col) => {
+    const needSearchBar = col?.accessor === 'organization' || col?.accessor === 'categories';
+
     if (col?.accessor === 'courseName') {
       return {
         ...col,
@@ -94,7 +96,7 @@ const ValidationTable = ({ data }) => {
     }
 
     if (!col.disableFilters) {
-      if (col?.accessor === 'organization' || col?.accessor === 'categories') {
+      if (needSearchBar) {
         return {
           ...col,
           Filter: (_ref) => (
@@ -154,12 +156,14 @@ const ValidationTable = ({ data }) => {
             label: 'Past process(es)',
             component: <PastProcesses
               pastProcessEvents={currentValidationRecord.validationProcessEvents}
-              validationBody={currentValidationRecord?.validationBody?.name}
+              validationBody={currentValidationRecord?.validationBody}
             />,
           },
         ]}
       />
+
       <DataTable
+        isLoading={isLoading}
         isFilterable
         defaultColumnValues={{ Filter: TextFilter }}
         itemCount={data?.length}
@@ -179,7 +183,7 @@ const ValidationTable = ({ data }) => {
       >
         <DataTable.TableControlBar />
         <DataTable.Table />
-        <DataTable.EmptyTable content="No results found" />
+        <DataTable.EmptyTable className="h1 text-center text-uppercase my-5" content="No results found" />
         <DataTable.TableFooter />
       </DataTable>
     </>
@@ -187,6 +191,7 @@ const ValidationTable = ({ data }) => {
 };
 
 ValidationTable.propTypes = {
+  isLoading: PropTypes.bool,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -197,6 +202,10 @@ ValidationTable.propTypes = {
       status: PropTypes.string,
     }),
   ).isRequired,
+};
+
+ValidationTable.defaultProps = {
+  isLoading: false,
 };
 
 export default ValidationTable;

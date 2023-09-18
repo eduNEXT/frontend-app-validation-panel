@@ -1,5 +1,5 @@
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { getCoursesByUser, getValidationProcesses } from './api';
+import { getCoursesByUser, getAllValidationProcesses } from './api';
 import {
   setCourses, updateCoursesStatus, updateValidationRecordStatus, setValidationRecords,
 } from './slice';
@@ -27,7 +27,7 @@ const getValidationRecords = (org) => (
     try {
       const user = getAuthenticatedUser();
       const apiParams = user.roles.includes(VALIDATION_ACCESS_ROLE.AUTHOR) ? { usename: user.usename } : { org };
-      const data = await getValidationProcesses(apiParams);
+      const data = await getAllValidationProcesses(apiParams);
       dispatch(setValidationRecords({ loadStatus: REQUEST_STATUS.LOADED, validationRecords: data.results }));
     } catch (error) {
       if (error.response && error.response.status === 403) {
