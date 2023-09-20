@@ -80,7 +80,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
                   key={field.name}
                   handleChange={formik.handleChange}
                   value={formik.values[field.name]}
-                  errorMessage={formik.errors[field.name]}
+                  errorMessage={formik.touched[field.name] && formik.errors[field.name]}
                   {...field}
                 />
               ))
