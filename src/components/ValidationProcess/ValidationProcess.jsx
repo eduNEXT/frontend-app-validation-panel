@@ -5,6 +5,7 @@ import {
   Form, Icon, PageBanner, Stack,
 } from '@edx/paragon';
 
+import { useSelector } from 'react-redux';
 import { ValidatorReview } from './ValidatorReview';
 import { CourseSubmissionInfo } from './CourseSubmissionInfo';
 import { getLastReviewEventInfo, getSubmissionInfo } from '../../utils/helpers';
@@ -18,8 +19,14 @@ const ValidationProcess = ({ courseSelected }) => {
     setIsReviewConfirmed((prevState) => !prevState);
   };
 
-  const isValidator = false;
-  const submissionInfo = getSubmissionInfo(courseSelected);
+  // TODO: Delete when backend sends the courseName through "/validation_process/<course_id>"
+  const availableCourses = useSelector((state) => state.courses.availableUserCourses.data.results);
+  const altCourseName = availableCourses.find((course) => course.courseId === courseSelected.courseId)?.name;
+  const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
+
+  const submissionInfo = getSubmissionInfo(
+    { ...courseSelected, courseName: courseSelected?.courseName ?? altCourseName },
+  );
   const isCourseExempted = !!submissionInfo.isExempted;
 
   return (

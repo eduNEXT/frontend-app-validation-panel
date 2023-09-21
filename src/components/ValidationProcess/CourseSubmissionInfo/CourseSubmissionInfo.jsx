@@ -54,16 +54,23 @@ const CourseSubmissionInfo = ({
         )}
       >
         <Stack gap={2}>
-          {submissionInfoWithDesignPropsWithUtilsProps.map((field) => (
-            <div>
-              {field.label !== courseName.label && (
-              <p>
-                <span className="font-weight-bold">{field.label}: </span>
-                {typeof field.value === 'string' ? field.value : field.value.join(', ')}
-              </p>
-              )}
-            </div>
-          ))}
+          {submissionInfoWithDesignPropsWithUtilsProps.map((field) => {
+            const isValueAnArray = Array.isArray(field.value);
+            const isValueADate = field.name.toLowerCase().includes('date')
+              ? new Date(field.value).toLocaleDateString('en-GB')
+              : field.value;
+            const value = isValueAnArray ? field?.value?.join(', ') : isValueADate;
+            return (
+              <div>
+                {field.label !== courseName.label && (
+                <p>
+                  <span className="font-weight-bold">{field.label}: </span>
+                  {value}
+                </p>
+                )}
+              </div>
+            );
+          })}
         </Stack>
       </Collapsible>
     );

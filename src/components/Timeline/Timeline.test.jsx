@@ -4,7 +4,7 @@ import Timeline from './Timeline';
 
 const mockEvents = [
   {
-    status: 'Submitted',
+    status: 'subm',
     createdAt: '2023-08-10',
     reason: null,
     comment: 'This is another comment of the course author',
@@ -13,7 +13,7 @@ const mockEvents = [
 
   },
   {
-    status: 'Approved',
+    status: 'aprv',
     createdAt: '2023-08-20',
     reason: null,
     comment: 'This is the comment of Validator 2',

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import { FormLayout } from '../FormLayout';
 import { addUtils } from '../../../utils/helpers';
@@ -20,7 +21,7 @@ const validatorReviewFieldUtilsProps = [
 
 const ValidatorReview = ({ lastReviewEventInfo, isReviewConfirmed }) => {
   const lastValidationReviewInfoWithUtilsProps = addUtils(validatorReviewFieldUtilsProps, lastReviewEventInfo);
-  const isValidator = false;
+  const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
 
   return (
     <div>

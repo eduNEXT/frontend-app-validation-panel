@@ -13,7 +13,8 @@ import CustomFilter from './CustomFilter';
 import { ModalLayout } from '../ModalLayout';
 import { ValidationProcess } from '../ValidationProcess';
 import { Timeline as PastProcesses } from '../Timeline';
-import { setCurrentRecord } from '../../data/slices';
+import { getCurrentValidationProcessByCourseId } from '../../data/slices';
+import { REQUEST_STATUS } from '../../data/constants';
 
 // TODO: Modify this to execute the proper needed action
 const ActionsAvailable = {
@@ -43,8 +44,8 @@ ActionButton.propTypes = {
 };
 
 const ValidationTable = ({ data, isLoading }) => {
-  const isValidator = false;
   const dispatch = useDispatch();
+  const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
   const [isOpen, open, close] = useToggle(false);
 
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
@@ -56,8 +57,7 @@ const ValidationTable = ({ data, isLoading }) => {
   });
 
   const handleClickInCourseTitle = (courseId) => {
-    const courseClicked = data.find((course) => course.courseId === courseId);
-    dispatch(setCurrentRecord(courseClicked));
+    dispatch(getCurrentValidationProcessByCourseId(courseId));
     open();
   };
 
@@ -81,6 +81,8 @@ const ValidationTable = ({ data, isLoading }) => {
   };
 
   const getColumnsWithClickableNames = (dataToAdapt) => getColumns(dataToAdapt).map((col) => {
+    const needSearchBar = col?.accessor === 'organization' || col?.accessor === 'categories';
+
     if (col?.accessor === 'courseName') {
       return {
         ...col,
@@ -94,7 +96,7 @@ const ValidationTable = ({ data, isLoading }) => {
     }
 
     if (!col.disableFilters) {
-      if (col?.accessor === 'organization' || col?.accessor === 'categories') {
+      if (needSearchBar) {
         return {
           ...col,
           Filter: (_ref) => (
@@ -140,6 +142,7 @@ const ValidationTable = ({ data, isLoading }) => {
   return (
     <>
       <ModalLayout
+        isLoading={currentValidationRecord.loadStatus === REQUEST_STATUS.LOADING}
         isOpen={isOpen}
         onClose={close}
         tabs={[
@@ -153,11 +156,12 @@ const ValidationTable = ({ data, isLoading }) => {
             label: 'Past process(es)',
             component: <PastProcesses
               pastProcessEvents={currentValidationRecord.validationProcessEvents}
-              validationBody={currentValidationRecord.validationBody}
+              validationBody={currentValidationRecord?.validationBody}
             />,
           },
         ]}
       />
+
       <DataTable
         isLoading={isLoading}
         isFilterable
@@ -179,7 +183,7 @@ const ValidationTable = ({ data, isLoading }) => {
       >
         <DataTable.TableControlBar />
         <DataTable.Table />
-        <DataTable.EmptyTable content="No results found" />
+        <DataTable.EmptyTable className="h1 text-center text-uppercase my-5" content="No results found" />
         <DataTable.TableFooter />
       </DataTable>
     </>
@@ -201,7 +205,7 @@ ValidationTable.propTypes = {
 };
 
 ValidationTable.defaultProps = {
-  isLoading: true,
+  isLoading: false,
 };
 
 export default ValidationTable;

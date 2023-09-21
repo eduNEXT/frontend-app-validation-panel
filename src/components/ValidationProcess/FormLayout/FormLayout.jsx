@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
+import { useFormik } from 'formik';
+import { useSelector } from 'react-redux';
 import { Button, Stack } from '@edx/paragon';
 import { FormattedDate } from '@edx/frontend-platform/i18n';
-import { useFormik } from 'formik';
 
 import { FormInput } from './FormInput';
+import { formatDateIfDateField } from './helpers';
 
 const getFormValues = (data) => {
   const values = {};
@@ -25,7 +27,7 @@ const FormLayout = ({
   });
 
   const submissionDate = data.find((field) => useSpecialDateUsage && field.label.toLowerCase().includes('date'));
-  const isValidator = false;
+  const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
 
   const exemptedConditional = (fieldName) => (isExempted ? !exemptedFields.includes(fieldName) : true);
   const isSubmissionDateField = (fieldName) => fieldName === submissionDate?.name;
@@ -49,7 +51,7 @@ const FormLayout = ({
           key={field.name}
           name={field.name}
           handleChange={handleChange}
-          value={values[field.name]}
+          value={formatDateIfDateField(field.name, values[field.name])}
           type={field.type}
           label={field.label}
           labelAssistant={(field.label.toLowerCase().includes('name') && submissionDate) && (

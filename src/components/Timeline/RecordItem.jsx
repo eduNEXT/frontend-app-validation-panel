@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { FormattedDate, FormattedMessage } from '@edx/frontend-platform/i18n';
+import { VALIDATION_STATUS_LABEL } from '../../data/constants';
 
 const bold = (str) => <b>{str}</b>;
 
@@ -52,7 +53,7 @@ const RecordItem = ({
             tagName="div"
             values={{
               b: bold,
-              status,
+              status: VALIDATION_STATUS_LABEL[status],
             }}
           />
           <FormattedMessage

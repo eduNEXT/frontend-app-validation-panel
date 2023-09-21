@@ -13,10 +13,12 @@ const ValidationTableLayout = ({ isValidator }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAvailableValidationProcesses());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const availableValidationProcesses = useSelector((state) => (
     state.validationRecord.availableValidationProcesses));
+
+  const areValidationProcessesLoading = availableValidationProcesses.loadStatus === REQUEST_STATUS.LOADING;
 
   const pendingStatuses = [VALIDATION_STATUS.IN_REVIEW, VALIDATION_STATUS.SUBMITTED];
 
@@ -26,8 +28,8 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Pending Courses',
       component: (
         <ValidationTable
-          isLoading={availableValidationProcesses.status === REQUEST_STATUS.LOADING}
-          data={availableValidationProcesses.data.results?.filter((course) => {
+          isLoading={areValidationProcessesLoading}
+          data={availableValidationProcesses?.data?.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
             return pendingStatuses.includes(lastValidationProcessEvent?.status);
           })}
@@ -39,8 +41,8 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Archived Courses',
       component: (
         <ValidationTable
-          isLoading={availableValidationProcesses.status === REQUEST_STATUS.LOADING}
-          data={availableValidationProcesses.data.results?.filter((course) => {
+          isLoading={areValidationProcessesLoading}
+          data={availableValidationProcesses?.data?.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
             return !pendingStatuses.includes(lastValidationProcessEvent?.status);
           })}
@@ -61,8 +63,8 @@ const ValidationTableLayout = ({ isValidator }) => {
         </Tabs>
       ) : (
         <ValidationTable
-          data={availableValidationProcesses.data.results}
-          isLoading={availableValidationProcesses.status === REQUEST_STATUS.LOADING}
+          isLoading={areValidationProcessesLoading}
+          data={availableValidationProcesses?.data}
         />
       )}
     </div>

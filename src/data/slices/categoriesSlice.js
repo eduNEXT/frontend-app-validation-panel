@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getAvailableCategories } from '../api';
+import { getCategories } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
-export const getCourseCategoriesByCourseId = createAsyncThunk('courses/courseCategories', async () => {
-  const response = await getAvailableCategories();
+export const getCourseCategories = createAsyncThunk('courses/courseCategories', async () => {
+  const response = await getCategories();
   return response;
 });
 
@@ -21,21 +21,21 @@ export const courseCategoriesSlice = createSlice({
   initialState: courseCategoriesInitialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getCourseCategoriesByCourseId.pending, (state) => {
+    builder.addCase(getCourseCategories.pending, (state) => {
       state.availableCourseCategories = {
         loadStatus: REQUEST_STATUS.LOADING,
         data: [],
         error: {},
       };
     });
-    builder.addCase(getCourseCategoriesByCourseId.fulfilled, (state, action) => {
+    builder.addCase(getCourseCategories.fulfilled, (state, action) => {
       state.availableCourseCategories = {
         loadStatus: REQUEST_STATUS.LOADED,
         data: action.payload,
         error: {},
       };
     });
-    builder.addCase(getCourseCategoriesByCourseId.rejected, (state, action) => {
+    builder.addCase(getCourseCategories.rejected, (state, action) => {
       state.availableCourseCategories = {
         loadStatus: REQUEST_STATUS.FAILED,
         data: [],

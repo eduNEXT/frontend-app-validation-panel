@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
-import { ModalDialog, Tabs, Tab } from '@edx/paragon';
+import {
+  ModalDialog, Tabs, Tab, Spinner, Stack,
+} from '@edx/paragon';
 
 /**
  * A versatile modal layout component with optional tabs. For showing and hiding
@@ -39,7 +41,7 @@ import { ModalDialog, Tabs, Tab } from '@edx/paragon';
  * </ModalLayout>
  */
 const ModalLayout = ({
-  title, isOpen, onClose, tabs, children,
+  title, isOpen, onClose, tabs, isLoading, children,
 }) => (
   <ModalDialog
     isOpen={isOpen}
@@ -55,17 +57,30 @@ const ModalLayout = ({
     </ModalDialog.Header>
 
     <ModalDialog.Body className="mx-5">
-      {!!tabs.length
-        && (
-          <Tabs variant="tabs">
-            {tabs.map(({ name, label, component }) => (
-              <Tab eventKey={name} title={label} className="py-4">
-                {component}
-              </Tab>
-            ))}
-          </Tabs>
-        )}
-      {children}
+      <div>
+        {
+          isLoading
+            ? (
+              <Stack className="align-items-center">
+                <Spinner animation="border" className="mt-5 mb-6" screenReaderText="loading" />
+              </Stack>
+            )
+            : (
+              <>
+                {!!tabs.length && (
+                  <Tabs variant="tabs">
+                    {tabs.map(({ name, label, component }) => (
+                      <Tab eventKey={name} title={label} className="py-4">
+                        {component}
+                      </Tab>
+                    ))}
+                  </Tabs>
+                )}
+                {children}
+              </>
+            )
+        }
+      </div>
     </ModalDialog.Body>
   </ModalDialog>
 );
@@ -79,6 +94,7 @@ ModalLayout.propTypes = {
     label: PropTypes.string.isRequired,
     component: PropTypes.node,
   })),
+  isLoading: PropTypes.bool,
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
 };
 
@@ -86,6 +102,7 @@ ModalLayout.defaultProps = {
   title: '',
   children: null,
   tabs: [],
+  isLoading: false,
 };
 
 export default ModalLayout;

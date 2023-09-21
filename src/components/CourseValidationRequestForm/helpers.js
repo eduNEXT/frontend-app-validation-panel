@@ -1,3 +1,9 @@
+export const getAdaptedData = (formData, availableCourseCategories) => ({
+  ...formData,
+  categoryIds: formData.categoryIds.map((categoryName) => (
+    availableCourseCategories.find(category => category.name === categoryName).id)),
+});
+
 export const adaptOptions = (optionsToAdapt) => optionsToAdapt?.map((option) => ({ key: option.name.replaceAll(' ', ''), id: option.id, label: option.name }));
 
 export const getCourseValidationRequestForm = (
@@ -16,21 +22,22 @@ export const getCourseValidationRequestForm = (
     options: adaptOptions(availableUserCourses),
   },
   {
-    name: 'validationBody',
+    name: 'validationBodyId',
     as: 'select',
     label: 'Validation Body',
     description: 'Please select the applicable validation body for your course',
     options: adaptOptions(availableValidationBodies),
   },
   {
-    name: 'category',
+    name: 'categoryIds',
+    isArray: true,
     as: 'select',
     label: 'Category',
     description: 'Please select the appropriate category for your course',
     options: adaptOptions(availableCourseCategories),
   },
   {
-    name: 'comments',
+    name: 'comment',
     as: 'textarea',
     label: 'Comments',
     description: 'Type any comment or explanation for your course',
