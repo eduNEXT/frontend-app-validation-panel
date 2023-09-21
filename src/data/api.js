@@ -24,15 +24,14 @@ export async function getCoursesByUser() {
   return camelCaseObject(data);
 }
 
+export async function getUserInfo() {
+  const { data } = await getAuthenticatedHttpClient().get(getValidationApiUrl(VALIDATION_API_PATH.USER_INFO));
+  return camelCaseObject(data);
+}
+
 /**
  * Fetches all the validation records created by the current user or related to a validation body.
  *  * @param {object} params
- * @returns {Promise<[{}]>}
- */
-
-/**
- * Fetches a specific validation process by course id.
- *  * @param {string} courseId
  * @returns {Promise<[{}]>}
  */
 
@@ -41,6 +40,11 @@ export async function getAllValidationProcesses() {
   return camelCaseObject(data);
 }
 
+/**
+ * Fetches a specific validation process by course id.
+ *  * @param {string} courseId
+ * @returns {Promise<[{}]>}
+ */
 export async function getValidationProcess(courseId) {
   const { data } = await getAuthenticatedHttpClient().get(
     getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_PROCESS}/${courseId}`),

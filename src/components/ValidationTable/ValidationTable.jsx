@@ -44,8 +44,8 @@ ActionButton.propTypes = {
 };
 
 const ValidationTable = ({ data, isLoading }) => {
-  const isValidator = false;
   const dispatch = useDispatch();
+  const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
   const [isOpen, open, close] = useToggle(false);
 
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);

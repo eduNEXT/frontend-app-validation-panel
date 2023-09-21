@@ -32,6 +32,7 @@ const VALIDATION_API_PATH = {
   VALIDATION_BODY: 'validation-bodies',
   VALIDATION_PROCESS: 'validation-processes',
   VALIDATION_EVENT: 'validation-process-event',
+  USER_INFO: 'user-info',
 };
 
 const REQUEST_STATUS = {

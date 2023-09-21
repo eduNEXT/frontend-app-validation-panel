@@ -1,14 +1,23 @@
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Stack, useToggle } from '@edx/paragon';
 
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { CourseValidationRequestForm, Header, ValidationTableLayout } from './components';
 
 import messages from './messages';
+import { getCurrentUserInfo } from './data/slices/userInfoSlice';
 
 const ValidationPanelPage = () => {
   const [isOpen, open, close] = useToggle(false);
   const intl = useIntl();
-  const isValidator = false;
+
+  const dispatch = useDispatch();
+  const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
+  useEffect(() => {
+    dispatch(getCurrentUserInfo());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
