@@ -4,17 +4,17 @@ import { getAllValidationProcesses, postValidationProcess } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
 const transformValidationProcess = (validationProcess) => ({
-  courseName: validationProcess.course.name || 'None',
+  courseName: validationProcess.course.displayName || 'None',
   courseId: validationProcess.course.id,
   organization: validationProcess.organization.name,
   categories: validationProcess.categories.map((category) => category.name),
   validationBody: validationProcess.validationBody.name,
   validationProcessEvents: validationProcess.events.map((event) => ({
     status: event.status,
-    createdAt: event.createAt,
+    createdAt: event.createdAt,
     reason: event.reason,
     comment: event.comment,
-    user: event.user,
+    user: event.user.fullName,
   })),
 });
 

@@ -13,7 +13,7 @@ const ValidationTableLayout = ({ isValidator }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAvailableValidationProcesses());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const availableValidationProcesses = useSelector((state) => (
     state.validationRecord.availableValidationProcesses));
