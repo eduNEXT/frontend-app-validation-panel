@@ -4,7 +4,7 @@ import { getAllValidationProcesses, postValidationProcess } from '../api';
 import { REQUEST_STATUS } from '../constants';
 
 const transformValidationProcess = (validationProcess) => ({
-  courseName: validationProcess.course.displayName || 'None',
+  courseName: validationProcess.course.displayName || '',
   courseId: validationProcess.course.id,
   organization: validationProcess.organization.name,
   categories: validationProcess.categories.map((category) => category.name),
@@ -14,7 +14,7 @@ const transformValidationProcess = (validationProcess) => ({
     createdAt: event.createdAt,
     reason: event.reason,
     comment: event.comment,
-    user: event.user.fullName,
+    user: event.user?.fullName || '',
   })),
 });
 
@@ -54,7 +54,7 @@ export const validationRecordSlice = createSlice({
         state.availableValidationProcesses.loadStatus = REQUEST_STATUS.LOADING;
       })
       .addCase(createValidationProcess.fulfilled, (state, action) => {
-        state.availableValidationProcesses.loadStatus = REQUEST_STATUS.LOADED;
+        state.availableValidationProcesses.loadStatus = REQUEST_STATUS.SAVED;
         state.availableValidationProcesses.data.push(transformValidationProcess(action.payload));
       })
       .addCase(createValidationProcess.rejected, (state, action) => {

@@ -27,7 +27,7 @@ export const getSubmissionInfo = (course) => {
     (validationProcess) => validationProcess?.status.toLowerCase() === VALIDATION_STATUS.EXEMPT.toLowerCase(),
   );
 
-  const courseAuthor = exemptionProcessEvent?.user || submissionProcessEvent?.user;
+  const courseAuthor = exemptionProcessEvent?.user?.fullName || submissionProcessEvent?.user?.fullName;
   const submissionDate = exemptionProcessEvent?.createdAt || submissionProcessEvent?.createdAt;
   const submissionComments = exemptionProcessEvent?.comment || submissionProcessEvent?.comment;
 
@@ -37,7 +37,7 @@ export const getSubmissionInfo = (course) => {
     isExempted,
     courseName: course.courseName,
     courseId: course.courseId,
-    reviewer: course.currentValidationUser,
+    reviewer: course.currentValidationUser?.fullName || '',
     organization: course.organization?.name,
     categories: course.categories?.map((category) => category?.name),
     courseAuthor,

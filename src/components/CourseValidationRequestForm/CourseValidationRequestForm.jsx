@@ -10,7 +10,6 @@ import {
   getCourseCategories,
   getCoursesByUsername,
   createValidationProcess,
-  getAvailableValidationProcesses,
 } from '../../data/slices';
 
 import { Field } from './Field';
@@ -29,7 +28,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     dispatch(getCoursesByUsername());
     dispatch(getCourseCategories());
     dispatch(getAvailableValidationBodies());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const validationRequestFormFields = getCourseValidationRequestForm(
@@ -57,7 +56,6 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     validationSchema: FormSchema,
     onSubmit: (formData) => {
       dispatch(createValidationProcess(getAdaptedData(formData, availableCourseCategories)));
-      dispatch(getAvailableValidationProcesses());
       // eslint-disable-next-line no-use-before-define
       handleClose();
     },
