@@ -33,6 +33,7 @@ const VALIDATION_API_PATH = {
   VALIDATION_PROCESS: 'validation-processes',
   VALIDATION_EVENT: 'validation-process-event',
   USER_INFO: 'user-info',
+  REJECTION_REASONS: 'rejection-reasons',
 };
 
 const REQUEST_STATUS = {

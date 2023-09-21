@@ -7,6 +7,7 @@ import {
   validationRecordReducer,
   currentValidationRecordReducer,
   userInfoReducer,
+  rejectionReasonsReducer,
 } from './slices';
 
 export const initializeStore = (preloadedState = undefined) => (
@@ -18,6 +19,7 @@ export const initializeStore = (preloadedState = undefined) => (
       validationBody: validationBodiesReducer,
       currentValidationRecord: currentValidationRecordReducer,
       userInfo: userInfoReducer,
+      rejectionReasons: rejectionReasonsReducer,
     },
     preloadedState,
   })
