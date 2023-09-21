@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CourseValidationRequestForm, Header, ValidationTableLayout } from './components';
 
 import messages from './messages';
-import { getCurrentUserInfo } from './data/slices/userInfoSlice';
+import { getAvailableRejectionReasons, getCurrentUserInfo } from './data/slices';
 
 const ValidationPanelPage = () => {
   const [isOpen, open, close] = useToggle(false);
@@ -16,6 +16,7 @@ const ValidationPanelPage = () => {
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
   useEffect(() => {
     dispatch(getCurrentUserInfo());
+    dispatch(getAvailableRejectionReasons());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -29,6 +29,11 @@ export async function getUserInfo() {
   return camelCaseObject(data);
 }
 
+export async function getRejectionReasons() {
+  const { data } = await getAuthenticatedHttpClient().get(getValidationApiUrl(VALIDATION_API_PATH.REJECTION_REASONS));
+  return camelCaseObject(data);
+}
+
 /**
  * Fetches all the validation records created by the current user or related to a validation body.
  *  * @param {object} params
