@@ -6,9 +6,9 @@ import { REQUEST_STATUS } from '../constants';
 const transformValidationProcess = (validationProcess) => ({
   courseName: validationProcess.course.displayName || '',
   courseId: validationProcess.course.id,
-  organization: validationProcess.organization.name,
-  categories: validationProcess.categories.map((category) => category.name).join(', '),
-  validationBody: validationProcess.validationBody.name,
+  organization: validationProcess.organization?.name,
+  categories: validationProcess.categories.map((category) => category?.name).join(', '),
+  validationBody: validationProcess.validationBody?.name,
   currentValidationUser: validationProcess.currentValidationUser,
   validationProcessEvents: validationProcess.events.map((event) => ({
     status: event.status,
