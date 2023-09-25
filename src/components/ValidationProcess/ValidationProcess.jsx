@@ -9,8 +9,9 @@ import { useSelector } from 'react-redux';
 import { ValidatorReview } from './ValidatorReview';
 import { CourseSubmissionInfo } from './CourseSubmissionInfo';
 import { getLastReviewEventInfo, getSubmissionInfo } from '../../utils/helpers';
+import { isPendingCourse } from './helpers';
 
-const ValidationProcess = ({ courseSelected }) => {
+const ValidationProcess = ({ courseSelected, onClose }) => {
   const [isReviewConfirmed, setIsReviewConfirmed] = useState(false);
   const [openCollapsible, setOpenCollapsible] = useState(null);
 
@@ -19,16 +20,14 @@ const ValidationProcess = ({ courseSelected }) => {
     setIsReviewConfirmed((prevState) => !prevState);
   };
 
-  // TODO: Delete when backend sends the courseName through "/validation_process/<course_id>"
-  const availableCourses = useSelector((state) => state.courses.availableUserCourses.data.results);
-  const altCourseName = availableCourses.find((course) => course.courseId === courseSelected.courseId)?.name;
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
 
   const submissionInfo = getSubmissionInfo(
-    { ...courseSelected, courseName: courseSelected?.courseName ?? altCourseName },
+    { ...courseSelected, courseName: courseSelected?.courseName },
   );
   const isCourseExempted = !!submissionInfo.isExempted;
 
+  const isPending = isPendingCourse(courseSelected);
   return (
     <>
       <div className="mb-4">
@@ -51,7 +50,7 @@ const ValidationProcess = ({ courseSelected }) => {
         }}
         submissionInfo={submissionInfo}
       />
-      {(isValidator && !isCourseExempted) && (
+      {(isValidator && !isCourseExempted && isPending) && (
       <Stack gap={3} className="my-4">
         <span>Before validating the course, review the content!</span>
         <Form.Checkbox onChange={handleChangeReviewConfirmation} checked={isReviewConfirmed}>
@@ -61,6 +60,8 @@ const ValidationProcess = ({ courseSelected }) => {
       )}
       {!isCourseExempted && (
       <ValidatorReview
+        onClose={onClose}
+        courseId={courseSelected.courseId}
         isReviewConfirmed={isReviewConfirmed}
         lastReviewEventInfo={getLastReviewEventInfo(courseSelected)}
       />
@@ -70,6 +71,7 @@ const ValidationProcess = ({ courseSelected }) => {
 };
 
 ValidationProcess.propTypes = {
+  onClose: PropTypes.func,
   courseSelected: PropTypes.shape({
     courseName: PropTypes.string.isRequired,
     courseId: PropTypes.string.isRequired,
@@ -84,6 +86,10 @@ ValidationProcess.propTypes = {
       user: PropTypes.string.isRequired,
     }),
   }).isRequired,
+};
+
+ValidationProcess.defaultProps = {
+  onClose: null,
 };
 
 export default ValidationProcess;

@@ -1,69 +1,50 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
 import { Button, Stack } from '@edx/paragon';
-import { FormattedDate } from '@edx/frontend-platform/i18n';
-
-import { FormInput } from './FormInput';
-import { formatDateIfDateField } from './helpers';
-
-const getFormValues = (data) => {
-  const values = {};
-  data.forEach((property) => {
-    values[property.name] = property.value;
-  });
-
-  return values;
-};
-
-const exemptedFields = ['validationBody', 'reviewer', 'submissionComments'];
+import {
+  exemptedFields,
+  getFormValues,
+  sortByPositionProp,
+} from './helpers';
+import { disableReasonField } from '../helpers';
+import FormField from './FormField';
 
 const FormLayout = ({
   data, useSpecialDateUsage, onSubmit, onCancel, isExempted,
 }) => {
+  const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
+  const [disableReason, setDisableReason] = useState();
   const { handleChange, values, handleSubmit } = useFormik({
-    initialValues: getFormValues(data),
+    initialValues: getFormValues(data, isValidator),
     onSubmit,
   });
 
-  const submissionDate = data.find((field) => useSpecialDateUsage && field.label.toLowerCase().includes('date'));
-  const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
+  useEffect(() => {
+    setDisableReason(disableReasonField(values.status));
+  }, [values.status]);
 
-  const exemptedConditional = (fieldName) => (isExempted ? !exemptedFields.includes(fieldName) : true);
-  const isSubmissionDateField = (fieldName) => fieldName === submissionDate?.name;
+  const submissionDate = data.find((field) => useSpecialDateUsage && field.label.toLowerCase().includes('date'));
+
+  const shouldShowFieldWhenExempted = (fieldName) => !isExempted || !exemptedFields.includes(fieldName);
 
   const fields = data
-    .sort((a, b) => {
-      if (a.pos < b.pos) {
-        return -1;
-      }
-      if (a.pos > b.pos) {
-        return 1;
-      }
-      return 0;
-    })
-    .map(
-      (field) => {
-        const isDisabled = !isValidator || field.disabled;
-        return (!isSubmissionDateField(field.name) && exemptedConditional(field.name) && (
-        <FormInput
-          disabled={isDisabled}
-          key={field.name}
-          name={field.name}
-          handleChange={handleChange}
-          value={formatDateIfDateField(field.name, values[field.name])}
-          type={field.type}
-          label={field.label}
-          labelAssistant={(field.label.toLowerCase().includes('name') && submissionDate) && (
-            <div className="text-light-800">
-              <span>{submissionDate?.label}: </span>
-              <FormattedDate value={new Date(submissionDate.value)} year="numeric" month="short" day="2-digit" />
-            </div>
-          )}
-        />
-        ));
-      },
-    );
+    .sort(sortByPositionProp)
+    .filter(
+      (field) => !(field.name === submissionDate?.name) && shouldShowFieldWhenExempted(field.name),
+    )
+    .map((field) => (
+      <FormField
+        field={field}
+        key={field.name}
+        values={values}
+        handleChange={handleChange}
+        disableReason={disableReason}
+        isValidator={isValidator}
+        submissionDate={submissionDate}
+      />
+    ));
 
   return (
     <Stack direction="horizontal" className="justify-content-between flex-wrap">
@@ -85,6 +66,10 @@ FormLayout.propTypes = {
       type: PropTypes.string,
       pos: PropTypes.number,
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+      disabled: PropTypes.bool,
+      isSelect: PropTypes.bool,
+      options: PropTypes.arrayOf(Object),
+      name: PropTypes.string,
     }),
   ).isRequired,
   useSpecialDateUsage: PropTypes.bool,

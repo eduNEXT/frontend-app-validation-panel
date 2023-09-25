@@ -37,9 +37,9 @@ export const getSubmissionInfo = (course) => {
     isExempted,
     courseName: course.courseName,
     courseId: course.courseId,
-    reviewer: course.currentValidationUser?.fullName || '',
-    organization: course.organization?.name,
-    categories: course.categories?.map((category) => category?.name),
+    reviewer: course.currentValidationUser,
+    organization: course.organization,
+    categories: course.categories,
     courseAuthor,
     submissionDate,
     submissionComments,
@@ -54,7 +54,7 @@ export const getLastReviewEventInfo = (course) => {
     reviewStartDate: lastValidationProcessEvent?.createdAt,
     status: VALIDATION_STATUS_LABEL[lastValidationProcessEvent?.status],
     reason: lastValidationProcessEvent?.reason,
-    additionalComment: lastValidationProcessEvent?.comment,
+    comment: lastValidationProcessEvent?.comment,
   };
 };
 
@@ -212,3 +212,9 @@ export const getColumns = (coursesToValidate) => {
     return processColumn(column, includeFilter, filterChoices);
   });
 };
+
+export const PENDING_STATUSES = [VALIDATION_STATUS.IN_REVIEW, VALIDATION_STATUS.SUBMITTED];
+
+export const getCurrentStatusCode = (status) => Object.entries(
+  VALIDATION_STATUS_LABEL,
+)?.find(([, value]) => value === status)?.[0];

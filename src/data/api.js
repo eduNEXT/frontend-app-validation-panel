@@ -101,6 +101,21 @@ export async function postValidationProcess(config) {
 }
 
 /**
+ * Updated a the status of a validation process
+ *  @param {object} config
+  * @param { string } config.courseId
+  * @param { string } config.comment
+  * @param { number } config.reasonId
+ *  */
+export async function postUpdateValidationProcessStatus(config) {
+  const { data } = await getAuthenticatedHttpClient().post(
+    getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_PROCESS}/${config.courseId}/update-state`),
+    snakeCaseObject(config),
+  );
+  return camelCaseObject(data);
+}
+
+/**
  * Creates a new validation process event
  *  @param {object} config
  * status: { string }

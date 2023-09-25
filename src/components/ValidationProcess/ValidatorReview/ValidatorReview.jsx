@@ -1,35 +1,51 @@
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { FormLayout } from '../FormLayout';
 import { addUtils } from '../../../utils/helpers';
+import { getAvailableValidationProcesses, updateValidationProcessStatus } from '../../../data/slices/validationRecordSlice';
+import { getOptions, isPendingCourse } from '../helpers';
 
-const validatorReviewFieldUtilsProps = [
-  {
-    name: 'reviewStartDate', label: 'Review start date', type: 'col', pos: 3, disabled: true,
-  },
-  {
-    name: 'status', label: 'Status', type: 'col', pos: 4,
-  },
-  {
-    name: 'reason', label: 'Reason', type: 'row', pos: 5,
-  },
-  {
-    name: 'additionalComment', label: 'Additional comments', type: 'row', pos: 6,
-  },
-];
-
-const ValidatorReview = ({ lastReviewEventInfo, isReviewConfirmed }) => {
-  const lastValidationReviewInfoWithUtilsProps = addUtils(validatorReviewFieldUtilsProps, lastReviewEventInfo);
+const ValidatorReview = ({
+  lastReviewEventInfo, isReviewConfirmed, onClose, courseId,
+}) => {
+  const dispatch = useDispatch();
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
+  const isPending = isPendingCourse(null, lastReviewEventInfo);
+
+  const validatorReviewFieldUtilsProps = [
+    {
+      name: 'reviewStartDate', label: 'Review start date', type: 'col', pos: 3, disabled: true,
+    },
+    {
+      name: 'status', label: 'Status', type: 'col', pos: 4, options: isPending ? getOptions(lastReviewEventInfo.status) : [], isSelect: isValidator,
+    },
+    {
+      name: 'reason', label: 'Reason', type: 'row', pos: 5, isSelect: isValidator,
+    },
+    {
+      name: 'comment', label: 'Additional comments', type: 'row', pos: 6,
+    },
+  ];
+
+  const lastValidationReviewInfoWithUtilsProps = addUtils(validatorReviewFieldUtilsProps, lastReviewEventInfo);
+
+  const handleSubmit = (formData) => {
+    dispatch(updateValidationProcessStatus({ ...formData, courseId }))
+      .then(() => {
+        onClose();
+        dispatch(getAvailableValidationProcesses());
+      });
+  };
 
   return (
     <div>
       {(!isValidator || isReviewConfirmed) && (
         <FormLayout
+          isValidator={isValidator}
           data={lastValidationReviewInfoWithUtilsProps}
-          onSubmit={(formData) => console.log(formData)}
-          onCancel={() => console.log('Comer')}
+          onSubmit={handleSubmit}
+          onCancel={onClose}
         />
       )}
     </div>
@@ -46,10 +62,13 @@ ValidatorReview.propTypes = {
     additionalComment: PropTypes.string,
   }).isRequired,
   isReviewConfirmed: PropTypes.bool,
+  onClose: PropTypes.func,
+  courseId: PropTypes.string.isRequired,
 };
 
 ValidatorReview.defaultProps = {
   isReviewConfirmed: false,
+  onClose: null,
 };
 
 export default ValidatorReview;
