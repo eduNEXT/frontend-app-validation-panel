@@ -11,6 +11,7 @@ import { Route, Routes } from 'react-router';
 import messages from './i18n';
 import ValidationPanelPage from './ValidationPanelPage';
 import PermissionsGuard from './utils/PermissionsGuard';
+import Head from './Head';
 
 import './index.scss';
 import store from './data/store';
@@ -18,6 +19,7 @@ import store from './data/store';
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
+      <Head />
       <Routes>
         <Route element={<PermissionsGuard />}>
           <Route path="/validation-panel" element={<ValidationPanelPage />} />
