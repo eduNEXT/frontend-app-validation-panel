@@ -14,7 +14,7 @@ export const getCourseValidationRequestForm = (
   {
     name: 'courseId',
     // select, textarea or input
-    as: 'select',
+    as: 'autosuggest',
     label: 'Course Name',
     description: 'Please select one of your courses from the list below',
     // prop when 'as' property is 'select'
@@ -23,15 +23,14 @@ export const getCourseValidationRequestForm = (
   },
   {
     name: 'validationBodyId',
-    as: 'select',
+    as: 'autosuggest',
     label: 'Validation Body',
     description: 'Please select the applicable validation body for your course',
     options: adaptOptions(availableValidationBodies),
   },
   {
     name: 'categoryIds',
-    isArray: true,
-    as: 'select',
+    as: 'multipleSelector',
     label: 'Category',
     description: 'Please select the appropriate category for your course',
     options: adaptOptions(availableCourseCategories),

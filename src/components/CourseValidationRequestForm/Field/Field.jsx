@@ -4,10 +4,10 @@ import { Close } from '@edx/paragon/icons';
 import { Chip, Form, Stack } from '@edx/paragon';
 
 const Field = ({
-  label, description, name, as, options, handleChange, value, errorMessage, isArray,
-}) => (
-  <div>
-    {isArray ? (
+  label, description, name, as, options, handleChange, value, errorMessage,
+}) => {
+  if (as === 'multipleSelector') {
+    return (
       <FieldArray
         name={name}
         render={({ push, remove }) => (
@@ -26,7 +26,7 @@ const Field = ({
                 }
               }}
             >
-              { options?.map((optionInfo) => (
+              {options?.map((optionInfo) => (
                 <Form.AutosuggestOption
                   key={optionInfo.key}
                   value={optionInfo.id}
@@ -52,23 +52,46 @@ const Field = ({
           </Stack>
         )}
       />
-    ) : (
+    );
+  }
+
+  if (as === 'autosuggest') {
+    return (
       <Stack>
         <span>{label}</span>
         <span className="small">{description}</span>
         <Form.Group isInvalid={!!errorMessage}>
-          <Form.Control name={name} as={as} onChange={handleChange} value={value}>
-            <option hidden selected> Select one... </option>
-            { options?.map((optionInfo) => (
-              <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
+          <Form.Autosuggest name={name} as="input" onSelected={handleChange} value={value}>
+            {options?.map((optionInfo) => (
+              <Form.AutosuggestOption
+                key={optionInfo.key}
+              >
+                {optionInfo.label}
+              </Form.AutosuggestOption>
             ))}
-          </Form.Control>
+          </Form.Autosuggest>
           <Form.Control.Feedback hidden={!errorMessage} type="invalid">{errorMessage}</Form.Control.Feedback>
         </Form.Group>
       </Stack>
-    )}
-  </div>
-);
+    );
+  }
+
+  return (
+    <Stack>
+      <span>{label}</span>
+      <span className="small">{description}</span>
+      <Form.Group isInvalid={!!errorMessage}>
+        <Form.Control name={name} as={as} onChange={handleChange} value={value}>
+          <option hidden selected> Select one... </option>
+          {options?.map((optionInfo) => (
+            <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
+          ))}
+        </Form.Control>
+        <Form.Control.Feedback hidden={!errorMessage} type="invalid">{errorMessage}</Form.Control.Feedback>
+      </Form.Group>
+    </Stack>
+  );
+};
 
 Field.propTypes = {
   label: PropTypes.string.isRequired,
@@ -79,7 +102,6 @@ Field.propTypes = {
   handleChange: PropTypes.func.isRequired,
   value: PropTypes.string,
   errorMessage: PropTypes.string,
-  isArray: PropTypes.bool,
 };
 
 Field.defaultProps = {
@@ -87,7 +109,6 @@ Field.defaultProps = {
   value: '',
   options: [],
   errorMessage: null,
-  isArray: false,
 };
 
 export default Field;
