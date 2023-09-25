@@ -102,13 +102,12 @@ const ValidationTable = ({ data, isLoading }) => {
           Filter: (_ref) => (
             <CustomFilter _ref={_ref} Filter={CheckboxFilter}>
               <SearchField.Advanced
-                submitButtonLocation="external"
                 onSubmit={(value) => setKeyword({ value, col })}
+                className="border-1"
               >
-                <div className="pgn__searchfield_wrapper">
-                  <SearchField.Input placeholder={`Find ${_ref.column.Header}`} />
-                </div>
-                <SearchField.SubmitButton buttonText={<Search />} submitButtonLocation="external" />
+                <SearchField.Input placeholder={`Find ${_ref.column.Header}`} />
+                <SearchField.SubmitButton buttonText={<Search />} />
+                <SearchField.ClearButton onClick={() => setKeyword({ value: '', col: null })} />
               </SearchField.Advanced>
             </CustomFilter>
           ),
@@ -127,14 +126,14 @@ const ValidationTable = ({ data, isLoading }) => {
 
   useEffect(() => {
     handleFilterChoices(keyword.value, keyword.col);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword.value]);
 
   useEffect(() => {
     const auxData = getColumnsWithClickableNames(data);
     setColumnsWithClickableNames(auxData);
     setAuxColumnsWithClickableNames(auxData);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.length]);
 
   const currentValidationRecord = useSelector((state) => state.currentValidationRecord);

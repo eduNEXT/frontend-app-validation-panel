@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 import { Button } from '@edx/paragon';
-import { ArrowDropDown } from '@edx/paragon/icons';
+import { KeyboardArrowRight } from '@edx/paragon/icons';
 
 const CustomToggle = forwardRef(({ children, onClick }, ref) => (
   <Button
@@ -15,7 +15,7 @@ const CustomToggle = forwardRef(({ children, onClick }, ref) => (
     }}
   >
     {children}
-    <ArrowDropDown />
+    <KeyboardArrowRight />
   </Button>
 ));
 
