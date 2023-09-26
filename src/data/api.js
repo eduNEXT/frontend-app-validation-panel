@@ -19,6 +19,7 @@ export async function getCoursesByUser() {
   const { data } = await getAuthenticatedHttpClient().get(getCoursesApiUrl(), {
     params: {
       username: getAuthenticatedUser().username,
+      page_size: 100,
     },
   });
   return camelCaseObject(data);

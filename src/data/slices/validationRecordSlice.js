@@ -1,7 +1,17 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { getAllValidationProcesses, postUpdateValidationProcessStatus, postValidationProcess } from '../api';
-import { REQUEST_STATUS } from '../constants';
+import { REQUEST_STATUS, VALIDATION_STATUS } from '../constants';
+
+/** Helpers */
+const transformValidationProcessEvents = (event) => ({
+  status: event.status,
+  createdAt: event.createdAt,
+  reason: event.reason,
+  comment: event.comment,
+  user: event.user?.fullName || '',
+});
 
 const transformValidationProcess = (validationProcess) => ({
   courseName: validationProcess.course.displayName || '',
@@ -10,13 +20,7 @@ const transformValidationProcess = (validationProcess) => ({
   categories: validationProcess.categories.map((category) => category?.name).join(', '),
   validationBody: validationProcess.validationBody?.name,
   currentValidationUser: validationProcess.currentValidationUser,
-  validationProcessEvents: validationProcess.events.map((event) => ({
-    status: event.status,
-    createdAt: event.createdAt,
-    reason: event.reason,
-    comment: event.comment,
-    user: event.user?.fullName || '',
-  })),
+  validationProcessEvents: validationProcess.events.map(transformValidationProcessEvents),
 });
 
 const defaultCommentsForFastActions = {
@@ -25,6 +29,7 @@ const defaultCommentsForFastActions = {
   revi: 'Validation process was selected to be reviewed',
 };
 
+/** Thunks */
 export const getAvailableValidationProcesses = createAsyncThunk('organization/validationProcesses', async () => {
   const response = await getAllValidationProcesses();
   return response;
@@ -39,9 +44,11 @@ export const updateValidationProcessStatus = createAsyncThunk('organization/vali
 
 export const createValidationProcess = createAsyncThunk('organization/validationProcesses/post', async (formData) => postValidationProcess(formData));
 
+/** Slice */
 const validationProcessesInitialState = {
   availableValidationProcesses: {
     loadStatus: 'idle',
+    courseIdsCurrentUserIsReviewing: [],
     data: [],
     error: {},
   },
@@ -57,6 +64,11 @@ export const validationRecordSlice = createSlice({
         state.availableValidationProcesses.loadStatus = REQUEST_STATUS.LOADING;
       })
       .addCase(getAvailableValidationProcesses.fulfilled, (state, action) => {
+        const { userId } = getAuthenticatedUser();
+
+        state.availableValidationProcesses.courseIdsCurrentUserIsReviewing = action.payload.filter(
+          (course) => course.currentValidationUser?.id === userId,
+        ).map((course) => course.course.id);
         state.availableValidationProcesses.loadStatus = REQUEST_STATUS.LOADED;
         state.availableValidationProcesses.data = action.payload.map(transformValidationProcess);
       })
@@ -72,6 +84,34 @@ export const validationRecordSlice = createSlice({
         state.availableValidationProcesses.data.push(transformValidationProcess(action.payload));
       })
       .addCase(createValidationProcess.rejected, (state, action) => {
+        state.availableValidationProcesses.loadStatus = REQUEST_STATUS.FAILED;
+        state.availableValidationProcesses.error = action.error;
+      })
+      .addCase(updateValidationProcessStatus.pending, (state) => {
+        state.availableValidationProcesses.loadStatus = REQUEST_STATUS.LOADING;
+      })
+      .addCase(updateValidationProcessStatus.fulfilled, (state, action) => {
+        const { courseId } = action.meta.arg;
+        const courseIdxToUpdate = state.availableValidationProcesses?.data?.findIndex(
+          (course) => course.courseId === courseId,
+        );
+
+        if (action.payload.status === VALIDATION_STATUS.IN_REVIEW) {
+          state.availableValidationProcesses.courseIdsCurrentUserIsReviewing = [...state
+            .availableValidationProcesses.courseIdsCurrentUserIsReviewing, courseId];
+        } else {
+          state.availableValidationProcesses.courseIdsCurrentUserIsReviewing = state
+            .availableValidationProcesses.courseIdsCurrentUserIsReviewing.filter(
+              (currentCourseId) => currentCourseId !== courseId,
+            );
+        }
+
+        state.availableValidationProcesses.loadStatus = REQUEST_STATUS.SAVED;
+        state.availableValidationProcesses.data[courseIdxToUpdate].validationProcessEvents.push(
+          transformValidationProcessEvents(action.payload),
+        );
+      })
+      .addCase(updateValidationProcessStatus.rejected, (state, action) => {
         state.availableValidationProcesses.loadStatus = REQUEST_STATUS.FAILED;
         state.availableValidationProcesses.error = action.error;
       });

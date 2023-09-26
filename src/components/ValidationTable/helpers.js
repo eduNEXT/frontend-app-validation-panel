@@ -1,5 +1,5 @@
 import { VALIDATION_STATUS } from '../../data/constants';
-import { getAvailableValidationProcesses, updateValidationProcessStatus } from '../../data/slices';
+import { updateValidationProcessStatus } from '../../data/slices';
 
 /* eslint-disable import/prefer-default-export */
 export const ActionsAvailable = {
@@ -8,9 +8,7 @@ export const ActionsAvailable = {
       action: (row, dispatch) => {
         dispatch(
           updateValidationProcessStatus({ courseId: row.values.courseId, status: VALIDATION_STATUS.CANCELLED }),
-        ).then(() => {
-          dispatch(getAvailableValidationProcesses());
-        });
+        );
       },
       label: 'Cancel validation',
     },
@@ -18,9 +16,7 @@ export const ActionsAvailable = {
       action: (row, dispatch) => {
         dispatch(
           updateValidationProcessStatus({ courseId: row.values.courseId, status: VALIDATION_STATUS.IN_REVIEW }),
-        ).then(() => {
-          dispatch(getAvailableValidationProcesses());
-        });
+        );
       },
       label: 'Review course',
     },
@@ -30,9 +26,7 @@ export const ActionsAvailable = {
       action: (row, dispatch) => {
         dispatch(
           updateValidationProcessStatus({ courseId: row.values.courseId, status: VALIDATION_STATUS.SUBMITTED }),
-        ).then(() => {
-          dispatch(getAvailableValidationProcesses());
-        });
+        );
       },
       label: 'Re-submit for validation',
     },
@@ -42,9 +36,7 @@ export const ActionsAvailable = {
       action: (row, dispatch) => {
         dispatch(
           updateValidationProcessStatus({ courseId: row.values.courseId, status: VALIDATION_STATUS.SUBMITTED }),
-        ).then(() => {
-          dispatch(getAvailableValidationProcesses());
-        });
+        );
       },
       label: 'Re-submit for validation',
     },
@@ -54,9 +46,7 @@ export const ActionsAvailable = {
       action: (row, dispatch) => {
         dispatch(
           updateValidationProcessStatus({ courseId: row.values.courseId, status: VALIDATION_STATUS.SUBMITTED }),
-        ).then(() => {
-          dispatch(getAvailableValidationProcesses());
-        });
+        );
       },
       label: 'Re-submit for validation',
     },
@@ -66,9 +56,7 @@ export const ActionsAvailable = {
       action: (row, dispatch) => {
         dispatch(
           updateValidationProcessStatus({ courseId: row.values.courseId, status: VALIDATION_STATUS.SUBMITTED }),
-        ).then(() => {
-          dispatch(getAvailableValidationProcesses());
-        });
+        );
       },
       label: 'Release course',
     },

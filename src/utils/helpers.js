@@ -105,6 +105,7 @@ export const adaptToTableFormat = (coursesToValidate) => {
     adaptedCourses.push({
       ...course,
       ...lastValidationProcessEvent,
+      user: firstValidationProcessEvent.user,
       status: VALIDATION_STATUS_LABEL[lastValidationProcessEvent.status],
       createdAt: new Date(firstValidationProcessEvent?.createdAt).toLocaleDateString('en-GB'),
     });

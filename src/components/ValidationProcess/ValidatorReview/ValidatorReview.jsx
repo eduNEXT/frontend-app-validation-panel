@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { FormLayout } from '../FormLayout';
 import { addUtils } from '../../../utils/helpers';
-import { getAvailableValidationProcesses, updateValidationProcessStatus } from '../../../data/slices/validationRecordSlice';
+import { updateValidationProcessStatus } from '../../../data/slices/validationRecordSlice';
 import { getOptions, isPendingCourse } from '../helpers';
 
 const ValidatorReview = ({
@@ -34,7 +34,6 @@ const ValidatorReview = ({
     dispatch(updateValidationProcessStatus({ ...formData, courseId }))
       .then(() => {
         onClose();
-        dispatch(getAvailableValidationProcesses());
       });
   };
 

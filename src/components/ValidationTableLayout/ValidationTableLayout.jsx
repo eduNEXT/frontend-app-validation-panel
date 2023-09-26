@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { Tab, Tabs } from '@edx/paragon';
 
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { REQUEST_STATUS } from '../../data/constants';
 import { getLastAndFirstValidationProcessEvents, PENDING_STATUSES } from '../../utils/helpers';
 
@@ -22,16 +21,6 @@ const ValidationTableLayout = ({ isValidator }) => {
     state.validationRecord.availableValidationProcesses
   ));
   const areValidationProcessesLoading = loadStatus === REQUEST_STATUS.LOADING;
-  const courseIdsCurrentUserIsReviewing = availableValidationProcesses.reduce(
-    (currentIds, validationProcess) => (
-      validationProcess.currentValidationUser?.id === getAuthenticatedUser().userId
-        ? [...currentIds, validationProcess.courseId]
-        : currentIds
-    ),
-    [
-
-    ],
-  );
   const dataToRender = getPermissionBasedData(availableValidationProcesses, isValidator);
 
   const tabItems = [
@@ -40,7 +29,6 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Pending Courses',
       component: (
         <ValidationTable
-          courseIdsCurrentUserIsReviewing={courseIdsCurrentUserIsReviewing}
           isLoading={areValidationProcessesLoading}
           data={dataToRender.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
@@ -54,7 +42,6 @@ const ValidationTableLayout = ({ isValidator }) => {
       label: 'Archived Courses',
       component: (
         <ValidationTable
-          courseIdsCurrentUserIsReviewing={courseIdsCurrentUserIsReviewing}
           isLoading={areValidationProcessesLoading}
           data={dataToRender.filter((course) => {
             const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
@@ -77,7 +64,6 @@ const ValidationTableLayout = ({ isValidator }) => {
         </Tabs>
       ) : (
         <ValidationTable
-          courseIdsCurrentUserIsReviewing={courseIdsCurrentUserIsReviewing}
           isLoading={areValidationProcessesLoading}
           data={dataToRender}
         />

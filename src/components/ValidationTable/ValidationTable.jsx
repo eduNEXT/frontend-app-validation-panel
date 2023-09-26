@@ -17,9 +17,13 @@ import { Timeline as PastProcesses } from '../Timeline';
 import { getCurrentValidationProcessByCourseId } from '../../data/slices';
 import { REQUEST_STATUS, VALIDATION_ACCESS_ROLE, VALIDATION_STATUS_LABEL } from '../../data/constants';
 
-const ValidationTable = ({ data, isLoading, courseIdsCurrentUserIsReviewing }) => {
+const ValidationTable = ({ data, isLoading }) => {
   const dispatch = useDispatch();
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
+  const courseIdsCurrentUserIsReviewing = useSelector(
+    (state) => state.validationRecord.availableValidationProcesses.courseIdsCurrentUserIsReviewing,
+  );
+
   const [isOpen, open, close] = useToggle(false);
 
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
@@ -209,7 +213,6 @@ ValidationTable.propTypes = {
       status: PropTypes.string,
     }),
   ).isRequired,
-  courseIdsCurrentUserIsReviewing: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 ValidationTable.defaultProps = {
