@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+
+import { getConfig } from '@edx/frontend-platform';
+import { useSelector } from 'react-redux';
 import { CheckCircle } from '@edx/paragon/icons';
 import {
   Form, Icon, PageBanner, Stack,
 } from '@edx/paragon';
-
-import { useSelector } from 'react-redux';
 import { ValidatorReview } from './ValidatorReview';
 import { CourseSubmissionInfo } from './CourseSubmissionInfo';
 import { getLastReviewEventInfo, getSubmissionInfo } from '../../utils/helpers';
@@ -13,7 +14,7 @@ import { isPendingCourse } from './helpers';
 
 const ValidationProcess = ({ courseSelected, onClose }) => {
   const [isReviewConfirmed, setIsReviewConfirmed] = useState(false);
-  const [openCollapsible, setOpenCollapsible] = useState(null);
+  const [openCollapsible, setOpenCollapsible] = useState(false);
 
   const handleChangeReviewConfirmation = () => {
     setOpenCollapsible(false);
@@ -51,20 +52,29 @@ const ValidationProcess = ({ courseSelected, onClose }) => {
         submissionInfo={submissionInfo}
       />
       {(isValidator && !isCourseExempted && isPending) && (
-      <Stack gap={3} className="my-4">
-        <span>Before validating the course, review the content!</span>
-        <Form.Checkbox onChange={handleChangeReviewConfirmation} checked={isReviewConfirmed}>
-          Click here to confirm that you have reviewed the content in STUDIO.
-        </Form.Checkbox>
-      </Stack>
+        <Stack gap={3} className="my-4">
+          <p>
+            <span>Before validating the course, review the content! </span>
+            <a
+              href={`${getConfig().STUDIO_BASE_URL}/course/${courseSelected.courseId}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-gray-900 muted-link"
+            >View course in Studio
+            </a>
+          </p>
+          <Form.Checkbox onChange={handleChangeReviewConfirmation} checked={isReviewConfirmed}>
+            Click here to confirm that you have reviewed the content in STUDIO.
+          </Form.Checkbox>
+        </Stack>
       )}
       {!isCourseExempted && (
-      <ValidatorReview
-        onClose={onClose}
-        courseId={courseSelected.courseId}
-        isReviewConfirmed={isReviewConfirmed}
-        lastReviewEventInfo={getLastReviewEventInfo(courseSelected)}
-      />
+        <ValidatorReview
+          onClose={onClose}
+          courseId={courseSelected.courseId}
+          isReviewConfirmed={isReviewConfirmed}
+          lastReviewEventInfo={getLastReviewEventInfo(courseSelected)}
+        />
       )}
     </>
   );
