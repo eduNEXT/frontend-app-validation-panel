@@ -31,7 +31,15 @@ const ValidatorReview = ({
   const lastValidationReviewInfoWithUtilsProps = addUtils(validatorReviewFieldUtilsProps, lastReviewEventInfo);
 
   const handleSubmit = (formData) => {
-    dispatch(updateValidationProcessStatus({ ...formData, courseId }))
+    if (!formData.reason) {
+      // eslint-disable-next-line no-param-reassign
+      delete formData.reason;
+    }
+
+    dispatch(updateValidationProcessStatus({
+      ...formData,
+      courseId,
+    }))
       .then(() => {
         onClose();
       });

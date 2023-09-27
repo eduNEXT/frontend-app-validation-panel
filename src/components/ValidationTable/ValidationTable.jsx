@@ -119,11 +119,12 @@ const ValidationTable = ({ data, isLoading }) => {
   }, [keyword.value]);
 
   useEffect(() => {
-    const auxData = getColumnsWithClickableNames(data);
-    setColumnsWithClickableNames(auxData);
-    setAuxColumnsWithClickableNames(auxData);
+    setColumnsWithClickableNames(getColumnsWithClickableNames(data));
+
+    // This AUX is created for handling the filters
+    setAuxColumnsWithClickableNames(getColumnsWithClickableNames(data));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.length]);
+  }, [data?.length, courseIdsCurrentUserIsReviewing.length]);
 
   const currentValidationRecord = useSelector((state) => state.currentValidationRecord);
 

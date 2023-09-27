@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { Tab, Tabs } from '@edx/paragon';
+import {
+  Spinner, Stack, Tab, Tabs,
+} from '@edx/paragon';
 
 import { REQUEST_STATUS } from '../../data/constants';
 import { getLastAndFirstValidationProcessEvents, PENDING_STATUSES } from '../../utils/helpers';
@@ -54,20 +56,31 @@ const ValidationTableLayout = ({ isValidator }) => {
 
   return (
     <div>
-      {isValidator ? (
-        <Tabs className="mb-4" variant="tabs">
-          {tabItems.map((tab) => (
-            <Tab key={tab.name} eventKey={tab.name} title={tab.label}>
-              {tab.component}
-            </Tab>
-          ))}
-        </Tabs>
-      ) : (
-        <ValidationTable
-          isLoading={areValidationProcessesLoading}
-          data={dataToRender}
-        />
-      )}
+      {
+        !dataToRender.length ? (
+          <Stack className="my-6 align-items-center">
+            <Spinner variant="brand" animation="grow" screenReaderText="loading" />
+          </Stack>
+        )
+          : (
+            <div>
+              {isValidator ? (
+                <Tabs className="mb-4" variant="tabs">
+                  {tabItems?.map((tab) => (
+                    <Tab key={tab.name} eventKey={tab.name} title={tab.label}>
+                      {tab.component}
+                    </Tab>
+                  ))}
+                </Tabs>
+              ) : (
+                <ValidationTable
+                  isLoading={areValidationProcessesLoading}
+                  data={dataToRender}
+                />
+              )}
+            </div>
+          )
+      }
     </div>
   );
 };
