@@ -41,16 +41,6 @@ export const ActionsAvailable = {
       label: 'Re-submit for validation',
     },
   },
-  disapproved: {
-    courseAuthor: {
-      action: (row, dispatch) => {
-        dispatch(
-          updateValidationProcessStatus({ courseId: row.values.courseId, status: VALIDATION_STATUS.SUBMITTED }),
-        );
-      },
-      label: 'Re-submit for validation',
-    },
-  },
   'in review': {
     validator: {
       action: (row, dispatch) => {
