@@ -3,8 +3,8 @@ import { FieldArray } from 'formik';
 import { Close } from '@edx/paragon/icons';
 import { Chip, Form, Stack } from '@edx/paragon';
 
-const Field = ({
-  label, description, name, as, options, handleChange, value, errorMessage, isArray,
+const SelectField = ({
+  label, description, name, as, options, handleChange, value, errorMessage, isArray, disabled,
 }) => (
   <div>
     {isArray ? (
@@ -26,7 +26,7 @@ const Field = ({
                 }
               }}
             >
-              { options?.map((optionInfo) => (
+              {options?.map((optionInfo) => (
                 <Form.AutosuggestOption
                   key={optionInfo.key}
                   value={optionInfo.id}
@@ -54,12 +54,23 @@ const Field = ({
       />
     ) : (
       <Stack>
-        <span>{label}</span>
+        <Form.Label className="w-100">
+          <Stack direction="horizontal" className="w-100 justify-content-between">
+            {label}
+          </Stack>
+        </Form.Label>
         <span className="small">{description}</span>
         <Form.Group isInvalid={!!errorMessage}>
-          <Form.Control name={name} as={as} onChange={handleChange} value={value}>
-            <option hidden selected> Select one... </option>
-            { options?.map((optionInfo) => (
+          <Form.Control
+            name={name}
+            as={as}
+            onChange={handleChange}
+            value={value}
+            disabled={disabled}
+            size="sm"
+          >
+            <option hidden> Select one... </option>
+            {options?.map((optionInfo) => (
               <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
             ))}
           </Form.Control>
@@ -70,24 +81,26 @@ const Field = ({
   </div>
 );
 
-Field.propTypes = {
+SelectField.propTypes = {
   label: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   as: PropTypes.string,
   options: PropTypes.arrayOf(PropTypes.shape({ key: PropTypes.string, label: PropTypes.string })),
   handleChange: PropTypes.func.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   errorMessage: PropTypes.string,
   isArray: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
-Field.defaultProps = {
+SelectField.defaultProps = {
   as: 'input',
   value: '',
   options: [],
   errorMessage: null,
   isArray: false,
+  disabled: false,
 };
 
-export default Field;
+export default SelectField;

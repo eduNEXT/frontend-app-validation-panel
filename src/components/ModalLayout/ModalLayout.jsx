@@ -49,11 +49,14 @@ const ModalLayout = ({
     hasCloseButton
     isFullscreenOnMobile
     size="lg"
+    title="modal-validation-panel"
   >
     <ModalDialog.Header className="mx-5">
-      <ModalDialog.Title>
-        {title}
-      </ModalDialog.Title>
+      {title && (
+        <ModalDialog.Title>
+          {title}
+        </ModalDialog.Title>
+      )}
     </ModalDialog.Header>
 
     <ModalDialog.Body className="mx-5">
@@ -70,7 +73,7 @@ const ModalLayout = ({
                 {!!tabs.length && (
                   <Tabs variant="tabs">
                     {tabs.map(({ name, label, component }) => (
-                      <Tab eventKey={name} title={label} className="py-4">
+                      <Tab key={name} eventKey={name} title={label} className="py-4">
                         {component}
                       </Tab>
                     ))}

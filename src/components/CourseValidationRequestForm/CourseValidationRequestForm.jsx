@@ -12,7 +12,7 @@ import {
   createValidationProcess,
 } from '../../data/slices';
 
-import { Field } from './Field';
+import { SelectField } from '../SelectField';
 import { ModalLayout } from '../ModalLayout';
 import { getAdaptedData, getCourseValidationRequestForm } from './helpers';
 
@@ -74,7 +74,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
           <Stack gap={2}>
             {
               validationRequestFormFields?.map((field) => (
-                <Field
+                <SelectField
                   key={field.name}
                   handleChange={formik.handleChange}
                   value={formik.values[field.name]}

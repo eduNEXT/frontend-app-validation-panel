@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { Search } from '@edx/paragon/icons';
 import {
-  Button, CheckboxFilter, DataTable, TextFilter, SearchField, useToggle,
+  Button, CheckboxFilter, DataTable, TextFilter, SearchField, useToggle, Stack,
 } from '@edx/paragon';
 
+import { ActionsAvailable } from './helpers';
 import { adaptToTableFormat, getColumns } from '../../utils/helpers';
 
 import CustomFilter from './CustomFilter';
@@ -14,38 +15,15 @@ import { ModalLayout } from '../ModalLayout';
 import { ValidationProcess } from '../ValidationProcess';
 import { Timeline as PastProcesses } from '../Timeline';
 import { getCurrentValidationProcessByCourseId } from '../../data/slices';
-import { REQUEST_STATUS } from '../../data/constants';
-
-// TODO: Modify this to execute the proper needed action
-const ActionsAvailable = {
-  submitted: {
-    action: (row) => console.log('submitted', row),
-    label: 'Cancel validation',
-  },
-  draft: {
-    action: (row) => console.log('draft', row),
-    label: 'Re-submit for validation',
-  },
-  approved: {
-    action: (row) => console.log('approved', row),
-    label: 'Cancel validation',
-  },
-};
-
-const ActionButton = ({ label, action }) => (
-  <Button variant="link" onClick={action} style={{ fontSize: '0.9rem' }}>
-    {label}
-  </Button>
-);
-
-ActionButton.propTypes = {
-  label: PropTypes.string.isRequired,
-  action: PropTypes.func.isRequired,
-};
+import { REQUEST_STATUS, VALIDATION_ACCESS_ROLE, VALIDATION_STATUS_LABEL } from '../../data/constants';
 
 const ValidationTable = ({ data, isLoading }) => {
   const dispatch = useDispatch();
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
+  const courseIdsCurrentUserIsReviewing = useSelector(
+    (state) => state.validationRecord.availableValidationProcesses.courseIdsCurrentUserIsReviewing,
+  );
+
   const [isOpen, open, close] = useToggle(false);
 
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
@@ -86,12 +64,22 @@ const ValidationTable = ({ data, isLoading }) => {
     if (col?.accessor === 'courseName') {
       return {
         ...col,
-        Cell: ({ row }) => (
-          <ActionButton
-            label={row.values.courseName}
-            action={() => handleClickInCourseTitle(row.values.courseId)}
-          />
-        ),
+        Cell: ({ row }) => {
+          const isInReview = row.values.status === VALIDATION_STATUS_LABEL.revi;
+          const isReviewedByCurrentUser = courseIdsCurrentUserIsReviewing.includes(row.values.courseId);
+          const canGiveFeedback = isInReview && isReviewedByCurrentUser;
+
+          if (isValidator && !canGiveFeedback) {
+            return row.values.courseName;
+          }
+
+          return (
+            <ActionButton
+              label={row.values.courseName}
+              action={() => handleClickInCourseTitle(row.values.courseId)}
+            />
+          );
+        },
       };
     }
 
@@ -127,15 +115,16 @@ const ValidationTable = ({ data, isLoading }) => {
 
   useEffect(() => {
     handleFilterChoices(keyword.value, keyword.col);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword.value]);
 
   useEffect(() => {
-    const auxData = getColumnsWithClickableNames(data);
-    setColumnsWithClickableNames(auxData);
-    setAuxColumnsWithClickableNames(auxData);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.length]);
+    setColumnsWithClickableNames(getColumnsWithClickableNames(data));
+
+    // This AUX is created for handling the filters
+    setAuxColumnsWithClickableNames(getColumnsWithClickableNames(data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.length, courseIdsCurrentUserIsReviewing.length]);
 
   const currentValidationRecord = useSelector((state) => state.currentValidationRecord);
 
@@ -149,7 +138,7 @@ const ValidationTable = ({ data, isLoading }) => {
           {
             name: 'validation_process',
             label: 'Validation process',
-            component: <ValidationProcess courseSelected={currentValidationRecord} />,
+            component: <ValidationProcess onClose={close} courseSelected={currentValidationRecord} />,
           },
           {
             name: 'past_processes',
@@ -169,25 +158,48 @@ const ValidationTable = ({ data, isLoading }) => {
         itemCount={data?.length}
         data={adaptToTableFormat(data)}
         columns={columnsWithClickableNames}
-        additionalColumns={!isValidator ? [
+        additionalColumns={data.length ? [
           {
-            id: 'action',
-            Header: 'Action',
             Cell: ({ row }) => {
-              const label = ActionsAvailable[row.values.status?.toLowerCase()]?.label || '';
-              const action = ActionsAvailable[row.values.status?.toLowerCase()]?.action || '';
-              return label ? <ActionButton label={label} action={() => action(row)} /> : null;
+              const userPermission = isValidator ? VALIDATION_ACCESS_ROLE.VALIDATOR : VALIDATION_ACCESS_ROLE.AUTHOR;
+              const isInReview = row.values.status === VALIDATION_STATUS_LABEL.revi;
+              const isReviewedByCurrentUser = courseIdsCurrentUserIsReviewing.includes(row.values.courseId);
+
+              const label = ActionsAvailable[row.values.status?.toLowerCase()]?.[userPermission]?.label;
+              const action = ActionsAvailable[row.values.status?.toLowerCase()]?.[userPermission]?.action;
+              return (!!label && !!action && (!isInReview || isReviewedByCurrentUser))
+                ? <ActionButton label={label} action={() => action(row, dispatch)} />
+                : null;
             },
           },
-        ] : false}
+        ] : []}
       >
         <DataTable.TableControlBar />
         <DataTable.Table />
-        <DataTable.EmptyTable className="h1 text-center text-uppercase my-5" content="No results found" />
+        <DataTable.EmptyTable content={<EmptyTableMessage />} />
         <DataTable.TableFooter />
       </DataTable>
     </>
   );
+};
+
+const EmptyTableMessage = () => (
+  <Stack className="align-items-center my-6">
+    <span className="h2 text-uppercase">
+      Not available validation processes
+    </span>
+  </Stack>
+);
+
+const ActionButton = ({ label, action }) => (
+  <Button variant="link" onClick={action} style={{ fontSize: '0.9rem', textAlign: 'left' }}>
+    {label}
+  </Button>
+);
+
+ActionButton.propTypes = {
+  label: PropTypes.string.isRequired,
+  action: PropTypes.func.isRequired,
 };
 
 ValidationTable.propTypes = {
@@ -197,8 +209,8 @@ ValidationTable.propTypes = {
       name: PropTypes.string,
       courseName: PropTypes.string,
       courseId: PropTypes.string,
-      organization: PropTypes.number,
-      validationBody: PropTypes.number,
+      organization: PropTypes.string,
+      validationBody: PropTypes.string,
       status: PropTypes.string,
     }),
   ).isRequired,

@@ -15,8 +15,8 @@ export const getCurrentValidationProcessByCourseId = createAsyncThunk(
 const currentValidationRecordInitialState = {
   loadStatus: 'idle',
   error: null,
-  courseName: null,
-  courseId: null,
+  courseName: '',
+  courseId: '',
   currentValidationUser: null,
   organization: null,
   categories: [],
@@ -60,16 +60,15 @@ const currentRecordSlice = createSlice({
     builder.addCase(getCurrentValidationProcessByCourseId.fulfilled, (state, action) => {
       state.loadStatus = REQUEST_STATUS.LOADED;
       state.error = null;
-      state.courseName = action.payload.course.name;
+      state.courseName = action.payload.course.displayName || '';
       state.courseId = action.payload.course.id;
-      state.currentValidationUser = action.payload.currentValidationUser;
-      state.organization = action.payload.organization;
-      state.categories = action.payload.categories;
+      state.currentValidationUser = action.payload.currentValidationUser?.fullName || '';
+      state.organization = action.payload.organization.name;
+      state.categories = action.payload?.categories?.map((category) => category?.name);
       state.validationBody = action.payload.validationBody.name;
-      // Is adapted the property createdAt 'cause backend send it as createAt
       state.validationProcessEvents = camelCaseObject(action.payload.events).map((event) => ({
         ...event,
-        createdAt: event.createAt ?? event.createdAt,
+        user: event.user?.fullName || '',
       }));
     });
     builder.addCase(getCurrentValidationProcessByCourseId.rejected, (state, action) => {

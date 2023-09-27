@@ -11,7 +11,7 @@ export const getCurrentUserInfo = createAsyncThunk('user/userInfo', async () => 
 const userInfoInitialState = {
   userInfo: {
     loadStatus: 'idle',
-    isValidator: false,
+    isValidator: null,
   },
 };
 

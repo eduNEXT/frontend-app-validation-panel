@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { Form, Stack } from '@edx/paragon';
 
 const FormInput = ({
-  handleChange, name, value, disabled, type, label, labelAssistant,
+  handleChange, name, value, disabled, label, labelAssistant,
 }) => (
-  <Form.Group style={{ width: type === 'col' ? '48%' : '100%' }}>
+  <Form.Group>
     <Form.Label className="w-100">
       <Stack direction="horizontal" className="w-100 justify-content-between">
         {label}
@@ -26,7 +26,6 @@ const FormInput = ({
 FormInput.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
   labelAssistant: PropTypes.node,
   disabled: PropTypes.bool,
   handleChange: PropTypes.func.isRequired,

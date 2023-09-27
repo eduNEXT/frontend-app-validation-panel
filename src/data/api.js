@@ -19,6 +19,7 @@ export async function getCoursesByUser() {
   const { data } = await getAuthenticatedHttpClient().get(getCoursesApiUrl(), {
     params: {
       username: getAuthenticatedUser().username,
+      page_size: 100,
     },
   });
   return camelCaseObject(data);
@@ -95,6 +96,21 @@ export async function getCategories() {
 export async function postValidationProcess(config) {
   const { data } = await getAuthenticatedHttpClient().post(
     getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_PROCESS}/${config.courseId}/submit`),
+    snakeCaseObject(config),
+  );
+  return camelCaseObject(data);
+}
+
+/**
+ * Updated a the status of a validation process
+ *  @param {object} config
+  * @param { string } config.courseId
+  * @param { string } config.comment
+  * @param { number } config.reasonId
+ *  */
+export async function postUpdateValidationProcessStatus(config) {
+  const { data } = await getAuthenticatedHttpClient().post(
+    getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_PROCESS}/${config.courseId}/update-state`),
     snakeCaseObject(config),
   );
   return camelCaseObject(data);
