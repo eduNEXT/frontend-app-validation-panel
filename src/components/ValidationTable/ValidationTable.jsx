@@ -20,6 +20,7 @@ import { REQUEST_STATUS, VALIDATION_ACCESS_ROLE, VALIDATION_STATUS_LABEL } from 
 const ValidationTable = ({ data, isLoading }) => {
   const dispatch = useDispatch();
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
+  const availableReasons = useSelector((state) => state.rejectionReasons.data);
   const courseIdsCurrentUserIsReviewing = useSelector(
     (state) => state.validationRecord.availableValidationProcesses.courseIdsCurrentUserIsReviewing,
   );
@@ -156,7 +157,7 @@ const ValidationTable = ({ data, isLoading }) => {
         isFilterable
         defaultColumnValues={{ Filter: TextFilter }}
         itemCount={data?.length}
-        data={adaptToTableFormat(data)}
+        data={adaptToTableFormat(data, availableReasons)}
         columns={columnsWithClickableNames}
         additionalColumns={data.length ? [
           {

@@ -8,7 +8,7 @@ const COL_WIDTH = '50%';
 const FULL_WIDTH = '100%';
 
 const FormField = ({
-  field, values, handleChange, disableReason, isValidator, submissionDate,
+  field, values, handleChange, disableReason, isValidator, submissionDate, errorMessage,
 }) => {
   const isDisabled = !isValidator || field.disabled || (field?.name === 'reason' && disableReason);
   const isColumn = field.type === 'col';
@@ -25,10 +25,12 @@ const FormField = ({
           handleChange={handleChange}
           value={values[field.name]}
           type={field.type}
+          errorMessage={errorMessage}
         />
       ) : (
         <FormInput
           disabled={isDisabled}
+          errorMessage={errorMessage}
           name={field.name}
           handleChange={handleChange}
           value={formatDateIfDateField(field.name, values[field.name])}
@@ -74,11 +76,13 @@ FormField.propTypes = {
   disableReason: PropTypes.bool,
   isValidator: PropTypes.bool.isRequired,
   submissionDate: PropTypes.shape({ value: PropTypes.string, label: PropTypes.string }),
+  errorMessage: PropTypes.string,
 };
 
 FormField.defaultProps = {
   disableReason: false,
   submissionDate: { value: '' },
+  errorMessage: '',
 };
 
 export default FormField;

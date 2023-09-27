@@ -12,13 +12,17 @@ import { disableReasonField } from '../helpers';
 import FormField from './FormField';
 
 const FormLayout = ({
-  data, useSpecialDateUsage, onSubmit, onCancel, isExempted,
+  data, useSpecialDateUsage, onSubmit, onCancel, isExempted, validationSchema,
 }) => {
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
   const [disableReason, setDisableReason] = useState();
-  const { handleChange, values, handleSubmit } = useFormik({
+
+  const {
+    handleChange, values, handleSubmit, errors, touched,
+  } = useFormik({
     initialValues: getFormValues(data, isValidator),
     onSubmit,
+    validationSchema,
   });
 
   useEffect(() => {
@@ -43,11 +47,12 @@ const FormLayout = ({
         disableReason={disableReason}
         isValidator={isValidator}
         submissionDate={submissionDate}
+        errorMessage={touched[field.name] && errors[field.name]}
       />
     ));
 
   return (
-    <Stack direction="horizontal" className="justify-content-between flex-wrap">
+    <Stack direction="horizontal" className="justify-content-between align-items-start flex-wrap">
       {fields}
       {isValidator && (
       <Stack direction="horizontal" gap={2} className="w-100 justify-content-end mt-4">
@@ -76,6 +81,7 @@ FormLayout.propTypes = {
   onSubmit: PropTypes.func,
   onCancel: PropTypes.func,
   isExempted: PropTypes.bool,
+  validationSchema: PropTypes.shape(),
 };
 
 FormLayout.defaultProps = {
@@ -83,6 +89,7 @@ FormLayout.defaultProps = {
   onSubmit: null,
   onCancel: null,
   isExempted: false,
+  validationSchema: null,
 };
 
 export default FormLayout;

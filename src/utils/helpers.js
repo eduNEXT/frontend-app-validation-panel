@@ -47,13 +47,13 @@ export const getSubmissionInfo = (course) => {
   };
 };
 
-export const getLastReviewEventInfo = (course) => {
+export const getLastReviewEventInfo = (course, availableReasons) => {
   const [lastValidationProcessEvent] = getLastAndFirstValidationProcessEvents(course);
 
   return {
     reviewStartDate: lastValidationProcessEvent?.createdAt,
     status: VALIDATION_STATUS_LABEL[lastValidationProcessEvent?.status],
-    reason: lastValidationProcessEvent?.reason,
+    reason: availableReasons?.find((reason) => reason.id === lastValidationProcessEvent?.reason)?.name,
     comment: lastValidationProcessEvent?.comment,
   };
 };
@@ -92,7 +92,7 @@ const filtersToShow = ['validationBody', 'status', 'categories', 'organization']
  * @returns {Array} - An array where each course is extended with the properties
  * of the last validation process event.
  */
-export const adaptToTableFormat = (coursesToValidate) => {
+export const adaptToTableFormat = (coursesToValidate, availableReasons) => {
   const adaptedCourses = [];
 
   coursesToValidate?.forEach((course) => {
@@ -105,6 +105,7 @@ export const adaptToTableFormat = (coursesToValidate) => {
     adaptedCourses.push({
       ...course,
       ...lastValidationProcessEvent,
+      reason: availableReasons?.find((reason) => reason.id === lastValidationProcessEvent?.reason)?.name,
       user: firstValidationProcessEvent.user,
       status: VALIDATION_STATUS_LABEL[lastValidationProcessEvent.status],
       createdAt: new Date(firstValidationProcessEvent?.createdAt).toLocaleDateString('en-GB'),
@@ -219,3 +220,5 @@ export const PENDING_STATUSES = [VALIDATION_STATUS.IN_REVIEW, VALIDATION_STATUS.
 export const getCurrentStatusCode = (status) => Object.entries(
   VALIDATION_STATUS_LABEL,
 )?.find(([, value]) => value === status)?.[0];
+
+export const adaptOptions = (optionsToAdapt) => optionsToAdapt?.map((option) => ({ key: option.name.replaceAll(' ', ''), id: option.id, label: option.name }));
