@@ -61,12 +61,12 @@ const CourseSubmissionInfo = ({
               : field.value;
             const value = isValueAnArray ? field?.value?.join(', ') : isValueADate;
             return (
-              <div>
+              <div key={`collapsible${value}`}>
                 {field.label !== courseName.label && (
-                <p>
-                  <span className="font-weight-bold">{field.label}: </span>
-                  {value}
-                </p>
+                  <p>
+                    <span className="font-weight-bold">{field.label}: </span>
+                    {value}
+                  </p>
                 )}
               </div>
             );

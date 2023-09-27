@@ -49,11 +49,14 @@ const ModalLayout = ({
     hasCloseButton
     isFullscreenOnMobile
     size="lg"
+    title="modal-validation-panel"
   >
     <ModalDialog.Header className="mx-5">
-      <ModalDialog.Title>
-        {title}
-      </ModalDialog.Title>
+      {title && (
+        <ModalDialog.Title>
+          {title}
+        </ModalDialog.Title>
+      )}
     </ModalDialog.Header>
 
     <ModalDialog.Body className="mx-5">

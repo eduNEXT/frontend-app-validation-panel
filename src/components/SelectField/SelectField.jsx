@@ -26,7 +26,7 @@ const SelectField = ({
                 }
               }}
             >
-              { options?.map((optionInfo) => (
+              {options?.map((optionInfo) => (
                 <Form.AutosuggestOption
                   key={optionInfo.key}
                   value={optionInfo.id}
@@ -69,8 +69,8 @@ const SelectField = ({
             disabled={disabled}
             size="sm"
           >
-            <option hidden selected> Select one... </option>
-            { options?.map((optionInfo) => (
+            <option hidden> Select one... </option>
+            {options?.map((optionInfo) => (
               <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
             ))}
           </Form.Control>
@@ -88,7 +88,7 @@ SelectField.propTypes = {
   as: PropTypes.string,
   options: PropTypes.arrayOf(PropTypes.shape({ key: PropTypes.string, label: PropTypes.string })),
   handleChange: PropTypes.func.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   errorMessage: PropTypes.string,
   isArray: PropTypes.bool,
   disabled: PropTypes.bool,

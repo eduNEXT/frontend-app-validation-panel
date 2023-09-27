@@ -115,7 +115,7 @@ const ValidationTable = ({ data, isLoading }) => {
 
   useEffect(() => {
     handleFilterChoices(keyword.value, keyword.col);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword.value]);
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const ValidationTable = ({ data, isLoading }) => {
 
     // This AUX is created for handling the filters
     setAuxColumnsWithClickableNames(getColumnsWithClickableNames(data));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.length, courseIdsCurrentUserIsReviewing.length]);
 
   const currentValidationRecord = useSelector((state) => state.currentValidationRecord);
@@ -185,7 +185,7 @@ const ValidationTable = ({ data, isLoading }) => {
 
 const EmptyTableMessage = () => (
   <Stack className="align-items-center my-6">
-    <span className="h2 text-uppercase text-brand-500">
+    <span className="h2 text-uppercase">
       Not available validation processes
     </span>
   </Stack>

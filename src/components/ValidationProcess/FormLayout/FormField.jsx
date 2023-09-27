@@ -64,11 +64,16 @@ FormField.propTypes = {
     pos: PropTypes.number,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   }).isRequired,
-  values: PropTypes.shape.isRequired,
+  values: PropTypes.shape({
+    comment: PropTypes.string,
+    reason: PropTypes.string,
+    reviewStartDate: PropTypes.string,
+    status: PropTypes.string,
+  }).isRequired,
   handleChange: PropTypes.func.isRequired,
   disableReason: PropTypes.bool,
   isValidator: PropTypes.bool.isRequired,
-  submissionDate: PropTypes.shape,
+  submissionDate: PropTypes.shape({ value: PropTypes.string, label: PropTypes.string }),
 };
 
 FormField.defaultProps = {
