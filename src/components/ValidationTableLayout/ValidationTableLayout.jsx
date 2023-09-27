@@ -57,7 +57,7 @@ const ValidationTableLayout = ({ isValidator }) => {
   return (
     <div>
       {
-        !dataToRender.length ? (
+        (areValidationProcessesLoading && !dataToRender.length) ? (
           <Stack className="my-6 align-items-center">
             <Spinner variant="brand" animation="grow" screenReaderText="loading" />
           </Stack>
