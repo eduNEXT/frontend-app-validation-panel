@@ -33,10 +33,7 @@ const filterFields = (data, role) => {
     // Iterate through the properties of the validation process
     Object.entries(validationProcess).forEach(([key, value]) => {
       if (allowedFields.includes(key)) {
-        if (typeof value === 'string') {
-          // Store string values directly
-          fieldsForCurrentUser[key] = value;
-        } else if (key === 'validationProcessEvents') {
+        if (key === 'validationProcessEvents') {
           // For 'validationProcessEvents', filter subfields
           fieldsForCurrentUser[key] = value.map((event) => {
             const subfields = {};
@@ -48,6 +45,8 @@ const filterFields = (data, role) => {
             });
             return subfields;
           });
+        } else {
+          fieldsForCurrentUser[key] = value;
         }
       }
     });
