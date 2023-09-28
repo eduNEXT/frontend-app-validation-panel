@@ -1,10 +1,10 @@
+import { adaptOptions } from '../../utils/helpers';
+
 export const getAdaptedData = (formData, availableCourseCategories) => ({
   ...formData,
   categoryIds: formData.categoryIds.map((categoryName) => (
     availableCourseCategories.find(category => category.name === categoryName).id)),
 });
-
-export const adaptOptions = (optionsToAdapt) => optionsToAdapt?.map((option) => ({ key: option.name.replaceAll(' ', ''), id: option.id, label: option.name }));
 
 export const getCourseValidationRequestForm = (
   availableUserCourses,

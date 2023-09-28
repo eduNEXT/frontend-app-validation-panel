@@ -5,7 +5,7 @@ import { REQUEST_STATUS } from '../constants';
 
 export const getAvailableRejectionReasons = createAsyncThunk('validationProcess/rejectionReasons', async () => {
   const response = await getRejectionReasons();
-  return response;
+  return Array.isArray(response) ? response : [];
 });
 
 const rejectionReasons = {

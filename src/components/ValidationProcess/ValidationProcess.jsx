@@ -22,6 +22,7 @@ const ValidationProcess = ({ courseSelected, onClose }) => {
   };
 
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
+  const availableReasons = useSelector((state) => state.rejectionReasons.data);
 
   const submissionInfo = getSubmissionInfo(
     { ...courseSelected, courseName: courseSelected?.courseName },
@@ -73,7 +74,7 @@ const ValidationProcess = ({ courseSelected, onClose }) => {
           onClose={onClose}
           courseId={courseSelected.courseId}
           isReviewConfirmed={isReviewConfirmed}
-          lastReviewEventInfo={getLastReviewEventInfo(courseSelected)}
+          lastReviewEventInfo={getLastReviewEventInfo(courseSelected, availableReasons)}
         />
       )}
     </>

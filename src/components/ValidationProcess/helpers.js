@@ -1,12 +1,12 @@
 import { ALLOWED_STATUS_CHANGES, VALIDATION_STATUS, VALIDATION_STATUS_LABEL } from '../../data/constants';
 import { getCurrentStatusCode, getLastReviewEventInfo, PENDING_STATUSES } from '../../utils/helpers';
 
-export const getOptions = (currentStatus) => {
+export const getAllowedStatuses = (currentStatus) => {
   const currentStatusCode = getCurrentStatusCode(currentStatus);
-  const adaptedOptions = [];
+  const allowedStatuses = [];
   Object.values(VALIDATION_STATUS).forEach((opt) => {
     if (ALLOWED_STATUS_CHANGES[currentStatusCode]?.includes(opt)) {
-      adaptedOptions.push({
+      allowedStatuses.push({
         key: opt,
         id: opt,
         label: VALIDATION_STATUS_LABEL[opt],
@@ -14,7 +14,7 @@ export const getOptions = (currentStatus) => {
     }
   });
 
-  return adaptedOptions;
+  return allowedStatuses;
 };
 
 export const isPendingCourse = (course, lastReviewEventProp) => {
