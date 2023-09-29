@@ -169,12 +169,14 @@ export const getColumns = (coursesToValidate) => {
 
   const processColumn = (key, includeFilter, filterChoices) => {
     const isCourseNameProperty = key === 'courseName';
+    const shouldBeSearchByText = ['categories'];
+
+    const properFilter = shouldBeSearchByText.includes(key)
+      ? { filter: 'text', filterChoices }
+      : { filter: 'includesValue', filterChoices };
 
     const shouldEnableTheFilter = includeFilter
-      ? {
-        filter: 'includesValue',
-        filterChoices,
-      }
+      ? properFilter
       : {
         disableFilters: true,
       };

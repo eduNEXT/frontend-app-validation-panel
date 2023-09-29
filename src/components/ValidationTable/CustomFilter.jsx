@@ -1,23 +1,20 @@
 import PropTypes from 'prop-types';
-import { Dropdown, Stack } from '@edx/paragon';
+import { Dropdown, Scrollable } from '@edx/paragon';
 
-import CustomMenu from './CustomMenu';
 import CustomToggle from './CustomToggleButton';
 
 const CustomFilter = ({
   _ref, Filter, children,
 }) => (
-  <Dropdown alignRight>
+  <Dropdown drop="right">
     <Dropdown.Toggle as={CustomToggle} variant="tertiary">
       {_ref.column.Header}
     </Dropdown.Toggle>
-    <Dropdown.Menu as={CustomMenu} style={{ minWidth: children ? '350px' : '' }}>
-      <Stack gap={3}>
-        {children}
-        <div className="mx-3">
-          {Filter(_ref)}
-        </div>
-      </Stack>
+    <Dropdown.Menu className="p-3 border rounded top-0">
+      {children}
+      <Scrollable style={{ height: '20vh', maxHeight: '20vh' }} className="mt-2">
+        {Filter(_ref)}
+      </Scrollable>
     </Dropdown.Menu>
   </Dropdown>
 );
