@@ -12,7 +12,7 @@ const CustomFilter = ({
     </Dropdown.Toggle>
     <Dropdown.Menu className="p-3 border rounded top-0">
       {children}
-      <Scrollable style={{ height: '20vh' }} className="mt-2">
+      <Scrollable style={{ height: '20vh', maxHeight: '20vh' }} className="mt-2">
         {Filter(_ref)}
       </Scrollable>
     </Dropdown.Menu>
