@@ -5,7 +5,9 @@ import {
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CourseValidationRequestForm, Header, ValidationTableLayout } from './components';
+import {
+  CourseValidationRequestForm, Header, PopUpMessage, ValidationTableLayout,
+} from './components';
 
 import messages from './messages';
 import { getAvailableRejectionReasons, getCurrentUserInfo } from './data/slices';
@@ -27,6 +29,7 @@ const ValidationPanelPage = () => {
 
   return (
     <>
+      <PopUpMessage />
       <CourseValidationRequestForm isOpen={isOpen} close={close} />
       <main className="bg-secondary-100" style={{ minHeight: '100vh' }}>
         <Header intl={intl} />

@@ -10,6 +10,7 @@ import {
   getCourseCategories,
   getCoursesByUsername,
   createValidationProcess,
+  setPopUpMessage,
 } from '../../data/slices';
 
 import { SelectField } from '../SelectField';
@@ -54,10 +55,17 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
   const formik = useFormik({
     initialValues,
     validationSchema: FormSchema,
-    onSubmit: (formData) => {
-      dispatch(createValidationProcess(getAdaptedData(formData, availableCourseCategories)));
+    onSubmit: async (formData) => {
+      const { error } = await dispatch(
+        createValidationProcess(getAdaptedData(formData, availableCourseCategories)),
+      );
+
       // eslint-disable-next-line no-use-before-define
       handleClose();
+
+      if (error?.message) {
+        dispatch(setPopUpMessage({ variant: 'danger', message: error.message }));
+      }
     },
   });
 
