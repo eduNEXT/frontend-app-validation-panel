@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { resetPopUpMessage } from '../../data/slices';
 
 const codeMessages = {
-  409: 'There is already a validation process in progress for this course.',
+  409: 'The validation process for this course is already underway.',
   400: 'This action cannot be completed at the moment. Please try refreshing the page and try again.',
-  401: 'You are not authorized to do execute this action.',
+  401: 'You are not authorized to execute this action.',
   404: 'There was an error trying to find the register you are looking for.',
   500: 'An unknown error occurred. Please try again later.',
 };
