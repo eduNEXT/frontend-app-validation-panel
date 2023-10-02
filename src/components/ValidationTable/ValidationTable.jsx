@@ -2,9 +2,9 @@
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { Search } from '@edx/paragon/icons';
+import debounce from 'lodash/debounce';
 import {
-  Button, CheckboxFilter, DataTable, TextFilter, SearchField, useToggle, Stack,
+  Button, CheckboxFilter, DataTable, TextFilter, useToggle, Stack, Form,
 } from '@edx/paragon';
 
 import { ActionsAvailable } from './helpers';
@@ -30,21 +30,25 @@ const ValidationTable = ({ data, isLoading }) => {
   const [columnsWithClickableNames, setColumnsWithClickableNames] = useState([]);
   const [auxColumnsWithClickableNames, setAuxColumnsWithClickableNames] = useState([]);
 
-  const [keyword, setKeyword] = useState({
-    value: '',
-    col: null,
-  });
+  const keywordInitialState = {
+    value: {
+      organization: '',
+      categories: '',
+    },
+    colAccessor: '',
+  };
+  const [keyword, setKeyword] = useState(keywordInitialState);
 
   const handleClickInCourseTitle = (courseId) => {
     dispatch(getCurrentValidationProcessByCourseId(courseId));
     open();
   };
 
-  const handleFilterChoices = (value, col) => {
+  const handleFilterChoices = (value, accessor) => {
     const newValues = auxColumnsWithClickableNames.map((column) => {
-      if (column?.accessor === col?.accessor) {
+      if (column?.accessor === accessor) {
         const newOptions = column.filterChoices.filter((option) => (
-          option.name.toLowerCase().includes(value.toLowerCase())
+          option.name.toLowerCase().includes(value[accessor].toLowerCase())
         ));
 
         return {
@@ -88,14 +92,14 @@ const ValidationTable = ({ data, isLoading }) => {
       if (needSearchBar) {
         const addFilterWithSearchBar = (_ref) => (
           <CustomFilter _ref={_ref} Filter={CheckboxFilter}>
-            <SearchField.Advanced
-              onSubmit={(value) => setKeyword({ value, col })}
-              className="border-1"
-            >
-              <SearchField.Input placeholder={`Find ${_ref.column.Header}`} />
-              <SearchField.SubmitButton buttonText={<Search />} />
-              <SearchField.ClearButton onClick={() => setKeyword({ value: '', col: null })} />
-            </SearchField.Advanced>
+            <Form.Control
+              onChange={debounce((e) => setKeyword(
+                (prevState) => (
+                  { value: { ...prevState.value, [col.accessor]: e.target.value }, colAccessor: col.accessor }
+                ),
+              ), 500)}
+              placeholder={`Find ${_ref.column.Header}`}
+            />
           </CustomFilter>
         );
 
@@ -125,9 +129,9 @@ const ValidationTable = ({ data, isLoading }) => {
   });
 
   useEffect(() => {
-    handleFilterChoices(keyword.value, keyword.col);
+    handleFilterChoices(keyword.value, keyword.colAccessor);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword.value]);
+  }, [keyword.value.categories, keyword.value.organization]);
 
   useEffect(() => {
     setColumnsWithClickableNames(getColumnsWithClickableNames(data));
