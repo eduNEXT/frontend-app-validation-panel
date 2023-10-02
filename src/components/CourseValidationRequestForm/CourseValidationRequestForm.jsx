@@ -84,6 +84,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
               validationRequestFormFields?.map((field) => (
                 <SelectField
                   key={field.name}
+                  setFieldValue={formik.setFieldValue}
                   handleChange={formik.handleChange}
                   value={formik.values[field.name]}
                   errorMessage={formik.touched[field.name] && formik.errors[field.name]}
