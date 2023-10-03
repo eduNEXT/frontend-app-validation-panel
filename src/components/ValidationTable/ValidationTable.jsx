@@ -112,18 +112,21 @@ const ValidationTable = ({ data, isLoading }) => {
           </CustomFilter>
         );
 
+        const commonProperties = {
+          Filter: (_ref) => addFilterWithSearchBar(_ref),
+          filterChoices: createCustomFilterChoices(dataFiltersChoices[col.accessor]),
+        };
+
         if (col?.accessor === 'categories') {
           return {
             ...col,
+            ...commonProperties,
             Cell: ({ row }) => row.values.categories.join(', '),
-            Filter: (_ref) => addFilterWithSearchBar(_ref),
-            filterChoices: dataFiltersChoices.categories.map(({ id, name }) => ({ value: `${id}`, name })),
           };
         }
         return {
           ...col,
-          Filter: (_ref) => addFilterWithSearchBar(_ref),
-          filterChoices: createCustomFilterChoices(dataFiltersChoices[col.accessor]),
+          ...commonProperties,
         };
       }
 
