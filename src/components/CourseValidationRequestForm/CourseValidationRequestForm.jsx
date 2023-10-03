@@ -6,8 +6,6 @@ import { Button, Stack } from '@edx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-  getAvailableValidationBodies,
-  getCourseCategories,
   getCoursesByUsername,
   createValidationProcess,
   setPopUpMessage,
@@ -27,8 +25,6 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
 
   useEffect(() => {
     dispatch(getCoursesByUsername());
-    dispatch(getCourseCategories());
-    dispatch(getAvailableValidationBodies());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

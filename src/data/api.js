@@ -8,6 +8,7 @@ ensureConfig(['LMS_BASE_URL'], 'Validation Panel API');
 
 export const getApiBaseUrl = () => getConfig().LMS_BASE_URL;
 export const getCoursesApiUrl = () => `${getApiBaseUrl()}/api/courses/v1/courses/`;
+export const getOrganizationsApiUrl = () => `${getApiBaseUrl()}/api/organizations/v0/organizations/`;
 export const getValidationApiUrl = (service) => `${getApiBaseUrl()}/plugin-cvw/api/v1/${service}/`;
 
 /**
@@ -19,6 +20,20 @@ export async function getCoursesByUser() {
   const { data } = await getAuthenticatedHttpClient().get(getCoursesApiUrl(), {
     params: {
       username: getAuthenticatedUser().username,
+      page_size: 100,
+    },
+  });
+  return camelCaseObject(data);
+}
+
+/**
+ * Fetches all the available organizations.
+ * @returns {Promise<[{}]>}
+ */
+
+export async function getOrganizations() {
+  const { data } = await getAuthenticatedHttpClient().get(getOrganizationsApiUrl(), {
+    params: {
       page_size: 100,
     },
   });

@@ -8,7 +8,9 @@ import {
 } from '@edx/paragon';
 
 import { ActionsAvailable } from './helpers';
-import { adaptToTableFormat, getColumns } from '../../utils/helpers';
+import {
+  adaptToTableFormat, createCustomFilterChoices, getColumns, statusFilterOptions,
+} from '../../utils/helpers';
 
 import CustomFilter from './CustomFilter';
 import { ModalLayout } from '../ModalLayout';
@@ -24,6 +26,12 @@ const ValidationTable = ({ data, isLoading }) => {
   const courseIdsCurrentUserIsReviewing = useSelector(
     (state) => state.validationRecord.availableValidationProcesses.courseIdsCurrentUserIsReviewing,
   );
+  const dataFiltersChoices = {
+    categories: useSelector((state) => (state.courseCategories.availableCourseCategories.data)),
+    organization: useSelector((state) => state.organizations.availableOrganizations.data),
+    validationBody: useSelector((state) => state.validationBody.availableValidationBodies.data),
+    status: statusFilterOptions,
+  };
 
   const [isOpen, open, close] = useToggle(false);
 
@@ -34,6 +42,7 @@ const ValidationTable = ({ data, isLoading }) => {
     value: {
       organization: '',
       categories: '',
+      validationBody: '',
     },
     colAccessor: '',
   };
@@ -64,7 +73,7 @@ const ValidationTable = ({ data, isLoading }) => {
   };
 
   const getColumnsWithClickableNames = (dataToAdapt) => getColumns(dataToAdapt).map((col) => {
-    const needSearchBar = col?.accessor === 'organization' || col?.accessor === 'categories';
+    const needSearchBar = col?.accessor === 'organization' || col?.accessor === 'categories' || col?.accessor === 'validationBody';
 
     if (col?.accessor === 'courseName') {
       return {
@@ -108,12 +117,13 @@ const ValidationTable = ({ data, isLoading }) => {
             ...col,
             Cell: ({ row }) => row.values.categories.join(', '),
             Filter: (_ref) => addFilterWithSearchBar(_ref),
+            filterChoices: dataFiltersChoices.categories.map(({ id, name }) => ({ value: `${id}`, name })),
           };
         }
-
         return {
           ...col,
           Filter: (_ref) => addFilterWithSearchBar(_ref),
+          filterChoices: createCustomFilterChoices(dataFiltersChoices[col.accessor]),
         };
       }
 
@@ -122,6 +132,7 @@ const ValidationTable = ({ data, isLoading }) => {
         Filter: (_ref) => (
           <CustomFilter _ref={_ref} Filter={CheckboxFilter} />
         ),
+        filterChoices: dataFiltersChoices[col.accessor],
       };
     }
 
@@ -131,7 +142,7 @@ const ValidationTable = ({ data, isLoading }) => {
   useEffect(() => {
     handleFilterChoices(keyword.value, keyword.colAccessor);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword.value.categories, keyword.value.organization]);
+  }, [keyword.value.categories, keyword.value.organization, keyword.value.validationBody]);
 
   useEffect(() => {
     setColumnsWithClickableNames(getColumnsWithClickableNames(data));
