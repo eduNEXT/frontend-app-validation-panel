@@ -4,10 +4,10 @@ import { Close } from '@edx/paragon/icons';
 import { Chip, Form, Stack } from '@edx/paragon';
 
 const SelectField = ({
-  label, description, name, as, options, handleChange, value, errorMessage, isArray, disabled,
-}) => (
-  <div>
-    {isArray ? (
+  label, description, name, as, options, handleChange, value, errorMessage, isArray, disabled, setFieldValue,
+}) => {
+  if (isArray) {
+    return (
       <FieldArray
         name={name}
         render={({ push, remove }) => (
@@ -52,34 +52,63 @@ const SelectField = ({
           </Stack>
         )}
       />
-    ) : (
+    );
+  }
+
+  if (as === 'autosuggest') {
+    return (
       <Stack>
-        <Form.Label className="w-100">
-          <Stack direction="horizontal" className="w-100 justify-content-between">
-            {label}
-          </Stack>
-        </Form.Label>
+        <span>{label}</span>
         <span className="small">{description}</span>
-        <Form.Group isInvalid={!!errorMessage}>
-          <Form.Control
-            name={name}
-            as={as}
-            onChange={handleChange}
-            value={value}
-            disabled={disabled}
-            size="sm"
-          >
-            <option hidden> Select one... </option>
-            {options?.map((optionInfo) => (
-              <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
-            ))}
-          </Form.Control>
-          <Form.Control.Feedback hidden={!errorMessage} type="invalid">{errorMessage}</Form.Control.Feedback>
-        </Form.Group>
+        <Form.Autosuggest
+          placeholder="Select one"
+          isInvalid={!!errorMessage}
+          onSelected={(newValue) => {
+            const valueFound = options.find((el) => el.label === newValue);
+            setFieldValue(name, valueFound.id);
+          }}
+        >
+          {options?.map((optionInfo) => (
+            <Form.AutosuggestOption
+              key={optionInfo.key}
+              value={optionInfo.id}
+            >
+              {optionInfo.label}
+            </Form.AutosuggestOption>
+          ))}
+        </Form.Autosuggest>
+        <Form.Control.Feedback hidden={!errorMessage} type="invalid">{errorMessage}</Form.Control.Feedback>
       </Stack>
-    )}
-  </div>
-);
+    );
+  }
+
+  return (
+    <Stack>
+      <Form.Label className="w-100">
+        <Stack direction="horizontal" className="w-100 justify-content-between">
+          {label}
+        </Stack>
+      </Form.Label>
+      <span className="small">{description}</span>
+      <Form.Group isInvalid={!!errorMessage}>
+        <Form.Control
+          name={name}
+          as={as}
+          onChange={handleChange}
+          value={value}
+          disabled={disabled}
+          size="sm"
+        >
+          <option hidden> Select one... </option>
+          {options?.map((optionInfo) => (
+            <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
+          ))}
+        </Form.Control>
+        <Form.Control.Feedback hidden={!errorMessage} type="invalid">{errorMessage}</Form.Control.Feedback>
+      </Form.Group>
+    </Stack>
+  );
+};
 
 SelectField.propTypes = {
   label: PropTypes.string.isRequired,
@@ -92,6 +121,7 @@ SelectField.propTypes = {
   errorMessage: PropTypes.string,
   isArray: PropTypes.bool,
   disabled: PropTypes.bool,
+  setFieldValue: PropTypes.func,
 };
 
 SelectField.defaultProps = {
@@ -101,6 +131,7 @@ SelectField.defaultProps = {
   errorMessage: null,
   isArray: false,
   disabled: false,
+  setFieldValue: () => {},
 };
 
 export default SelectField;

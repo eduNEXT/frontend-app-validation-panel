@@ -10,7 +10,11 @@ import {
 } from './components';
 
 import messages from './messages';
-import { getAvailableRejectionReasons, getCurrentUserInfo } from './data/slices';
+import {
+  getAvailableRejectionReasons, getCurrentUserInfo, getAvailableValidationBodies,
+  getCourseCategories,
+  getAvailableOrganizations,
+} from './data/slices';
 import { REQUEST_STATUS } from './data/constants';
 
 const ValidationPanelPage = () => {
@@ -21,8 +25,11 @@ const ValidationPanelPage = () => {
   const { isValidator, loadStatus } = useSelector((state) => state.userInfo.userInfo);
   useEffect(() => {
     dispatch(getCurrentUserInfo());
+    dispatch(getAvailableOrganizations());
+    dispatch(getCourseCategories());
+    dispatch(getAvailableValidationBodies());
     dispatch(getAvailableRejectionReasons());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isLoadingUserInfo = isValidator === null || loadStatus === REQUEST_STATUS.LOADING;

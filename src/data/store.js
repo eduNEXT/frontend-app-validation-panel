@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import {
   coursesReducer,
   courseCategoriesReducer,
+  organizationsReducer,
   validationBodiesReducer,
   validationRecordReducer,
   currentValidationRecordReducer,
@@ -16,6 +17,7 @@ export const initializeStore = (preloadedState = undefined) => (
     reducer: {
       courses: coursesReducer,
       courseCategories: courseCategoriesReducer,
+      organizations: organizationsReducer,
       validationRecord: validationRecordReducer,
       validationBody: validationBodiesReducer,
       currentValidationRecord: currentValidationRecordReducer,

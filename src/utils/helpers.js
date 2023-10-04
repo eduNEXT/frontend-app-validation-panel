@@ -115,48 +115,8 @@ export const adaptToTableFormat = (coursesToValidate, availableReasons) => {
   return adaptedCourses;
 };
 
-/**
- * Generate filter choices for the given courses and selected filter.
- *
- * @param {Array} coursesToValidate - The array of courses for which to generate filter choices.
- * @param {string} selectedFilter - The selected filter for which to generate choices.
- * @returns {Array} - An array of filter choices or an object with filter choices per property.
- */
-export const getFilterChoices = (coursesToValidate, selectedFilter) => {
-  const availableFilters = {};
-
-  // Collect all possible filter values from courses
-  coursesToValidate.forEach((course) => {
-    Object.entries(course).forEach(([filterName, filterValue]) => {
-      if (typeof filterValue === 'string' || Array.isArray(filterValue)) {
-        availableFilters[filterName] = [
-          ...(availableFilters[filterName] || []),
-          ...(Array.isArray(filterValue) ? filterValue : [filterValue]),
-        ];
-      }
-    });
-  });
-
-  if (selectedFilter) {
-    // Return unique filter choices for the selected filter
-    const uniqueValues = [...new Set(availableFilters[selectedFilter])];
-    return uniqueValues.map((newFilter) => ({
-      name: newFilter,
-      value: newFilter,
-    }));
-  }
-
-  // Return formatted filter choices for all properties
-  return Object.entries(availableFilters).reduce((formattedFilters, [filterName, filterValues]) => {
-    const uniqueValues = [...new Set(filterValues)];
-    // eslint-disable-next-line no-param-reassign
-    formattedFilters[filterName] = uniqueValues.map((newFilter) => ({
-      name: newFilter,
-      value: newFilter,
-    }));
-    return formattedFilters;
-  }, {});
-};
+export const createCustomFilterChoices = (data) => data.map(({ name }) => ({ value: name, name }));
+export const statusFilterOptions = Object.values(VALIDATION_STATUS_LABEL).map(name => ({ value: name, name }));
 
 /**
  * Generate the available columns for the table of the Validation Panel.
@@ -167,13 +127,13 @@ export const getFilterChoices = (coursesToValidate, selectedFilter) => {
 export const getColumns = (coursesToValidate) => {
   const availableColumns = new Set();
 
-  const processColumn = (key, includeFilter, filterChoices) => {
+  const processColumn = (key, includeFilter) => {
     const isCourseNameProperty = key === 'courseName';
     const shouldBeSearchByText = ['categories'];
 
     const properFilter = shouldBeSearchByText.includes(key)
-      ? { filter: 'text', filterChoices }
-      : { filter: 'includesValue', filterChoices };
+      ? { filter: 'text' }
+      : { filter: 'includesValue' };
 
     const shouldEnableTheFilter = includeFilter
       ? properFilter
@@ -212,8 +172,7 @@ export const getColumns = (coursesToValidate) => {
 
   return Array.from(availableColumns).map((column) => {
     const includeFilter = filtersToShow.includes(column);
-    const filterChoices = includeFilter ? getFilterChoices(adaptToTableFormat(coursesToValidate), column) : false;
-    return processColumn(column, includeFilter, filterChoices);
+    return processColumn(column, includeFilter);
   });
 };
 
