@@ -13,7 +13,7 @@ import {
 
 import { SelectField } from '../SelectField';
 import { ModalLayout } from '../ModalLayout';
-import { getAdaptedData, getCourseValidationRequestForm } from './helpers';
+import { getCourseValidationRequestForm } from './helpers';
 
 const CourseValidationRequestForm = ({ isOpen, close }) => {
   const dispatch = useDispatch();
@@ -38,13 +38,17 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     courseId: null,
     comment: '',
     validationBodyId: null,
-    categoryIds: [],
+    // When is needed category as array
+    // categoryIds: [],
+    categoryId: null,
   };
 
   const FormSchema = Yup.object().shape({
     courseId: Yup.string().required('Please select a course!'),
     validationBodyId: Yup.number().required('Please select a validation body!'),
-    categoryIds: Yup.array().of(Yup.string()).min(1, 'Please select at least one category!'),
+    // When is needed category as array
+    // categoryIds: Yup.array().of(Yup.string()).min(1, 'Please select at least one category!'),
+    categoryId: Yup.number().required('Please select at least one category!'),
     comment: Yup.string().required('Please insert at least a short description about your submission'),
   });
 
@@ -53,7 +57,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     validationSchema: FormSchema,
     onSubmit: async (formData) => {
       const { error } = await dispatch(
-        createValidationProcess(getAdaptedData(formData, availableCourseCategories)),
+        createValidationProcess(formData),
       );
 
       // eslint-disable-next-line no-use-before-define

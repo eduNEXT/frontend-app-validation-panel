@@ -71,18 +71,12 @@ const SelectField = ({
           {options?.map((optionInfo) => (
             <Form.AutosuggestOption
               key={optionInfo.key}
-              value={optionInfo.id}
+              // eslint-disable-next-line no-use-before-define
+              as={CustomOption}
+              optionId={optionInfo.id}
+              label={label}
             >
-              <Stack direction="horizontal" gap={3}>
-                <span>
-                  {optionInfo.label}
-                </span>
-                {label.toLowerCase().includes('course') && (
-                <span className="text-gray-400">
-                  {optionInfo.id}
-                </span>
-                )}
-              </Stack>
+              {optionInfo.label}
             </Form.AutosuggestOption>
           ))}
         </Form.Autosuggest>
@@ -141,6 +135,42 @@ SelectField.defaultProps = {
   isArray: false,
   disabled: false,
   setFieldValue: () => {},
+};
+
+const CustomOption = ({
+  className, onClick, value, optionId, label, children,
+}) => (
+  <Stack
+    className={className}
+    onClick={(e) => {
+      e.currentTarget = { value };
+      onClick(e);
+    }}
+  >
+    <span>
+      {children}
+    </span>
+    {label.toLowerCase().includes('course') && (
+      <span className="text-gray-400 ml-3">
+        {optionId}
+      </span>
+    )}
+  </Stack>
+);
+
+CustomOption.propTypes = {
+  className: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  optionId: PropTypes.oneOfType(PropTypes.string, PropTypes.number),
+  label: PropTypes.string,
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
+};
+
+CustomOption.defaultProps = {
+  value: '',
+  optionId: '',
+  label: '',
 };
 
 export default SelectField;

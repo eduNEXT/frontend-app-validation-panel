@@ -42,7 +42,12 @@ export const updateValidationProcessStatus = createAsyncThunk('organization/vali
   },
 ));
 
-export const createValidationProcess = createAsyncThunk('organization/validationProcesses/post', async (formData) => postValidationProcess(formData));
+export const createValidationProcess = createAsyncThunk('organization/validationProcesses/post', async (formData) => postValidationProcess({
+  ...formData,
+  // Sent like an array because backend needs it like that
+  // if category as array, this would be unnecessary
+  categoryIds: [formData.categoryId],
+}));
 
 /** Slice */
 const validationProcessesInitialState = {
