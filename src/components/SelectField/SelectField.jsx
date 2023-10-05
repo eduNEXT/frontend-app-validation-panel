@@ -73,7 +73,16 @@ const SelectField = ({
               key={optionInfo.key}
               value={optionInfo.id}
             >
-              {optionInfo.label}
+              <Stack direction="horizontal" gap={3}>
+                <span>
+                  {optionInfo.label}
+                </span>
+                {label.toLowerCase().includes('course') && (
+                <span className="text-gray-400">
+                  {optionInfo.id}
+                </span>
+                )}
+              </Stack>
             </Form.AutosuggestOption>
           ))}
         </Form.Autosuggest>

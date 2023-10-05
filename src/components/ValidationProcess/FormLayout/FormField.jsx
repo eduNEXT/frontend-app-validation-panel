@@ -13,6 +13,10 @@ const FormField = ({
   const isDisabled = !isValidator || field.disabled || (field?.name === 'reason' && disableReason);
   const isColumn = field.type === 'col';
 
+  if (!isValidator && field.name === 'reason' && !values[field.name]) {
+    return null;
+  }
+
   return (
     <div style={{ width: isColumn ? COL_WIDTH : FULL_WIDTH }} key={field.name}>
       {field.isSelect ? (

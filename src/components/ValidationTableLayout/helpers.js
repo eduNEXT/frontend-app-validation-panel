@@ -11,7 +11,7 @@ export const availableFields = {
   courseAuthor: {
     fields: ['courseName', 'courseId', 'organization', 'validationBody', 'validationProcessEvents'],
     subfields: {
-      validationProcessEvents: ['status', 'createdAt', 'reason', 'comment'],
+      validationProcessEvents: ['status', 'createdAt', 'comment'],
     },
   },
 };

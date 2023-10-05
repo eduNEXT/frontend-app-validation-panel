@@ -62,7 +62,6 @@ const ValidatorReview = ({
     <div>
       {(!isValidator || isReviewConfirmed) && (
         <FormLayout
-          isValidator={isValidator}
           data={lastValidationReviewInfoWithUtilsProps}
           onSubmit={handleSubmit}
           onCancel={onClose}

@@ -14,7 +14,7 @@ export const ActionsAvailable = {
           dispatch(setPopUpMessage({ variant: 'danger', message: error.message }));
         }
       },
-      label: 'Cancel validation',
+      label: 'Cancel submission',
     },
     validator: {
       action: async (row, dispatch) => {
@@ -61,7 +61,11 @@ export const ActionsAvailable = {
     validator: {
       action: async (row, dispatch) => {
         const { error } = await dispatch(
-          updateValidationProcessStatus({ courseId: row.values.courseId, status: VALIDATION_STATUS.SUBMITTED }),
+          updateValidationProcessStatus({
+            courseId: row.values.courseId,
+            status: VALIDATION_STATUS.SUBMITTED,
+            comment: 'The validator disengaged from the course',
+          }),
         );
 
         if (error?.message) {

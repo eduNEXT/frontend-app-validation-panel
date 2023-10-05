@@ -18,7 +18,7 @@ const submissionFieldUtilProps = [
     name: 'courseAuthor', label: 'Course Author', type: 'col', pos: 4,
   },
   {
-    name: 'categories', label: 'Categories', type: 'col', pos: 5,
+    name: 'categories', label: 'Category', type: 'col', pos: 5,
   },
   {
     name: 'submissionComments', label: 'Submission Comments', type: 'row', pos: 6,

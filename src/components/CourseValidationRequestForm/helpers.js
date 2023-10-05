@@ -19,7 +19,11 @@ export const getCourseValidationRequestForm = (
     description: 'Please select one of your courses from the list below',
     // prop when 'as' property is 'select'
     // This properties come from API or Constants
-    options: adaptOptions(availableUserCourses),
+    options: adaptOptions(availableUserCourses)?.sort((a, b) => {
+      if (a.label > b.label) { return 1; }
+      if (a.label < b.label) { return -1; }
+      return 0;
+    }),
   },
   {
     name: 'validationBodyId',

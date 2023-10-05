@@ -20,6 +20,7 @@ export async function getCoursesByUser() {
   const { data } = await getAuthenticatedHttpClient().get(getCoursesApiUrl(), {
     params: {
       username: getAuthenticatedUser().username,
+      permissions: 'staff',
       page_size: 100,
     },
   });
