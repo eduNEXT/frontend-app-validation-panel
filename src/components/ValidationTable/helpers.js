@@ -26,7 +26,7 @@ export const ActionsAvailable = {
           dispatch(setPopUpMessage({ variant: 'danger', message: error.message }));
         }
       },
-      label: 'Review course',
+      label: 'Assign me as validator',
     },
   },
   draft: {
@@ -72,7 +72,7 @@ export const ActionsAvailable = {
           dispatch(setPopUpMessage({ variant: 'danger', message: error.message }));
         }
       },
-      label: 'Release course',
+      label: 'Remove me as validator',
     },
   },
 };
