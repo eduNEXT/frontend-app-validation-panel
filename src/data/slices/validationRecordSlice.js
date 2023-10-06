@@ -10,7 +10,7 @@ const transformValidationProcessEvents = (event) => ({
   createdAt: event.createdAt,
   reason: event.reason,
   comment: event.comment,
-  user: event.user?.fullName || '',
+  user: event.user?.fullName || event.user?.username || '',
 });
 
 const transformValidationProcess = (validationProcess) => ({
@@ -42,7 +42,12 @@ export const updateValidationProcessStatus = createAsyncThunk('organization/vali
   },
 ));
 
-export const createValidationProcess = createAsyncThunk('organization/validationProcesses/post', async (formData) => postValidationProcess(formData));
+export const createValidationProcess = createAsyncThunk('organization/validationProcesses/post', async (formData) => postValidationProcess({
+  ...formData,
+  // Sent like an array because backend needs it like that
+  // if category as array, this would be unnecessary
+  categoryIds: [formData.categoryId],
+}));
 
 /** Slice */
 const validationProcessesInitialState = {

@@ -156,6 +156,13 @@ const ValidationTable = ({ data, isLoading }) => {
   }, [data?.length, courseIdsCurrentUserIsReviewing.length]);
 
   const currentValidationRecord = useSelector((state) => state.currentValidationRecord);
+  const sortedCurrentValidationRecordEvents = [...currentValidationRecord?.validationProcessEvents || []].sort(
+    (a, b) => {
+      if (a.id > b.id) { return -1; }
+      if (a.id < b.id) { return 1; }
+      return 0;
+    },
+  );
 
   return (
     <>
@@ -171,10 +178,11 @@ const ValidationTable = ({ data, isLoading }) => {
           },
           {
             name: 'past_processes',
-            label: 'Past process(es)',
+            label: 'Past events',
             component: <PastProcesses
-              pastProcessEvents={currentValidationRecord.validationProcessEvents}
+              pastProcessEvents={sortedCurrentValidationRecordEvents}
               validationBody={currentValidationRecord?.validationBody}
+              availableReasons={availableReasons}
             />,
           },
         ]}
@@ -189,6 +197,7 @@ const ValidationTable = ({ data, isLoading }) => {
         columns={columnsWithClickableNames}
         additionalColumns={data.length ? [
           {
+            Header: 'Action',
             Cell: ({ row }) => {
               const userPermission = isValidator ? VALIDATION_ACCESS_ROLE.VALIDATOR : VALIDATION_ACCESS_ROLE.AUTHOR;
               const isInReview = row.values.status === VALIDATION_STATUS_LABEL.revi;

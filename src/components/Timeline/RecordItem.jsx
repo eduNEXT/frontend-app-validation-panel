@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { FormattedDate, FormattedMessage } from '@edx/frontend-platform/i18n';
-import { VALIDATION_STATUS_LABEL } from '../../data/constants';
+import { VALIDATION_STATUS, VALIDATION_STATUS_LABEL } from '../../data/constants';
 
 const bold = (str) => <b>{str}</b>;
 
@@ -12,6 +12,7 @@ const RecordItem = ({
   comment,
   first,
   last,
+  user,
 }) => (
   <li className="record-item pb-4 px-5">
     {/* Top Line */}
@@ -57,6 +58,16 @@ const RecordItem = ({
             }}
           />
           <FormattedMessage
+            id="record.item.validation.reportedBy"
+            defaultMessage="<b>Reported by</b>: {user}"
+            description="reportedBy of the record"
+            tagName="div"
+            values={{
+              b: bold,
+              user,
+            }}
+          />
+          <FormattedMessage
             id="record.item.validation.body"
             defaultMessage="<b>Validator body</b>: {validationBody}"
             description="identify who was in charge to validate the course"
@@ -66,18 +77,22 @@ const RecordItem = ({
               validationBody,
             }}
           />
-          <FormattedMessage
-            id="record.item.validation.reason"
-            defaultMessage="Reason: "
-            description="identify who was in charge to validate the course"
-            tagName="b"
-          />
-          {reason}
+          {status === VALIDATION_STATUS.DISAPPROVED && (
+          <div>
+            <FormattedMessage
+              id="record.item.validation.reason"
+              defaultMessage="Reason: "
+              description="identify who was in charge to validate the course"
+              tagName="b"
+            />
+            {reason}
+          </div>
+          )}
         </div>
         <div className="mt-2">
           <FormattedMessage
             id="record.item.validation.comment"
-            defaultMessage="Comments: "
+            defaultMessage="Info: "
             description="Shown the label for additional information left for the validator"
             tagName="b"
           />
@@ -96,6 +111,7 @@ RecordItem.propTypes = {
   comment: PropTypes.string,
   first: PropTypes.bool,
   last: PropTypes.bool,
+  user: PropTypes.string,
 };
 
 RecordItem.defaultProps = {
@@ -103,6 +119,7 @@ RecordItem.defaultProps = {
   reason: null,
   first: false,
   last: false,
+  user: '',
 };
 
 export default RecordItem;

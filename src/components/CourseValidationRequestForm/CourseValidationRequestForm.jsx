@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import { Button, Stack } from '@edx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,13 +13,14 @@ import {
 
 import { SelectField } from '../SelectField';
 import { ModalLayout } from '../ModalLayout';
-import { getAdaptedData, getCourseValidationRequestForm } from './helpers';
+import { getCourseValidationRequestForm } from './helpers';
+import { getValidationBodies } from '../../data/api';
 
 const CourseValidationRequestForm = ({ isOpen, close }) => {
   const dispatch = useDispatch();
 
   const availableUserCourses = useSelector((state) => state.courses.availableUserCourses.data.results);
-  const availableValidationBodies = useSelector((state) => state.validationBody.availableValidationBodies.data);
+  const [availableValidationBodies, setAvailableValidationBodies] = useState([]);
   const availableCourseCategories = useSelector((state) => (
     state.courseCategories.availableCourseCategories.data));
 
@@ -38,13 +39,17 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     courseId: null,
     comment: '',
     validationBodyId: null,
-    categoryIds: [],
+    // When is needed category as array
+    // categoryIds: [],
+    categoryId: null,
   };
 
   const FormSchema = Yup.object().shape({
     courseId: Yup.string().required('Please select a course!'),
     validationBodyId: Yup.number().required('Please select a validation body!'),
-    categoryIds: Yup.array().of(Yup.string()).min(1, 'Please select at least one category!'),
+    // When is needed category as array
+    // categoryIds: Yup.array().of(Yup.string()).min(1, 'Please select at least one category!'),
+    categoryId: Yup.number().required('Please select at least one category!'),
     comment: Yup.string().required('Please insert at least a short description about your submission'),
   });
 
@@ -53,7 +58,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     validationSchema: FormSchema,
     onSubmit: async (formData) => {
       const { error } = await dispatch(
-        createValidationProcess(getAdaptedData(formData, availableCourseCategories)),
+        createValidationProcess(formData),
       );
 
       // eslint-disable-next-line no-use-before-define
@@ -64,6 +69,20 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
       }
     },
   });
+
+  useEffect(() => {
+    let isCurrent = true;
+    if (formik.values.courseId) {
+      getValidationBodies(formik.values.courseId).then((data) => {
+        if (isCurrent) {
+          setAvailableValidationBodies(data);
+        }
+      });
+    }
+    return () => {
+      isCurrent = false;
+    };
+  }, [formik.values.courseId, setAvailableValidationBodies, dispatch]);
 
   const handleClose = () => {
     close();

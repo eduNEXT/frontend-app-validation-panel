@@ -20,14 +20,24 @@ export const getLastAndFirstValidationProcessEvents = (course) => {
 };
 
 export const getSubmissionInfo = (course) => {
-  const submissionProcessEvent = course?.validationProcessEvents?.find(
-    (validationProcess) => validationProcess?.status.toLowerCase() === VALIDATION_STATUS.SUBMITTED.toLowerCase(),
+  let submissionProcessEvent = {};
+  course?.validationProcessEvents?.forEach(
+    (currentValidationProcess) => {
+      if (currentValidationProcess?.status === VALIDATION_STATUS.SUBMITTED) {
+        if (
+          !submissionProcessEvent?.createdAt || submissionProcessEvent?.createdAt > currentValidationProcess.createdAt
+        ) {
+          submissionProcessEvent = currentValidationProcess;
+        }
+      }
+    },
+    {},
   );
   const exemptionProcessEvent = course?.validationProcessEvents?.find(
     (validationProcess) => validationProcess?.status.toLowerCase() === VALIDATION_STATUS.EXEMPT.toLowerCase(),
   );
 
-  const courseAuthor = exemptionProcessEvent?.user?.fullName || submissionProcessEvent?.user?.fullName;
+  const courseAuthor = exemptionProcessEvent?.user || submissionProcessEvent?.user;
   const submissionDate = exemptionProcessEvent?.createdAt || submissionProcessEvent?.createdAt;
   const submissionComments = exemptionProcessEvent?.comment || submissionProcessEvent?.comment;
 
@@ -37,7 +47,7 @@ export const getSubmissionInfo = (course) => {
     isExempted,
     courseName: course.courseName,
     courseId: course.courseId,
-    reviewer: course.currentValidationUser,
+    reviewer: course.currentValidationUser || 'Not assigned',
     organization: course.organization,
     categories: course.categories,
     courseAuthor,

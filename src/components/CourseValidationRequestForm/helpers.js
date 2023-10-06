@@ -1,10 +1,5 @@
+/* eslint-disable import/prefer-default-export */
 import { adaptOptions } from '../../utils/helpers';
-
-export const getAdaptedData = (formData, availableCourseCategories) => ({
-  ...formData,
-  categoryIds: formData.categoryIds.map((categoryName) => (
-    availableCourseCategories.find(category => category.name === categoryName).id)),
-});
 
 export const getCourseValidationRequestForm = (
   availableUserCourses,
@@ -19,7 +14,11 @@ export const getCourseValidationRequestForm = (
     description: 'Please select one of your courses from the list below',
     // prop when 'as' property is 'select'
     // This properties come from API or Constants
-    options: adaptOptions(availableUserCourses),
+    options: adaptOptions(availableUserCourses)?.sort((a, b) => {
+      if (a.label.toLowerCase() > b.label.toLowerCase()) { return 1; }
+      if (a.label.toLowerCase() < b.label.toLowerCase()) { return -1; }
+      return 0;
+    }),
   },
   {
     name: 'validationBodyId',
@@ -29,9 +28,10 @@ export const getCourseValidationRequestForm = (
     options: adaptOptions(availableValidationBodies),
   },
   {
-    name: 'categoryIds',
-    isArray: true,
-    as: 'select',
+    name: 'categoryId',
+    // When is needed category as array
+    // isArray: true,
+    as: 'autosuggest',
     label: 'Category',
     description: 'Please select the appropriate category for your course',
     options: adaptOptions(availableCourseCategories),

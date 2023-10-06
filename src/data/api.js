@@ -20,6 +20,7 @@ export async function getCoursesByUser() {
   const { data } = await getAuthenticatedHttpClient().get(getCoursesApiUrl(), {
     params: {
       username: getAuthenticatedUser().username,
+      permissions: 'staff',
       page_size: 100,
     },
   });
@@ -74,19 +75,15 @@ export async function getValidationProcess(courseId) {
 }
 
 /**
- * Fetches validation body acording with the organization.
+ * Fetches validation body acording with the courseId.
+ * If the courseId is not provided, return all the validation bodies.
  * @param {string} org
  * @returns {Promise<[{}]>}
  */
 
-// TODO: Allow receiving org id when is connected to the API
-// export async function getValidationBodies(org) {
-export async function getValidationBodies(org) {
-  const { data } = await getAuthenticatedHttpClient().get(getValidationApiUrl(VALIDATION_API_PATH.VALIDATION_BODY), {
-    params: {
-      org,
-    },
-  });
+export async function getValidationBodies(courseId) {
+  const params = courseId ? ['/', courseId].join('') : '';
+  const { data } = await getAuthenticatedHttpClient().get(getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_BODY}${params}`));
   return camelCaseObject(data);
 }
 
