@@ -68,7 +68,7 @@ const currentRecordSlice = createSlice({
       state.validationBody = action.payload.validationBody.name;
       state.validationProcessEvents = camelCaseObject(action.payload.events).map((event) => ({
         ...event,
-        user: event.user?.fullName || '',
+        user: event.user?.fullName || event.user?.username || '',
       }));
     });
     builder.addCase(getCurrentValidationProcessByCourseId.rejected, (state, action) => {

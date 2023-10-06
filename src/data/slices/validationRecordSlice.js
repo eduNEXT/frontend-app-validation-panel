@@ -10,7 +10,7 @@ const transformValidationProcessEvents = (event) => ({
   createdAt: event.createdAt,
   reason: event.reason,
   comment: event.comment,
-  user: event.user?.fullName || '',
+  user: event.user?.fullName || event.user?.username || '',
 });
 
 const transformValidationProcess = (validationProcess) => ({
