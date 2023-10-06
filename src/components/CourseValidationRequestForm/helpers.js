@@ -15,8 +15,8 @@ export const getCourseValidationRequestForm = (
     // prop when 'as' property is 'select'
     // This properties come from API or Constants
     options: adaptOptions(availableUserCourses)?.sort((a, b) => {
-      if (a.label > b.label) { return 1; }
-      if (a.label < b.label) { return -1; }
+      if (a.label.toLowerCase() > b.label.toLowerCase()) { return 1; }
+      if (a.label.toLowerCase() < b.label.toLowerCase()) { return -1; }
       return 0;
     }),
   },

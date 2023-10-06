@@ -134,7 +134,7 @@ SelectField.defaultProps = {
   errorMessage: null,
   isArray: false,
   disabled: false,
-  setFieldValue: () => {},
+  setFieldValue: () => { },
 };
 
 const CustomOption = ({
@@ -151,9 +151,9 @@ const CustomOption = ({
       {children}
     </span>
     {label.toLowerCase().includes('course') && (
-      <span className="text-gray-400 ml-3">
+      <p className="text-gray x-small m-0">
         {optionId}
-      </span>
+      </p>
     )}
   </Stack>
 );

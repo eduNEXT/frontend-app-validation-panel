@@ -54,7 +54,7 @@ export const ActionsAvailable = {
           dispatch(setPopUpMessage({ variant: 'danger', message: error.message }));
         }
       },
-      label: 'Re-submit for validation',
+      label: 'Resubmit for validation',
     },
   },
   'in review': {
