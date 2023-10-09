@@ -79,10 +79,14 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
         }
       });
     }
+    if (!formik.values.courseId) {
+      formik.values.validationBodyId = null;
+    }
     return () => {
       isCurrent = false;
+      setAvailableValidationBodies([]);
     };
-  }, [formik.values.courseId, setAvailableValidationBodies, dispatch]);
+  }, [formik.values, setAvailableValidationBodies, dispatch]);
 
   const handleClose = () => {
     close();

@@ -2,10 +2,12 @@ import PropTypes from 'prop-types';
 import { FieldArray } from 'formik';
 import { Close } from '@edx/paragon/icons';
 import { Chip, Form, Stack } from '@edx/paragon';
+import { useState } from 'react';
 
 const SelectField = ({
   label, description, name, as, options, handleChange, value, errorMessage, isArray, disabled, setFieldValue,
 }) => {
+  const [selected, setSelected] = useState('');
   if (isArray) {
     return (
       <FieldArray
@@ -63,8 +65,15 @@ const SelectField = ({
         <Form.Autosuggest
           placeholder="Select one"
           isInvalid={!!errorMessage}
+          value={value ? selected : ''}
+          onChange={(newValue) => {
+            if (newValue === '') {
+              setFieldValue(name, null); setSelected('');
+            }
+          }}
           onSelected={(newValue) => {
             const valueFound = options.find((el) => el.label === newValue);
+            setSelected(valueFound.label);
             setFieldValue(name, valueFound.id);
           }}
         >
