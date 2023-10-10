@@ -32,7 +32,7 @@ const RecordItem = ({
         <FormattedMessage
           id="record.item.validation.date"
           defaultMessage="Validation date: {date}"
-          description="date when the record was created"
+          description="Date when the record was created"
           values={{
             date: (
               <FormattedDate
@@ -50,7 +50,7 @@ const RecordItem = ({
           <FormattedMessage
             id="record.item.validation.status"
             defaultMessage="<b>Status</b>: {status}"
-            description="status of the record"
+            description="Status of the record"
             tagName="div"
             values={{
               b: bold,
@@ -60,7 +60,7 @@ const RecordItem = ({
           <FormattedMessage
             id="record.item.validation.reportedBy"
             defaultMessage="<b>Reported by</b>: {user}"
-            description="reportedBy of the record"
+            description="Identify who reported the record"
             tagName="div"
             values={{
               b: bold,
@@ -70,7 +70,7 @@ const RecordItem = ({
           <FormattedMessage
             id="record.item.validation.body"
             defaultMessage="<b>Validator body</b>: {validationBody}"
-            description="identify who was in charge to validate the course"
+            description="Identify the validation body in charge to validate the course"
             tagName="div"
             values={{
               b: bold,
@@ -78,22 +78,22 @@ const RecordItem = ({
             }}
           />
           {status === VALIDATION_STATUS.DISAPPROVED && (
-          <div>
-            <FormattedMessage
-              id="record.item.validation.reason"
-              defaultMessage="Reason: "
-              description="identify who was in charge to validate the course"
-              tagName="b"
-            />
-            {reason}
-          </div>
+            <div>
+              <FormattedMessage
+                id="record.item.validation.reason"
+                defaultMessage="Reason: "
+                description="Identify the reason to reject the course"
+                tagName="b"
+              />
+              {reason}
+            </div>
           )}
         </div>
         <div className="mt-2">
           <FormattedMessage
             id="record.item.validation.comment"
             defaultMessage="Info: "
-            description="Shown the label for additional information left for the validator"
+            description="Shown additional information left for the record reporter"
             tagName="b"
           />
           {comment}
