@@ -1,43 +1,47 @@
 import PropTypes from 'prop-types';
 import { Collapsible, Stack } from '@edx/paragon';
 
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { FormLayout } from '../FormLayout';
 import { addUtils } from '../../../utils/helpers';
+import globalMessages from '../../../messages';
+import messages from '../messages';
 
-const submissionFieldUtilProps = [
+const submissionFieldUtilProps = (intl) => ([
   {
-    name: 'courseName', label: 'Course Name', type: 'row', pos: 1,
+    name: 'courseName', label: intl.formatMessage(globalMessages.courseName), type: 'row', pos: 1,
   },
   {
-    name: 'courseId', label: 'Course ID', type: 'col', pos: 2,
+    name: 'courseId', label: intl.formatMessage(globalMessages.courseId), type: 'col', pos: 2,
   },
   {
-    name: 'organization', label: 'Organization', type: 'col', pos: 3,
+    name: 'organization', label: intl.formatMessage(globalMessages.organization), type: 'col', pos: 3,
   },
   {
-    name: 'courseAuthor', label: 'Course Author', type: 'col', pos: 4,
+    name: 'courseAuthor', label: intl.formatMessage(globalMessages.user), type: 'col', pos: 4,
   },
   {
-    name: 'categories', label: 'Category', type: 'col', pos: 5,
+    name: 'categories', label: intl.formatMessage(globalMessages.categories), type: 'col', pos: 5,
   },
   {
-    name: 'submissionComments', label: 'Submission Comments', type: 'row', pos: 6,
+    name: 'submissionComments', label: intl.formatMessage(messages.submissionComments), type: 'row', pos: 6,
   },
   {
-    name: 'submissionDate', label: 'Submission Date', type: 'col', pos: 7,
+    name: 'submissionDate', label: intl.formatMessage(messages.submissionDate), type: 'col', pos: 7,
   },
   {
-    name: 'validationBody', label: 'Validation Body', type: 'col', pos: 8,
+    name: 'validationBody', label: intl.formatMessage(globalMessages.validationBody), type: 'col', pos: 8,
   },
   {
-    name: 'reviewer', label: 'Reviewer', type: 'col', pos: 9,
+    name: 'reviewer', label: intl.formatMessage(messages.reviewer), type: 'col', pos: 9,
   },
-];
+]);
 
 const CourseSubmissionInfo = ({
   submissionInfo, isCollapsible, collapsibleProps,
 }) => {
-  const submissionInfoWithDesignPropsWithUtilsProps = addUtils(submissionFieldUtilProps, submissionInfo);
+  const intl = useIntl();
+  const submissionInfoWithDesignPropsWithUtilsProps = addUtils(submissionFieldUtilProps(intl), submissionInfo);
   const courseName = submissionInfoWithDesignPropsWithUtilsProps.find((field) => field.label.toLowerCase().includes('name'));
 
   if (isCollapsible) {
@@ -61,7 +65,7 @@ const CourseSubmissionInfo = ({
               : field.value;
             const value = isValueAnArray ? field?.value?.join(', ') : isValueADate;
             return (
-              <div key={`collapsible${value}`}>
+              <div key={`collapsible${field.name}${value}}`}>
                 {field.label !== courseName.label && (
                   <p>
                     <span className="font-weight-bold">{field.label}: </span>

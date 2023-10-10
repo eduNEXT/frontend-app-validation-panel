@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Stack } from '@edx/paragon';
 import {
   exemptedFields,
@@ -10,10 +11,12 @@ import {
 } from './helpers';
 import { disableReasonField } from '../helpers';
 import FormField from './FormField';
+import messages from '../messages';
 
 const FormLayout = ({
   data, useSpecialDateUsage, onSubmit, onCancel, isExempted, validationSchema,
 }) => {
+  const intl = useIntl();
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
   const [disableReason, setDisableReason] = useState();
 
@@ -55,10 +58,10 @@ const FormLayout = ({
     <Stack direction="horizontal" className="justify-content-between align-items-start flex-wrap">
       {fields}
       {isValidator && (
-      <Stack direction="horizontal" gap={2} className="w-100 justify-content-end mt-4">
-        {!!onCancel && <Button className="px-5" variant="outline-primary" onClick={onCancel}>Cancel</Button>}
-        {!!onSubmit && <Button className="px-5" variant="primary" onClick={handleSubmit}>Submit</Button>}
-      </Stack>
+        <Stack direction="horizontal" gap={2} className="w-100 justify-content-end mt-4">
+          {!!onCancel && <Button className="px-5" variant="outline-primary" onClick={onCancel}>{intl.formatMessage(messages.formLayoutCancel)}</Button>}
+          {!!onSubmit && <Button className="px-5" variant="primary" onClick={handleSubmit}>{intl.formatMessage(messages.formLayoutSubmmit)}</Button>}
+        </Stack>
       )}
     </Stack>
   );

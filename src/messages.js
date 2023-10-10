@@ -33,7 +33,7 @@ const messages = defineMessages({
   },
   courseId: {
     id: 'validation.panel.course.id.key',
-    defaultMessage: 'Course id',
+    defaultMessage: 'Course ID',
     description: 'Label for the course id key',
   },
   organization: {
@@ -63,12 +63,17 @@ const messages = defineMessages({
   },
   comment: {
     id: 'validation.panel.comment.key',
-    defaultMessage: 'Comment',
+    defaultMessage: 'Additional information',
     description: 'Label for the comment key',
   },
   user: {
     id: 'validation.panel.user.key',
-    defaultMessage: 'Course Author',
+    defaultMessage: 'Course author',
+    description: 'Label for the course author key',
+  },
+  reason: {
+    id: 'validation.panel.reason',
+    defaultMessage: 'Rejection reason',
     description: 'Label for the course author key',
   },
 });

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
+import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import { useSelector } from 'react-redux';
 import { CheckCircle } from '@edx/paragon/icons';
 import {
@@ -11,8 +12,10 @@ import { ValidatorReview } from './ValidatorReview';
 import { CourseSubmissionInfo } from './CourseSubmissionInfo';
 import { getLastReviewEventInfo, getSubmissionInfo } from '../../utils/helpers';
 import { isPendingCourse } from './helpers';
+import messages from './messages';
 
 const ValidationProcess = ({ courseSelected, onClose }) => {
+  const intl = useIntl();
   const [isReviewConfirmed, setIsReviewConfirmed] = useState(false);
   const [openCollapsible, setOpenCollapsible] = useState(false);
 
@@ -37,8 +40,7 @@ const ValidationProcess = ({ courseSelected, onClose }) => {
           <Stack className="align-items-center" direction="horizontal" gap={3}>
             <Icon src={CheckCircle} />
             <span className="text-left">
-              This course is automatically approved without undergoing
-              a validation process, as it belongs to an exempt organization.
+              {intl.formatMessage(messages.exemptMessage)}
             </span>
           </Stack>
         </PageBanner>
@@ -55,17 +57,25 @@ const ValidationProcess = ({ courseSelected, onClose }) => {
       {(isValidator && !isCourseExempted && isPending) && (
         <Stack gap={3} className="my-4">
           <p>
-            <span>Before validating the course, review the content! </span>
-            <a
-              href={`${getConfig().STUDIO_BASE_URL}/course/${courseSelected.courseId}`}
-              target="_blank"
-              rel="noreferrer"
-              className="text-gray-900 muted-link"
-            >View course in Studio
-            </a>
+            <FormattedMessage
+              id="validation.process.studio.link.description"
+              defaultMessage="Before validating the course, review the content {link}"
+              description="link to redirect to studio"
+              values={{
+                link: (
+                  <a
+                    href={`${getConfig().STUDIO_BASE_URL}/course/${courseSelected.courseId}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-gray-900 muted-link"
+                  >{intl.formatMessage(messages.studioLink)}
+                  </a>
+                ),
+              }}
+            />
           </p>
           <Form.Checkbox onChange={handleChangeReviewConfirmation} checked={isReviewConfirmed}>
-            Click here to confirm that you have reviewed the content in STUDIO.
+            {intl.formatMessage(messages.validatorCheckbox)}
           </Form.Checkbox>
         </Stack>
       )}
