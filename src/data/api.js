@@ -83,7 +83,7 @@ export async function getValidationProcess(courseId) {
 
 export async function getValidationBodies(courseId) {
   const params = courseId ? ['/', courseId].join('') : '';
-  const { data } = await getAuthenticatedHttpClient().get(getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_BODY}${params}`));
+  const { data } = await getAuthenticatedHttpClient({ useCache: true }).get(getValidationApiUrl(`${VALIDATION_API_PATH.VALIDATION_BODY}${params}`));
   return camelCaseObject(data);
 }
 

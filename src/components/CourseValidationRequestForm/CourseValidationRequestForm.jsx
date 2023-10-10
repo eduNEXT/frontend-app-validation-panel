@@ -23,7 +23,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
   const [availableValidationBodies, setAvailableValidationBodies] = useState([]);
   const availableCourseCategories = useSelector((state) => (
     state.courseCategories.availableCourseCategories.data));
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     dispatch(getCoursesByUsername());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,7 +50,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     // When is needed category as array
     // categoryIds: Yup.array().of(Yup.string()).min(1, 'Please select at least one category!'),
     categoryId: Yup.number().required('Please select at least one category!'),
-    comment: Yup.string().required('Please insert at least a short description about your submission'),
+    comment: Yup.string(),
   });
 
   const formik = useFormik({
@@ -73,16 +73,22 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
   useEffect(() => {
     let isCurrent = true;
     if (formik.values.courseId) {
+      setIsLoading(true);
       getValidationBodies(formik.values.courseId).then((data) => {
         if (isCurrent) {
           setAvailableValidationBodies(data);
+          setIsLoading(false);
         }
       });
     }
+    if (!formik.values.courseId) {
+      formik.values.validationBodyId = null;
+    }
     return () => {
       isCurrent = false;
+      setAvailableValidationBodies([]);
     };
-  }, [formik.values.courseId, setAvailableValidationBodies, dispatch]);
+  }, [formik.values, setAvailableValidationBodies, dispatch]);
 
   const handleClose = () => {
     close();
@@ -104,6 +110,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
                   value={formik.values[field.name]}
                   errorMessage={formik.touched[field.name] && formik.errors[field.name]}
                   {...field}
+                  isLoading={field.name === 'validationBodyId' && isLoading}
                 />
               ))
             }

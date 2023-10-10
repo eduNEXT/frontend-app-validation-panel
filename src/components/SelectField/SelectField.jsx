@@ -2,10 +2,48 @@ import PropTypes from 'prop-types';
 import { FieldArray } from 'formik';
 import { Close } from '@edx/paragon/icons';
 import { Chip, Form, Stack } from '@edx/paragon';
+import { useState } from 'react';
+
+const CustomOption = ({
+  className, onClick, value, optionId, label, children,
+}) => (
+  <Stack
+    className={className}
+    onClick={(e) => {
+      e.currentTarget = { value };
+      onClick(e);
+    }}
+  >
+    <span>
+      {children}
+    </span>
+    {label.toLowerCase().includes('course') && (
+      <p className="text-gray x-small m-0">
+        {optionId}
+      </p>
+    )}
+  </Stack>
+);
+
+CustomOption.propTypes = {
+  className: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  optionId: PropTypes.oneOfType(PropTypes.string, PropTypes.number),
+  label: PropTypes.string,
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
+};
+
+CustomOption.defaultProps = {
+  value: '',
+  optionId: '',
+  label: '',
+};
 
 const SelectField = ({
-  label, description, name, as, options, handleChange, value, errorMessage, isArray, disabled, setFieldValue,
+  label, description, name, as, options, handleChange, value, errorMessage, isArray, isLoading, disabled, setFieldValue,
 }) => {
+  const [selected, setSelected] = useState('');
   if (isArray) {
     return (
       <FieldArray
@@ -62,16 +100,23 @@ const SelectField = ({
         <span className="small">{description}</span>
         <Form.Autosuggest
           placeholder="Select one"
+          isLoading={isLoading}
           isInvalid={!!errorMessage}
+          value={value ? selected : ''}
+          onChange={(newValue) => {
+            if (newValue === '') {
+              setFieldValue(name, null); setSelected('');
+            }
+          }}
           onSelected={(newValue) => {
             const valueFound = options.find((el) => el.label === newValue);
+            setSelected(valueFound.label);
             setFieldValue(name, valueFound.id);
           }}
         >
           {options?.map((optionInfo) => (
             <Form.AutosuggestOption
-              key={optionInfo.key}
-              // eslint-disable-next-line no-use-before-define
+              key={optionInfo.id}
               as={CustomOption}
               optionId={optionInfo.id}
               label={label}
@@ -123,6 +168,7 @@ SelectField.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   errorMessage: PropTypes.string,
   isArray: PropTypes.bool,
+  isLoading: PropTypes.bool,
   disabled: PropTypes.bool,
   setFieldValue: PropTypes.func,
 };
@@ -133,44 +179,9 @@ SelectField.defaultProps = {
   options: [],
   errorMessage: null,
   isArray: false,
+  isLoading: false,
   disabled: false,
   setFieldValue: () => { },
-};
-
-const CustomOption = ({
-  className, onClick, value, optionId, label, children,
-}) => (
-  <Stack
-    className={className}
-    onClick={(e) => {
-      e.currentTarget = { value };
-      onClick(e);
-    }}
-  >
-    <span>
-      {children}
-    </span>
-    {label.toLowerCase().includes('course') && (
-      <p className="text-gray x-small m-0">
-        {optionId}
-      </p>
-    )}
-  </Stack>
-);
-
-CustomOption.propTypes = {
-  className: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-  value: PropTypes.string,
-  optionId: PropTypes.oneOfType(PropTypes.string, PropTypes.number),
-  label: PropTypes.string,
-  children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
-};
-
-CustomOption.defaultProps = {
-  value: '',
-  optionId: '',
-  label: '',
 };
 
 export default SelectField;
