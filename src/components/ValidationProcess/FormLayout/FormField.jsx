@@ -10,13 +10,16 @@ const FULL_WIDTH = '100%';
 const FormField = ({
   field, values, handleChange, disableReason, isValidator, submissionDate, errorMessage,
 }) => {
-  const isDisabled = !isValidator || field.disabled || (field?.name === 'reason' && disableReason);
+  const isDisabled = !isValidator || field.disabled;
   const isColumn = field.type === 'col';
 
   if (!isValidator && field.name === 'reason' && !values[field.name]) {
     return null;
   }
 
+  if (field.name === 'reason' && disableReason) {
+    return <div />;
+  }
   return (
     <div style={{ width: isColumn ? COL_WIDTH : FULL_WIDTH }} key={field.name}>
       {field.isSelect ? (
