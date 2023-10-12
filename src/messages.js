@@ -76,6 +76,26 @@ const messages = defineMessages({
     defaultMessage: 'Rejection reason',
     description: 'Label for the course author key',
   },
+  formActionCancel: {
+    id: 'validation.process.form.cancel.action',
+    defaultMessage: 'Cancel',
+    description: 'Label for the cancel action in a form',
+  },
+  formActionSubmmit: {
+    id: 'validation.process.form.submit.action',
+    defaultMessage: 'Submit',
+    description: 'Label form the submission action in a form',
+  },
+  selectPlaceholder: {
+    id: 'selected.field.select',
+    defaultMessage: 'Select one',
+    description: 'Placeholder to display in select inputs',
+  },
+  multiselectPlaceholder: {
+    id: 'selected.field.multiselect',
+    defaultMessage: 'Select at least one',
+    description: 'Placeholder to display in multiselect inputs',
+  },
 });
 
 export default messages;

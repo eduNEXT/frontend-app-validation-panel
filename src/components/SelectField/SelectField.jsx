@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { FieldArray } from 'formik';
 import { Close } from '@edx/paragon/icons';
 import { Chip, Form, Stack } from '@edx/paragon';
 import { useState } from 'react';
+import globalMessages from '../../messages';
 
 const CustomOption = ({
   className, onClick, value, optionId, label, children,
@@ -43,6 +45,7 @@ CustomOption.defaultProps = {
 const SelectField = ({
   label, description, name, as, options, handleChange, value, errorMessage, isArray, isLoading, disabled, setFieldValue,
 }) => {
+  const intl = useIntl();
   const [selected, setSelected] = useState('');
   if (isArray) {
     return (
@@ -53,7 +56,7 @@ const SelectField = ({
             <span>{label}</span>
             <span className="small">{description}</span>
             <Form.Autosuggest
-              placeholder="Select at least one..."
+              placeholder={intl.formatMessage(globalMessages.multiselectPlaceholder)}
               isInvalid={!!errorMessage}
               onSelected={(newValue) => {
                 const valueFoundIndex = value.findIndex((el) => el === newValue);
@@ -99,7 +102,7 @@ const SelectField = ({
         <span>{label}</span>
         <span className="small">{description}</span>
         <Form.Autosuggest
-          placeholder="Select one"
+          placeholder={intl.formatMessage(globalMessages.selectPlaceholder)}
           isLoading={isLoading}
           isInvalid={!!errorMessage}
           value={value ? selected : ''}
@@ -147,7 +150,7 @@ const SelectField = ({
           disabled={disabled}
           size="sm"
         >
-          <option hidden> Select one... </option>
+          <option hidden> {intl.formatMessage(globalMessages.multiselectPlaceholder)} </option>
           {options?.map((optionInfo) => (
             <option key={optionInfo.key} value={optionInfo.id}>{optionInfo.label}</option>
           ))}
