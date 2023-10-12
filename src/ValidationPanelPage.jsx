@@ -48,10 +48,12 @@ const ValidationPanelPage = () => {
           )
           : (
             <div className="container-lg">
-              <Stack direction="horizontal" className="my-5 justify-content-between">
+              <Stack direction="horizontal" className="mt-5 mb-4 justify-content-between align-items-end">
                 <div>
                   <h1>{intl.formatMessage(messages.heading)}</h1>
-                  <h3>{isValidator ? 'Course validation processes' : 'My course validation processes' }</h3>
+                  <h3 className="mt-5">{isValidator ? intl.formatMessage(messages.validatorTitle)
+                    : intl.formatMessage(messages.courseAutorTitle)}
+                  </h3>
                 </div>
                 {!isValidator && <Button onClick={open} variant="brand">{intl.formatMessage(messages.newRecordCreatorButton)}</Button>}
               </Stack>

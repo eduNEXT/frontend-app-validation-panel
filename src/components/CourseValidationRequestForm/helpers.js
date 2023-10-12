@@ -1,17 +1,20 @@
 /* eslint-disable import/prefer-default-export */
 import { adaptOptions } from '../../utils/helpers';
+import globalMessages from '../../messages';
+import messages from './messages';
 
 export const getCourseValidationRequestForm = (
   availableUserCourses,
   availableCourseCategories,
   availableValidationBodies,
+  intl,
 ) => ([
   {
     name: 'courseId',
     // select, autosuggest, textarea or input
     as: 'autosuggest',
-    label: 'Course Name',
-    description: 'Please select one of your courses from the list below',
+    label: intl.formatMessage(globalMessages.courseName),
+    description: intl.formatMessage(messages.descriptionSelectCourse),
     // prop when 'as' property is 'select'
     // This properties come from API or Constants
     options: adaptOptions(availableUserCourses)?.sort((a, b) => {
@@ -23,8 +26,8 @@ export const getCourseValidationRequestForm = (
   {
     name: 'validationBodyId',
     as: 'autosuggest',
-    label: 'Validation Body',
-    description: 'Please select the applicable validation body for your course',
+    label: intl.formatMessage(globalMessages.validationBody),
+    description: intl.formatMessage(messages.descriptionSelectValidationBody),
     options: adaptOptions(availableValidationBodies),
   },
   {
@@ -32,14 +35,14 @@ export const getCourseValidationRequestForm = (
     // When is needed category as array
     // isArray: true,
     as: 'autosuggest',
-    label: 'Category',
-    description: 'Please select the appropriate category for your course',
+    label: intl.formatMessage(globalMessages.categories),
+    description: intl.formatMessage(messages.descriptionSelectCategory),
     options: adaptOptions(availableCourseCategories),
   },
   {
     name: 'comment',
     as: 'textarea',
-    label: 'Comments',
-    description: 'Type any comment or explanation for your course',
+    label: intl.formatMessage(globalMessages.comment),
+    description: intl.formatMessage(messages.descriptionComment),
   },
 ]);

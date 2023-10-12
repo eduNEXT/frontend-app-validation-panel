@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, CheckboxFilter, DataTable, TextFilter, useToggle, Stack, Form,
 } from '@edx/paragon';
 
-import { ActionsAvailable } from './helpers';
 import {
-  adaptToTableFormat, createCustomFilterChoices, getColumns, statusFilterOptions,
-} from '../../utils/helpers';
+  ActionsAvailable, adaptToTableFormat, createCustomFilterChoices, getColumns, statusFilterOptions,
+} from './helpers';
 
 import CustomFilter from './CustomFilter';
 import { ModalLayout } from '../ModalLayout';
@@ -18,8 +18,10 @@ import { ValidationProcess } from '../ValidationProcess';
 import { Timeline as PastProcesses } from '../Timeline';
 import { getCurrentValidationProcessByCourseId } from '../../data/slices';
 import { REQUEST_STATUS, VALIDATION_ACCESS_ROLE, VALIDATION_STATUS_LABEL } from '../../data/constants';
+import messages from './messages';
 
 const ValidationTable = ({ data, isLoading }) => {
+  const intl = useIntl();
   const dispatch = useDispatch();
   const isValidator = useSelector((state) => state.userInfo.userInfo.isValidator);
   const availableReasons = useSelector((state) => state.rejectionReasons.data);
@@ -72,7 +74,7 @@ const ValidationTable = ({ data, isLoading }) => {
     setColumnsWithClickableNames(newValues);
   };
 
-  const getColumnsWithClickableNames = (dataToAdapt) => getColumns(dataToAdapt).map((col) => {
+  const getColumnsWithClickableNames = (dataToAdapt) => getColumns(dataToAdapt, intl).map((col) => {
     const needSearchBar = col?.accessor === 'organization' || col?.accessor === 'categories' || col?.accessor === 'validationBody';
 
     if (col?.accessor === 'courseName') {
@@ -107,7 +109,7 @@ const ValidationTable = ({ data, isLoading }) => {
                   { value: { ...prevState.value, [col.accessor]: e.target.value }, colAccessor: col.accessor }
                 ),
               ), 500)}
-              placeholder={`Find ${_ref.column.Header}`}
+              placeholder={intl.formatMessage(messages.typeaheadFilterPlaceholder, { filterField: _ref.column.Header })}
             />
           </CustomFilter>
         );
@@ -173,12 +175,12 @@ const ValidationTable = ({ data, isLoading }) => {
         tabs={[
           {
             name: 'validation_process',
-            label: 'Validation process',
+            label: intl.formatMessage(messages.validationProcesDescription),
             component: <ValidationProcess onClose={close} courseSelected={currentValidationRecord} />,
           },
           {
             name: 'past_processes',
-            label: 'Past events',
+            label: intl.formatMessage(messages.validationProcessPastEvents),
             component: <PastProcesses
               pastProcessEvents={sortedCurrentValidationRecordEvents}
               validationBody={currentValidationRecord?.validationBody}
@@ -197,7 +199,7 @@ const ValidationTable = ({ data, isLoading }) => {
         columns={columnsWithClickableNames}
         additionalColumns={data.length ? [
           {
-            Header: 'Action',
+            Header: intl.formatMessage(messages.actionColumn),
             Cell: ({ row }) => {
               const userPermission = isValidator ? VALIDATION_ACCESS_ROLE.VALIDATOR : VALIDATION_ACCESS_ROLE.AUTHOR;
               const isInReview = row.values.status === VALIDATION_STATUS_LABEL.revi;
@@ -221,13 +223,17 @@ const ValidationTable = ({ data, isLoading }) => {
   );
 };
 
-const EmptyTableMessage = () => (
-  <Stack className="align-items-center my-6">
-    <span className="h2 text-uppercase">
-      Not available validation processes
-    </span>
-  </Stack>
-);
+const EmptyTableMessage = () => {
+  const intl = useIntl();
+
+  return (
+    <Stack className="align-items-center my-6">
+      <span className="h2 text-uppercase">
+        {intl.formatMessage(messages.notResults)}
+      </span>
+    </Stack>
+  );
+};
 
 const ActionButton = ({ label, action }) => (
   <Button variant="link" onClick={action} style={{ fontSize: '0.9rem', textAlign: 'left' }}>
@@ -236,7 +242,7 @@ const ActionButton = ({ label, action }) => (
 );
 
 ActionButton.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.node.isRequired,
   action: PropTypes.func.isRequired,
 };
 

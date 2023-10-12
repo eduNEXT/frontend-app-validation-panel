@@ -5,6 +5,7 @@ import {
   Spinner, Stack, Tab, Tabs,
 } from '@edx/paragon';
 
+import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import { REQUEST_STATUS } from '../../data/constants';
 import { getLastAndFirstValidationProcessEvents, PENDING_STATUSES } from '../../utils/helpers';
 
@@ -28,7 +29,7 @@ const ValidationTableLayout = ({ isValidator }) => {
   const tabItems = [
     {
       name: 'pending',
-      label: 'Pending Courses',
+      label: <FormattedMessage id="validation.layout.pending.tab" defaultMessage="Pending Courses" description="Tab to show the courses pending to review" />,
       component: (
         <ValidationTable
           isLoading={areValidationProcessesLoading}
@@ -41,7 +42,7 @@ const ValidationTableLayout = ({ isValidator }) => {
     },
     {
       name: 'archived',
-      label: 'Archived Courses',
+      label: <FormattedMessage id="validation.layout.archived.tab" defaultMessage="Archived Courses" description="Tab to show the courses which has a finished review" />,
       component: (
         <ValidationTable
           isLoading={areValidationProcessesLoading}
@@ -59,7 +60,19 @@ const ValidationTableLayout = ({ isValidator }) => {
       {
         (areValidationProcessesLoading && !dataToRender.length) ? (
           <Stack className="my-6 align-items-center">
-            <Spinner variant="brand" animation="grow" screenReaderText="loading" />
+            <Spinner
+              variant="brand"
+              animation="grow"
+              screenReaderText={(
+                <span className="sr-only">
+                  <FormattedMessage
+                    id="validation.layout.loading"
+                    defaultMessage="Loading"
+                    description="Loading message for spinner screenreader text."
+                  />
+                </span>
+              )}
+            />
           </Stack>
         )
           : (

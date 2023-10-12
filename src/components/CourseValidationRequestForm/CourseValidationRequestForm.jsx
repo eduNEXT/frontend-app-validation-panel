@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { FormikProvider, useFormik } from 'formik';
 import { Button, Stack } from '@edx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,8 +16,11 @@ import { SelectField } from '../SelectField';
 import { ModalLayout } from '../ModalLayout';
 import { getCourseValidationRequestForm } from './helpers';
 import { getValidationBodies } from '../../data/api';
+import globalMessages from '../../messages';
+import messages from './messages';
 
 const CourseValidationRequestForm = ({ isOpen, close }) => {
+  const intl = useIntl();
   const dispatch = useDispatch();
 
   const availableUserCourses = useSelector((state) => state.courses.availableUserCourses.data.results);
@@ -33,6 +37,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     availableUserCourses,
     availableCourseCategories,
     availableValidationBodies,
+    intl,
   );
 
   const initialValues = {
@@ -45,11 +50,11 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
   };
 
   const FormSchema = Yup.object().shape({
-    courseId: Yup.string().required('Please select a course!'),
-    validationBodyId: Yup.number().required('Please select a validation body!'),
+    courseId: Yup.string().required(intl.formatMessage(messages.feedbackSelectCourse)),
+    validationBodyId: Yup.number().required(intl.formatMessage(messages.feedbackSelectValidationBody)),
     // When is needed category as array
     // categoryIds: Yup.array().of(Yup.string()).min(1, 'Please select at least one category!'),
-    categoryId: Yup.number().required('Please select at least one category!'),
+    categoryId: Yup.number().required(intl.formatMessage(messages.feedbackSelectCategory)),
     comment: Yup.string(),
   });
 
@@ -99,7 +104,7 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
     <FormikProvider value={formik}>
       <ModalLayout isOpen={isOpen} onClose={handleClose}>
         <Stack gap={3}>
-          <span className="lead">Submit a course for validation</span>
+          <span className="lead">{intl.formatMessage(messages.CourseValidationFormTitle)}</span>
           <Stack gap={2}>
             {
               validationRequestFormFields?.map((field) => (
@@ -116,8 +121,8 @@ const CourseValidationRequestForm = ({ isOpen, close }) => {
             }
           </Stack>
           <Stack gap={2} direction="horizontal" className="justify-content-end mb-4">
-            <Button variant="tertiary" onClick={handleClose} className="px-5">Cancel</Button>
-            <Button onClick={formik.handleSubmit} className="px-5">Submit</Button>
+            <Button variant="tertiary" onClick={handleClose} className="px-5">{intl.formatMessage(globalMessages.formActionCancel)}</Button>
+            <Button onClick={formik.handleSubmit} className="px-5">{intl.formatMessage(globalMessages.formActionSubmmit)}</Button>
           </Stack>
         </Stack>
       </ModalLayout>
