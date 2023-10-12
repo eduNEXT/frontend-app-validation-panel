@@ -41,16 +41,6 @@ const messages = defineMessages({
     defaultMessage: 'Please insert at least a short description about your review',
     description: 'Feedback display in the comment input',
   },
-  formLayoutCancel: {
-    id: 'validation.process.form.layout.cancel.action',
-    defaultMessage: 'Cancel',
-    description: 'Additional comments from the validation review',
-  },
-  formLayoutSubmmit: {
-    id: 'validation.process.form.layout.submit.action',
-    defaultMessage: 'Submit',
-    description: 'Additional comments from the validation review',
-  },
   submissionComments: {
     id: 'validation.process.course.submission.comments',
     defaultMessage: 'Submission comments',

@@ -11,7 +11,7 @@ import {
 } from './helpers';
 import { disableReasonField } from '../helpers';
 import FormField from './FormField';
-import messages from '../messages';
+import globalMessages from '../../../messages';
 
 const FormLayout = ({
   data, useSpecialDateUsage, onSubmit, onCancel, isExempted, validationSchema,
@@ -59,8 +59,8 @@ const FormLayout = ({
       {fields}
       {isValidator && (
         <Stack direction="horizontal" gap={2} className="w-100 justify-content-end mt-4">
-          {!!onCancel && <Button className="px-5" variant="outline-primary" onClick={onCancel}>{intl.formatMessage(messages.formLayoutCancel)}</Button>}
-          {!!onSubmit && <Button className="px-5" variant="primary" onClick={handleSubmit}>{intl.formatMessage(messages.formLayoutSubmmit)}</Button>}
+          {!!onCancel && <Button className="px-5" variant="outline-primary" onClick={onCancel}>{intl.formatMessage(globalMessages.formActionCancel)}</Button>}
+          {!!onSubmit && <Button className="px-5" variant="primary" onClick={handleSubmit}>{intl.formatMessage(globalMessages.formActionSubmmit)}</Button>}
         </Stack>
       )}
     </Stack>
