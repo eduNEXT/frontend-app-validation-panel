@@ -5,7 +5,10 @@ frontend-app-validation-panel
 
 Purpose
 ***************
-The Validation Panel is a micro-frontend (MFE) that empowers course authors to initiate validation processes for the courses they intend to publish on the platform. These processes are routed to validator bodies for a thorough course review, feedback, and determination of approval or disapproval. This MFE offers a user-friendly interface, streamlining the course validation process for both authors and validators.
+The Validation Panel is a micro-frontend (MFE) that enables course authors to initiate validation processes for the courses they intend to publish on the platform. These processes are routed to validators for a thorough review, feedback, and determination of approval or disapproval. This MFE offers a user-friendly interface, streamlining the course validation process for both authors and validators.
+	
+This application was designed for UNESCO's Open edX instance and depends on the
+`Platform Global Teacher Campus Plugin <https://github.com/eduNEXT/platform-global-teacher-campus/tree/main#platform-global-teacher-campus-plugin>`_
 
 Getting Started
 ***************
@@ -13,57 +16,78 @@ Getting Started
 Prerequisites
 =============
 
-#. It is currently recommended to use `Tutor`_ as the development environment for this MFE. You can refer to the `relevant tutor-mfe documentation`_ for guidance or follow these steps to get started quickly:
+The `devstack`_ is currently recommended as a development environment for your
+new MFE.  If you start it with ``make dev.up.lms`` that should give you
+everything you need as a companion to this frontend.
 
-   #. Install TVM running 
-       ``pip install git+https://github.com/eduNEXT/tvm.git``
-   
-   #. Initialize a new Tutor project
-       .. code-block::
-
-          tvm project init <project-name> <tutor-version>
-
-          # For example:
-          # tvm project init tvm-test v14.0.0
-
-   #. Access the new Tutor project folder with ``cd <project-name>``
-   
-   #. Initialize the environment with ``source ./.tvm/bin/activate``
+Note that it is also possible to use `Tutor`_ to develop an MFE.  You can refer
+to the `relevant tutor-mfe documentation`_ to get started using it.
     
-   #. Run ``tutor dev launch`` to install the necessary initial components
-   
-   #. Stop the Tutor containers using ``tutor dev stop``
-    
-#. Ensure you have installed the `platform-global-teacher-campus <https://github.com/eduNEXT/platform-global-teacher-campus>`_ plugin as per its documentation to have access to the endpoints required by this MFE
+Ensure you have installed the `Platform Global Teacher Campus Plugin <https://github.com/eduNEXT/platform-global-teacher-campus/tree/main#platform-global-teacher-campus-plugin>`_ as per its documentation to have access to the endpoints required by this MFE
 
 Developing
 ============
 
 Cloning and Startup
 -------------------
-#. Clone this repository inside the new Tutor project:
-    ``git clone git@github.com:openedx/frontend-app-validation-panel.git``
+1. Clone this repository to gain access to the project:
+
+.. code-block::
+
+	git clone git@github.com:openedx/frontend-app-validation-panel.git
         
-#. Use node v18.x.
-    The current version of the micro-frontend build scripts support node 18. Using other major versions of node *may* work, but this is unsupported. For convenience, this repository includes an .nvmrc file to help in setting the correct node version via `nvm <https://github.com/nvm-sh/nvm>`_.
+2. Make sure are using Node version 18.x, as the micro-frontend build scripts support Node 18. This repository includes an **.nvmrc** file to helpset the correct Node version using `nvm <https://github.com/nvm-sh/nvm>`_.
         
-#. Install npm dependencies:
-    ``cd frontend-app-validation-panel && npm install``
+3. Install the dependencies of the Validation Panel project:
 
-#. Create a ``docker-compose.override.yml`` file in the ``env > dev`` directory from the root of your new Tutor project
+.. code-block::
 
-#. Add the following code to the YML file and adjust the path to your local clone of the frontend-app-validation-panel repository:
-    .. code-block::
+	cd frontend-app-validation-panel
+    npm install
+    
+4. Update the application port to access the Validation Panel in development:
+	* Update the line `PORT` line in your ``.env.development`` file and specify the desired (e.g. `PORT=9999`). 
+    
+	* By default, the app runs on `http://localhost:2001/validation_panel`, overriding the port used by the course-authoring MFE, unless otherwise specified in ``.env.development:PORT`` and ``.env.development:LMS_BASE_URL``.
 
-      version: '3.7'
-      services:
-        course-authoring:
-          volumes:
-            - 'path/to/frontend-app-validation-panel:/openedx/app'
+5. Start the development server:
 
-#. Run ``tutor dev start`` and wait the containers to be mounted
+.. code-block::
 
-#. After this, any changes you make to your local clone of the Validation Panel repository will be reflected at ``http://apps.local.overhang.io:2001/validation-panel``
+	npm start
+
+7. Next, enable the Validation Panel micro-frontend in `edx-platform` to make requests, adding the path to the Validation Panel app in `edx-platform`:
+	* Go to your environment settings (e.g. `edx-platform/lms/envs/private.py`)
+	* Add the environment variable, ``VALIDATION_PANEL_MICROFRONTEND_URL`` pointing to the Validation Panel App location considering the `PORT` determined in ``.env.development:PORT`` (e.g. ``http://localhost:2001``).
+
+8. Restart the ``edx-platform`` ``lms`` by running the following command:
+    
+.. code-block::
+
+    make dev.restart-container
+
+Deployment
+============
+This component follows the standard deploy process for MFEs. For details, see
+the `MFE production deployment guide`_
+
+Now, if you prefer to use Tutor, you will need to create an image containing the new MFE. With this in mind, you have to execute the following steps:
+
+1. Declare the new MFE adding the following code in your config.yml
+
+.. code-block:: yml
+	
+    MFE_VALIDATION_PANEL_MFE_APP:
+      name: validation_panel
+      port: < any free port >
+      repository: https://github.com/eduNEXT/frontend-app-validation-panel.git
+      version: < the wanted git branch or 'master' >
+
+2. Apply the new settings with ``tutor config save``
+
+3. Create the new image of the MFEs containing this new MFE usign ``tutor images build mfe``
+
+4. Start the platform with the image recently created with ``tutor local launch``
 
 License
 =======
@@ -92,3 +116,4 @@ Please see `LICENSE <LICENSE>`_ for details.
 .. _Tutor: https://github.com/overhangio/tutor
 
 .. _relevant tutor-mfe documentation: https://github.com/overhangio/tutor-mfe#mfe-development
+.. _MFE production deployment guide: https://openedx.github.io/frontend-platform/#production-deployment-strategy
