@@ -73,7 +73,13 @@ the `MFE production deployment guide`_
 
 Now, if you prefer to use Tutor, you will need to create an image containing the new MFE. With this in mind, you have to execute the following steps:
 
-1. Declare the new MFE adding the following code in your config.yml
+1. Declare the new MFE in your config.yml by executing the following command line
+
+.. code-block:: bash
+
+    tutor config save --set MFE_VALIDATION_PANEL_MFE_APP="{'name': 'validation_panel', 'repository': 'https://github.com/eduNEXT/frontend-app-validation-panel.git', 'version': '< the wanted git branch or 'master' >', 'port': < any free port >}"
+
+or by adding the following code directly in the config.yml 
 
 .. code-block:: yml
 	
@@ -82,6 +88,8 @@ Now, if you prefer to use Tutor, you will need to create an image containing the
       port: < any free port >
       repository: https://github.com/eduNEXT/frontend-app-validation-panel.git
       version: < the wanted git branch or 'master' >
+      
+* If you are using Tutor in a v16.X version or up, you will need to execute the steps given in `tutor-mfe documentation <https://github.com/overhangio/tutor-mfe/tree/v16.1.1#adding-new-mfes>`_
 
 2. Apply the new settings with ``tutor config save``
 
