@@ -1,213 +1,101 @@
 frontend-app-validation-panel
-##########################
-
-.. note::
-
-  This README is a template.  As a maintainer, please review its contents and
-  update all relevant sections. Instructions to you are marked with
-  "[PLACEHOLDER]" or "[TODO]". Update or remove those sections, and remove this
-  note when you are done.
+#############################
 
 |license-badge| |status-badge| |ci-badge| |codecov-badge|
 
-.. |license-badge| image:: https://img.shields.io/github/license/openedx/frontend-app-[PLACEHOLDER].svg
-    :target: https://github.com/openedx/frontend-app-[PLACEHOLDER]/blob/main/LICENSE
-    :alt: License
-
-.. |status-badge| image:: https://img.shields.io/badge/Status-Maintained-brightgreen
-
-.. |ci-badge| image:: https://github.com/openedx/frontend-app-[PLACEHOLDER]/actions/workflows/ci.yml/badge.svg
-    :target: https://github.com/openedx/frontend-app-[PLACEHOLDER]/actions/workflows/ci.yml
-    :alt: Continuous Integration
-
-.. |codecov-badge| image:: https://codecov.io/github/openedx/frontend-app-[PLACEHOLDER]/coverage.svg?branch=main
-    :target: https://codecov.io/github/openedx/frontend-app[PLACEHOLDER]?branch=main
-    :alt: Codecov
-
 Purpose
-=======
-
-.. note::
-
-   [TODO]
-
-   What is this MFE?  Add a 2-3 sentence description of what it is and what it
-   does.
-
-This is the Awesome MFE.  It was built to provide an unmatched learning
-experience, with improved tools for both randomized goodness and the ability to
-directly reference amaze-blocks in existing courses. This experience is powered
-by the new Fantastico storage engine.
+***************
+The Validation Panel is a micro-frontend (MFE) that enables course authors to initiate validation processes for the courses they intend to publish on the platform. These processes are routed to validators for a thorough review, feedback, and determination of approval or disapproval. This MFE offers a user-friendly interface, streamlining the course validation process for both authors and validators.
+	
+This application was designed for UNESCO's Open edX instance and depends on the
+`Platform Global Teacher Campus Plugin <https://github.com/eduNEXT/platform-global-teacher-campus/tree/main#platform-global-teacher-campus-plugin>`_
 
 Getting Started
-===============
+***************
 
-Devstack Installation
----------------------
+Prerequisites
+=============
 
-.. note::
+The `devstack`_ is currently recommended as a development environment for your
+new MFE.  If you start it with ``make dev.up.lms`` that should give you
+everything you need as a companion to this frontend.
 
-   [TODO]
+Note that it is also possible to use `Tutor`_ to develop an MFE.  You can refer
+to the `relevant tutor-mfe documentation`_ to get started using it.
+    
+Ensure you have installed the `Platform Global Teacher Campus Plugin <https://github.com/eduNEXT/platform-global-teacher-campus/tree/main#platform-global-teacher-campus-plugin>`_ as per its documentation to have access to the endpoints required by this MFE
 
-   Describe in detail how this MFE can be installed and set up for development
-   in a devstack.  Include as many screenshots as you can to make your guide
-   easier to follow!  Use the following steps as an example:
-
-Follow these steps to provision, run, and enable an instance of the
-[PLACEHOLDER] MFE for local development via the `devstack`_.
-
-.. _devstack: https://github.com/openedx/devstack#getting-started
-
-#. To start, clone the devstack repository as a child of an arbitrary ``~/workspace/`` directory.
-
-   .. code-block::
-
-      mkdir -p ~/workspace/
-      cd ~/workspace/
-      git clone https://github.com/openedx/devstack.git
-
-#. Configure default services and setup devstack
-
-   Create a ``devstack/options.local.mk`` file with only the services required.
-   Commonly, this will just be the LMS:
-
-   .. code-block::
-
-      DEFAULT_SERVICES ?= \
-      lms
-
-#. Start the devstack with:
-
-   .. code-block::
-
-      cd devstack
-      make dev.pull
-      make dev.provision
-      make dev.up
-
-#. In an LMS shell, enable the ``ENABLE_[PLACEHOLDER]_MICROFRONTEND`` feature flag:
-
-   .. code-block::
-
-      make lms-shell
-      vim /edx/etc/lms.yml
-      ---
-      FEATURES:
-          ENABLE_[PLACEHOLDER]_MICROFRONTEND: true
-
-   Exit the shell and restart the LMS so changes take effect:
-
-   .. code-block::
-
-      make lms-restart
-
-#. Create and enable the waffle flag required to redirect users to the MFE,
-   enabling it for everyone:
-
-   .. code-block::
-
-      make lms-shell
-      ./manage.py lms waffle_flag --create --everyone [PLACEHOLDER].redirect_to_microfrontend
-
-#. Start this MFE with:
-
-   .. code-block::
-
-      cd frontend-app-[PLACEHOLDER]
-      nvm use
-      npm ci
-      npm start
-
-#. Finally, open the MFE in a browser
-
-   Navigate to `http://localhost:8080 <http://localhost:8080>`_ to open the
-   MFE.  This is what it should look like if everything worked:
-
-   .. figure:: ./docs/images/template.jpg
-
-      "Polycon marking template" by mangtronix is licensed under CC BY-SA 2.0.
-
-Configuration
--------------
-
-.. note::
-
-   [TODO]
-
-   Explicitly list anything that this MFE requires to function correctly.  This includes:
-
-   * A list of both required and optional .env variables, and how they each
-     affect the functioning of the MFE
-
-   * A list of edx-platform `feature and waffle flags`_ that are either required
-     to enable use of this MFE, or affect the behavior of the MFE in some other
-     way
-
-   * A list of IDAs or other MFEs that this MFE depends on to function correctly
-
-.. _feature and waffle flags: https://docs.openedx.org/projects/openedx-proposals/en/latest/best-practices/oep-0017-bp-feature-toggles.html
-
-[PLACEHOLDER: Other Relevant Sections]
-======================================
-
-.. note::
-
-   [TODO]
-
-   This is optional, but you might have additional sections you wish to cover.
-   For instance, architecture documentation, i18n notes, build process, or
-   more.
-
-Known Issues
+Developing
 ============
 
-.. note::
+Cloning and Startup
+-------------------
+1. Clone this repository to gain access to the project:
 
-   [TODO]
+.. code-block::
 
-   If there are long-standing known issues, list them here as a bulletted list,
-   linking to the actual issues in the Github repository.
+	git clone git@github.com:openedx/frontend-app-validation-panel.git
+        
+2. Make sure are using Node version 18.x, as the micro-frontend build scripts support Node 18. This repository includes an **.nvmrc** file to helpset the correct Node version using `nvm <https://github.com/nvm-sh/nvm>`_.
+        
+3. Install the dependencies of the Validation Panel project:
 
-Development Roadmap
-===================
+.. code-block::
 
-.. note::
+	cd frontend-app-validation-panel
+    npm install
+    
+4. Update the application port to access the Validation Panel in development:
+	* Update the line `PORT` line in your ``.env.development`` file and specify the desired (e.g. `PORT=9999`). 
+    
+	* By default, the app runs on `http://localhost:2001/validation_panel`, overriding the port used by the course-authoring MFE, unless otherwise specified in ``.env.development:PORT`` and ``.env.development:LMS_BASE_URL``.
 
-   [TODO]
+5. Start the development server:
 
-   Include a list of current development targets, in (rough) descending order
-   of priority.  It can be a simple bulleted list of roadmap items with links
-   to Github issues or wiki pages.
+.. code-block::
 
-Getting Help
+	npm start
+
+7. Next, enable the Validation Panel micro-frontend in `edx-platform` to make requests, adding the path to the Validation Panel app in `edx-platform`:
+	* Go to your environment settings (e.g. `edx-platform/lms/envs/private.py`)
+	* Add the environment variable, ``VALIDATION_PANEL_MICROFRONTEND_URL`` pointing to the Validation Panel App location considering the `PORT` determined in ``.env.development:PORT`` (e.g. ``http://localhost:2001``).
+
+8. Restart the ``edx-platform`` ``lms`` by running the following command:
+    
+.. code-block::
+
+    make dev.restart-container
+
+Deployment
 ============
+This component follows the standard deploy process for MFEs. For details, see
+the `MFE production deployment guide`_
 
-.. note::
+Now, if you prefer to use Tutor, you will need to create an image containing the new MFE. With this in mind, you have to execute the following steps:
 
-   [TODO]
+1. Declare the new MFE in your config.yml by executing the following command line
 
-   Use the following as a template, but feel free to add specific places where
-   this MFE is commonly discussed.
+.. code-block:: bash
 
-If you're having trouble, we have discussion forums at
-https://discuss.openedx.org where you can connect with others in the community.
+    tutor config save --set MFE_VALIDATION_PANEL_MFE_APP="{'name': 'validation_panel', 'repository': 'https://github.com/eduNEXT/frontend-app-validation-panel.git', 'version': '< the wanted git branch or 'master' >', 'port': < any free port >}"
 
-Our real-time conversations are on Slack. You can request a `Slack
-invitation`_, then join our `community Slack workspace`_.  Because this is a
-frontend repository, the best place to discuss it would be in the `#wg-frontend
-channel`_.
+or by adding the following code directly in the config.yml 
 
-For anything non-trivial, the best path is to open an issue in this repository
-with as many details about the issue you are facing as you can provide.
+.. code-block:: yml
+	
+    MFE_VALIDATION_PANEL_MFE_APP:
+      name: validation_panel
+      port: < any free port >
+      repository: https://github.com/eduNEXT/frontend-app-validation-panel.git
+      version: < the wanted git branch or 'master' >
+      
+* If you are using Tutor in a v16.X version or up, you will need to execute the steps given in `tutor-mfe documentation <https://github.com/overhangio/tutor-mfe/tree/v16.1.1#adding-new-mfes>`_
 
-https://github.com/openedx/frontend-app-[PLACEHOLDER]/issues
+2. Apply the new settings with ``tutor config save``
 
-For more information about these options, see the `Getting Help`_ page.
+3. Create the new image of the MFEs containing this new MFE usign ``tutor images build mfe``
 
-.. _Slack invitation: https://openedx.org/slack
-.. _community Slack workspace: https://openedx.slack.com/
-.. _#wg-frontend channel: https://openedx.slack.com/archives/C04BM6YC7A6
-.. _Getting Help: https://openedx.org/getting-help
+4. Start the platform with the image recently created with ``tutor local launch``
 
 License
 =======
@@ -217,43 +105,23 @@ noted.
 
 Please see `LICENSE <LICENSE>`_ for details.
 
-Contributing
-============
 
-.. note::
+.. |license-badge| image:: https://img.shields.io/github/license/eduNEXT/frontend-app-validation-panel.svg
+    :target: https://github.com/eduNEXT/frontend-app-validation-panel/blob/master/LICENSE
+    :alt: License
 
-   [TODO]
+.. |status-badge| image:: https://img.shields.io/badge/Status-Maintained-brightgreen
 
-   Feel free to add contribution details specific to your repository.
+.. |ci-badge| image:: https://github.com/eduNEXT/frontend-app-validation-panel/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/eduNEXT/frontend-app-validation-panel/actions/workflows/ci.yml
+    :alt: Continuous Integration
 
-Contributions are very welcome.  Please read `How To Contribute`_ for details.
+.. |codecov-badge| image:: https://codecov.io/github/eduNEXT/frontend-app-validation-panel/coverage.svg?branch=master
+    :target: https://codecov.io/github/eduNEXT/frontend-appvalidation-panel?branch=master
+    :alt: Codecov
+.. _Devstack: https://github.com/openedx/devstack
 
-.. _How To Contribute: https://openedx.org/r/how-to-contribute
+.. _Tutor: https://github.com/overhangio/tutor
 
-This project is currently accepting all types of contributions, bug fixes,
-security fixes, maintenance work, or new features.  However, please make sure
-to have a discussion about your new feature idea with the maintainers prior to
-beginning development to maximize the chances of your change being accepted.
-You can start a conversation by creating a new issue on this repo summarizing
-your idea.
-
-The Open edX Code of Conduct
-============================
-
-All community members are expected to follow the `Open edX Code of Conduct`_.
-
-.. _Open edX Code of Conduct: https://openedx.org/code-of-conduct/
-
-People
-======
-
-The assigned maintainers for this component and other project details may be
-found in `Backstage`_. Backstage pulls this data from the ``catalog-info.yaml``
-file in this repo.
-
-.. _Backstage: https://open-edx-backstage.herokuapp.com/catalog/default/component/frontend-app-[PLACEHOLDER]
-
-Reporting Security Issues
-=========================
-
-Please do not report security issues in public.  Email security@openedx.org instead.
+.. _relevant tutor-mfe documentation: https://github.com/overhangio/tutor-mfe#mfe-development
+.. _MFE production deployment guide: https://openedx.github.io/frontend-platform/#production-deployment-strategy
