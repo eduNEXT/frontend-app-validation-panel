@@ -5,8 +5,12 @@ import {
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { StudioHeader } from '@edx/frontend-component-header';
+import { StudioFooter } from '@edx/frontend-component-footer';
+
 import {
-  CourseValidationRequestForm, Header, PopUpMessage, ValidationTableLayout,
+  CourseValidationRequestForm, PopUpMessage, ValidationTableLayout,
 } from './components';
 
 import messages from './messages';
@@ -39,7 +43,7 @@ const ValidationPanelPage = () => {
       <PopUpMessage />
       <CourseValidationRequestForm isOpen={isOpen} close={close} />
       <main className="bg-secondary-100" style={{ minHeight: '100vh' }}>
-        <Header intl={intl} />
+        <StudioHeader isHiddenMainMenu />
         {isLoadingUserInfo
           ? (
             <Stack className="my-6 align-items-center">
@@ -62,6 +66,7 @@ const ValidationPanelPage = () => {
               />
             </div>
           )}
+        <StudioFooter />
       </main>
     </>
   );

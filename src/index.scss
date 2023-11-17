@@ -3,4 +3,10 @@
 @import "~@edx/paragon/scss/core/core";
 @import "@edx/brand/paragon/overrides.scss";
 
-@import './components/Timeline/RecordItem'
+@import "~@edx/frontend-component-header/dist/index";
+
+@import './components/Timeline/RecordItem';
+
+.dropdown-menu {
+  min-width: fit-content;
+}
